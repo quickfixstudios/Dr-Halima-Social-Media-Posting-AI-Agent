@@ -62,7 +62,7 @@
           "model": "gpt-6.1-sol",
           "max_tokens": 16000,
           "response_format": "json_object",
-          "parseJSONResponse": true,
+          "parseJSONResponse": false,
           "reasoning_effort": "medium",
           "messages": [
             {
@@ -71,7 +71,7 @@
             },
             {
               "role": "user",
-              "content": "Today is {{formatDate(now; \"dddd D MMMM YYYY\")}} (Asia/Dhaka), post slot {{1.slot}} of 5.\nContent pillar: {{get(split(\"Education,Myth vs Fact,Warning/Awareness,Pregnancy,Hormonal Health,Emotional Support,Preventive Tips\"; \",\"); (1.n mod 7) + 1)}}\nTopic number: {{(floor(1.n / 7) mod 10) + 1}}\nPost style: {{if(1.slot = 2; \"quick-tip\"; if(1.slot = 4; \"quick-tip\"; \"educational\"))}}\n\nWrite the post and return the JSON object."
+              "content": "Today is {{formatDate(now; \"dddd D MMMM YYYY\")}} (Asia/Dhaka), post slot {{1.slot}} of 5.\nContent pillar: {{get(split(\"Education,Myth vs Fact,Warning/Awareness,Pregnancy,Hormonal Health,Emotional Support,Preventive Tips\"; \",\"); 1.n - floor(1.n / 7) * 7 + 1)}}\nTopic number: {{floor(1.n / 7) - floor(1.n / 70) * 10 + 1}}\nPost style: {{if(1.slot = 2; \"quick-tip\"; if(1.slot = 4; \"quick-tip\"; \"educational\"))}}\n\nWrite the post and return the JSON object."
             }
           ]
         },
@@ -102,6 +102,23 @@
         ]
       },
       {
+        "id": 6,
+        "module": "json:ParseJSON",
+        "version": 1,
+        "parameters": {
+          "type": 519796
+        },
+        "mapper": {
+          "json": "{{2.choices[].message.content}}"
+        },
+        "metadata": {
+          "designer": {
+            "x": 450,
+            "y": 0
+          }
+        }
+      },
+      {
         "id": 3,
         "module": "openai-gpt-3:GenerateImage",
         "version": 1,
@@ -110,7 +127,7 @@
         },
         "mapper": {
           "model": "gpt-image-2.5-sunburst",
-          "prompt": "{{2.result.image_prompt}}",
+          "prompt": "{{ifempty(6.image_prompt; \"Clean, minimal, modern illustration of a calm, smiling woman reading a health leaflet in soft natural light, pastel colours, warm and reassuring mood, square composition. No text, no anatomy, no blood, no medical instruments, no logos.\")}}",
           "size": "1024x1024",
           "quality": "high",
           "output_format": "jpeg",
@@ -147,12 +164,10 @@
         "id": 4,
         "module": "facebook-pages:CreatePostWithPhotos",
         "version": 6,
-        "parameters": {
-          "__IMTCONN__": 7761459
-        },
+        "parameters": {},
         "mapper": {
           "page_id": "103052652458065",
-          "message": "{{2.result.caption}}",
+          "message": "{{6.caption}}",
           "photos": [
             {
               "type": "data",
