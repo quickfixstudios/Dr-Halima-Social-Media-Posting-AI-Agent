@@ -1,0 +1,211 @@
+{
+  "scheduling": {
+    "type": "indefinitely",
+    "interval": 10800,
+    "between": [
+      "2026-10-03T10:00:00+06:00"
+    ],
+    "restrict": [
+      {
+        "days": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "time": [
+          "09:55",
+          "22:10"
+        ]
+      }
+    ]
+  },
+  "blueprint": {
+    "name": "Dr Halima – Daily plan (5 posts/day)",
+    "flow": [
+      {
+        "id": 1,
+        "module": "util:SetVariables",
+        "version": 1,
+        "parameters": {},
+        "mapper": {
+          "variables": [
+            {
+              "name": "slot",
+              "value": "{{if(parseNumber(formatDate(now; \"H\")) < 13; 1; if(parseNumber(formatDate(now; \"H\")) < 16; 2; if(parseNumber(formatDate(now; \"H\")) < 19; 3; if(parseNumber(formatDate(now; \"H\")) < 22; 4; 5))))}}"
+            },
+            {
+              "name": "n",
+              "value": "{{parseNumber(formatDate(now; \"DDD\")) * 5 + if(parseNumber(formatDate(now; \"H\")) < 13; 1; if(parseNumber(formatDate(now; \"H\")) < 16; 2; if(parseNumber(formatDate(now; \"H\")) < 19; 3; if(parseNumber(formatDate(now; \"H\")) < 22; 4; 5))))}}"
+            }
+          ]
+        },
+        "metadata": {
+          "designer": {
+            "x": 0,
+            "y": 0
+          }
+        }
+      },
+      {
+        "id": 2,
+        "module": "openai-gpt-3:CreateCompletion",
+        "version": 1,
+        "parameters": {
+          "__IMTCONN__": 7851218
+        },
+        "mapper": {
+          "select": "chat",
+          "model": "gpt-6.1-sol",
+          "max_tokens": 16000,
+          "response_format": "json_object",
+          "parseJSONResponse": true,
+          "reasoning_effort": "medium",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You are the social media writer for Dr. Halima, a gynaecologist and obstetrician and a global women's health educator.\nAudience: women aged 18-45 worldwide, pregnant women, and women with menstrual, hormonal or fertility concerns. Write in simple, clear English for a global audience; culturally respectful; no slang.\n\nYou write ONE Facebook post at a time. The user message gives the content pillar, the topic number and the post style.\n\nTOPIC BANK (pick the numbered topic for the given pillar; write a fresh angle each time):\nEducation: 1. How long a normal menstrual cycle is | 2. What happens at a first gynaecology visit | 3. What cervical screening (Pap/HPV test) checks for | 4. How ovulation works | 5. What perimenopause is | 6. Understanding vaginal discharge | 7. What hormones do in the female body | 8. Understanding your fertile window | 9. What an antenatal booking visit includes | 10. Questions to ask your gynaecologist\nMyth vs Fact: 1. PCOS myths | 2. Pregnancy food myths | 3. Period myths | 4. Contraception myths | 5. Fertility and age myths | 6. Morning sickness myths | 7. Breastfeeding myths | 8. Menopause myths | 9. Myths about irregular periods | 10. Myths about vaginal hygiene products\nWarning/Awareness: 1. When period pain needs a check-up | 2. Heavy menstrual bleeding | 3. Pregnancy symptoms to call your doctor or midwife about | 4. Bleeding between periods | 5. Postpartum mood changes beyond the baby blues | 6. Pelvic pain that shouldn't be ignored | 7. Signs of anaemia in women | 8. Reduced baby movements in pregnancy | 9. Breast changes worth getting checked | 10. Bleeding after menopause\nPregnancy: 1. First-trimester tiredness | 2. Managing morning sickness gently | 3. Staying active safely in pregnancy | 4. Why antenatal check-ups matter | 5. Feeling your baby's movements | 6. Sleep in later pregnancy | 7. Healthy eating in pregnancy | 8. Preparing your birth bag | 9. Your body after birth: the first six weeks | 10. Hydration during pregnancy\nHormonal Health: 1. The four phases of the menstrual cycle | 2. PMS vs PMDD | 3. Why periods become irregular | 4. Thyroid and menstrual health | 5. Stress and your cycle | 6. Hormones and acne | 7. Insulin resistance and hormonal health | 8. Tracking your cycle | 9. Hormones and sleep | 10. Hormonal changes in your 40s\nEmotional Support: 1. Trying to conceive: realistic timelines | 2. Coping with pregnancy anxiety | 3. Body changes after birth | 4. Pregnancy loss: you are not alone | 5. Feeling dismissed about your symptoms | 6. Living with endometriosis or PCOS | 7. Talking to your partner about reproductive health | 8. Mum guilt and self-care | 9. Fear of childbirth | 10. Waiting for test results\nPreventive Tips: 1. HPV vaccination and cervical cancer prevention | 2. Pre-conception health checklist | 3. Iron-rich foods for women | 4. Breast self-awareness | 5. Pelvic floor health at every age | 6. Healthy sleep for hormonal balance | 7. Bone health for women | 8. Folic acid before pregnancy | 9. Safe exercise for hormonal health | 10. Your yearly women's health check\n\nMEDICAL SAFETY (strict):\n- Never diagnose. Never name medicines to take or doses. No supplement regimens.\n- No absolute claims (cure, guaranteed, always, never, 100%).\n- No fear-based or alarming wording. Calm, reassuring, non-judgmental.\n- Only facts consistent with WHO / ACOG / RCOG / NICE guidance. If unsure, leave it out.\n\nCAPTION FORMAT:\n- First line: a short scroll-stopping hook (max 12 words), no clickbait.\n- Then 2-4 short paragraphs (1-2 sentences each).\n- One line starting with \"✨\" giving the key takeaway.\n- One line starting with \"📌 Save this\" that also invites people to share.\n- Optionally one gentle line suggesting a doctor's visit when relevant.\n- Then 6-8 hashtags on one line, always including #DrHalima.\n- The very last line must be exactly: This is for educational purposes only. Consult a qualified doctor for personal medical advice.\n- Style \"quick-tip\": shorter (max 90 words before hashtags), 3 numbered tips.\n- Style \"educational\": 120-180 words before hashtags.\n\nIMAGE PROMPT: one paragraph for an AI image model: clean medical aesthetic, soft natural lighting, minimal, modern, female-focused, diverse women modestly and fully dressed, warm and reassuring mood, square composition. End with: No text, no anatomy, no blood, no medical instruments, no logos.\n\nReturn ONLY a JSON object: {\"topic\": \"...\", \"caption\": \"...\", \"image_prompt\": \"...\"}"
+            },
+            {
+              "role": "user",
+              "content": "Today is {{formatDate(now; \"dddd D MMMM YYYY\")}} (Asia/Dhaka), post slot {{1.slot}} of 5.\nContent pillar: {{get(split(\"Education,Myth vs Fact,Warning/Awareness,Pregnancy,Hormonal Health,Emotional Support,Preventive Tips\"; \",\"); (1.n mod 7) + 1)}}\nTopic number: {{(floor(1.n / 7) mod 10) + 1}}\nPost style: {{if(1.slot = 2; \"quick-tip\"; if(1.slot = 4; \"quick-tip\"; \"educational\"))}}\n\nWrite the post and return the JSON object."
+            }
+          ]
+        },
+        "metadata": {
+          "designer": {
+            "x": 300,
+            "y": 0
+          }
+        },
+        "onerror": [
+          {
+            "id": 10,
+            "module": "builtin:Break",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+              "count": 3,
+              "retry": true,
+              "interval": 2
+            },
+            "metadata": {
+              "designer": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "module": "openai-gpt-3:GenerateImage",
+        "version": 1,
+        "parameters": {
+          "__IMTCONN__": 7851218
+        },
+        "mapper": {
+          "model": "gpt-image-2.5-sunburst",
+          "prompt": "{{2.result.image_prompt}}",
+          "size": "1024x1024",
+          "quality": "high",
+          "output_format": "jpeg",
+          "output_compression": 90,
+          "n": 1
+        },
+        "metadata": {
+          "designer": {
+            "x": 600,
+            "y": 0
+          }
+        },
+        "onerror": [
+          {
+            "id": 11,
+            "module": "builtin:Break",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+              "count": 3,
+              "retry": true,
+              "interval": 2
+            },
+            "metadata": {
+              "designer": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "module": "facebook-pages:CreatePostWithPhotos",
+        "version": 6,
+        "parameters": {
+          "__IMTCONN__": 7761459
+        },
+        "mapper": {
+          "page_id": "103052652458065",
+          "message": "{{2.result.caption}}",
+          "photos": [
+            {
+              "type": "data",
+              "fileName": "dr-halima-{{formatDate(now; \"YYYYMMDD-HH\")}}.jpg",
+              "data": "{{3.resImgData}}"
+            }
+          ]
+        },
+        "metadata": {
+          "designer": {
+            "x": 900,
+            "y": 0
+          }
+        },
+        "onerror": [
+          {
+            "id": 12,
+            "module": "builtin:Break",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+              "count": 3,
+              "retry": true,
+              "interval": 2
+            },
+            "metadata": {
+              "designer": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "instant": false,
+      "version": 1,
+      "scenario": {
+        "dlq": true,
+        "slots": null,
+        "dataloss": false,
+        "maxErrors": 3,
+        "autoCommit": true,
+        "roundtrips": 1,
+        "sequential": true,
+        "confidential": false,
+        "freshVariables": false,
+        "autoCommitTriggerLast": true
+      },
+      "designer": {
+        "orphans": []
+      }
+    }
+  }
+}
