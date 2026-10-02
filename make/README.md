@@ -7,7 +7,7 @@ How it works (one scenario, no storage needed — fits the Make Free plan):
 | Step | Module | What it does |
 |---|---|---|
 | 1 | Tools › Set variables | Works out the slot from the current Dhaka hour (10→1, 13→2, 16→3, 19→4, 22→5) and a rotation number `n = day_of_year × 5 + slot` |
-| 2 | OpenAI › Generate a completion (`gpt-6.1-sol`) | Writes one post: pillar = `n − floor(n/7)×7`, topic = `floor(n/7) − floor(n/70)×10` (Make has no `mod` operator) from a 70-topic bank, style quick-tip in slots 2 and 4. Returns JSON text |
+| 2 | OpenAI › Generate a completion (`gpt-6.1-sol`) | Writes one post **in Bangla** (image prompt in English, Bangladeshi visuals, Bangla disclaimer): pillar = `n − floor(n/7)×7`, topic = `floor(n/7) − floor(n/70)×10` (Make has no `mod` operator) from a 70-topic bank, style quick-tip in slots 2 and 4. Returns JSON text |
 | 2b | JSON › Parse JSON (data structure "Dr Halima post") | Turns the reply into `topic`, `caption`, `image_prompt` |
 | 3 | OpenAI › Generate images (`gpt-image-2.5-sunburst`) | Creates a square JPEG from `image_prompt` (falls back to a safe default prompt if it's ever empty) |
 | 4 | Facebook Pages › Create a Post with Photos | Posts caption + image to **Dr. Halima (Dubai)** |
