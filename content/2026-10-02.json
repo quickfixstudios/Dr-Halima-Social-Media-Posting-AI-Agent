@@ -1,0 +1,79 @@
+{
+  "posts": [
+    {
+      "post_number": 1,
+      "post_type": "carousel",
+      "content_pillar": "Myth vs Fact",
+      "topic": "4 common PCOS myths",
+      "target_audience_segment": "Women 18–35 with irregular cycles or a recent PCOS diagnosis",
+      "hook_style": "Myth-breaking",
+      "hook_english": "4 PCOS myths you can stop believing today.",
+      "hook_bangla": "PCOS নিয়ে ৪টি ভুল ধারণা — সত্যিটা জানুন।",
+      "script_or_slide_content": "Slide 1 (Hook): 4 PCOS myths you can stop believing today.\n\nSlide 2: MYTH: \"You can't get pregnant with PCOS.\"\nFACT: Many women with PCOS conceive — some naturally, some with medical support. PCOS can affect ovulation, but it is not the same as infertility.\n\nSlide 3: MYTH: \"Only women with higher body weight get PCOS.\"\nFACT: PCOS happens in every body type. Lean women can have PCOS too — weight is not the diagnosis.\n\nSlide 4: MYTH: \"PCOS means you have cysts on your ovaries.\"\nFACT: The 'cysts' are usually small, immature follicles. A scan finding is only one part of the picture — you can have PCOS without it, and have it without PCOS.\n\nMYTH: \"PCOS is just about irregular periods.\"\nFACT: PCOS can also affect skin, hair, mood and long-term metabolic health — which is why regular check-ups matter.\n\nSlide 5 (Summary / CTA): PCOS is common, manageable, and different for every woman. Save this, share it with a friend who needs it, and talk to a qualified doctor about your own symptoms.\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "caption": "PCOS is one of the most common hormonal conditions in women — and one of the most misunderstood. 💜\n\nMany women hear frightening things after a diagnosis. The truth is calmer: PCOS looks different in every body, and many women with PCOS go on to have healthy pregnancies.\n\n✨ Key takeaway: PCOS is a hormonal pattern, not a life sentence — and it is not defined by your weight or a single scan.\n\n📌 Save this so you have the facts next time someone shares a myth.\n\nIf your periods are irregular or you're noticing new skin or hair changes, a qualified doctor can guide you.\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "visual_prompt": "Clean, modern medical-education carousel cover, 1080x1350 portrait. Soft lavender and blush-pink pastel background with subtle rounded geometric shapes. Minimal flat illustration of a calm, confident South Asian woman in her late 20s wearing a simple cardigan, holding a cup of tea, gentle smile, shown from the waist up. Large empty space at the top for headline text. Small decorative 'myth vs fact' icons (a crossed-out bubble and a checkmark bubble) in muted teal. Soft natural lighting, airy, trustworthy healthcare aesthetic. No text, no anatomy, no medical instruments, no logos.",
+      "hashtags": ["#PCOS", "#PCOSAwareness", "#WomensHealth", "#MythVsFact", "#HormonalHealth", "#Gynaecology", "#PCOSSupport", "#DrHalima"],
+      "cta": "Save this and share it with someone who has just been diagnosed."
+    },
+    {
+      "post_number": 2,
+      "post_type": "reel",
+      "content_pillar": "Pregnancy Care",
+      "topic": "Why first-trimester fatigue happens and how to cope",
+      "target_audience_segment": "Newly pregnant women in their first trimester",
+      "hook_style": "Relatable",
+      "hook_english": "Pregnant and too tired to keep your eyes open at 3 PM? You're not lazy.",
+      "hook_bangla": "প্রেগন্যান্সির শুরুতে এত ক্লান্ত লাগে কেন?",
+      "script_or_slide_content": "Duration: ~35 seconds | Format: Dr. Halima speaking to camera, soft on-screen text\n\n[0–4s] HOOK: \"Pregnant and too tired to keep your eyes open at 3 PM? You're not lazy.\"\n\n[4–11s] EXPLANATION: \"In the first trimester your body is working hard behind the scenes — building the placenta, increasing your blood volume, and adjusting to rising pregnancy hormones like progesterone.\"\n\n[11–24s] KEY INSIGHTS:\n1. \"This tiredness is very common — and for many women it eases around the second trimester.\"\n2. \"Nausea and broken sleep can add to it, so small, frequent meals and water through the day can help.\"\n3. \"Extreme exhaustion, breathlessness or dizziness is worth mentioning to your doctor — they may simply check things like your iron levels.\"\n\n[24–31s] GENTLE ADVICE: \"Rest when you can, say yes to help, and try gentle movement like a short walk if you feel up to it. Your body is doing something amazing.\"\n\n[31–35s] SOFT CTA: \"Save this for the tired days, and keep your antenatal check-ups. Follow for calm, simple pregnancy tips.\"\n\nOn-screen footer: For educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "caption": "Feeling exhausted in early pregnancy? You're not imagining it — and you're definitely not lazy. 🤍\n\nIn the first trimester your body is building the placenta, increasing blood volume and adjusting to new hormones. That takes a lot of energy.\n\n✨ Key takeaway: First-trimester tiredness is common and often improves in the second trimester — rest is part of the work your body is doing.\n\n📌 Save this for the days you need a reminder to slow down.\n\nIf the tiredness feels extreme, or comes with dizziness or breathlessness, let your doctor know at your next visit (or sooner).\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "visual_prompt": "Vertical 1080x1920 reel cover image. Soft, calm interior scene: a pregnant woman in early pregnancy (no visible bump), wearing a comfortable oversized sweater, resting peacefully on a sofa with a light blanket and a glass of water on a side table. Warm afternoon sunlight through sheer curtains. Palette of soft peach, cream and sage green. Modern minimal healthcare aesthetic, gentle and reassuring mood, respectful and fully clothed. Empty space in the upper third for title text. No text, no medical equipment, no logos.",
+      "hashtags": ["#FirstTrimester", "#PregnancyTips", "#PregnancyFatigue", "#PregnancyCare", "#MomToBe", "#WomensHealth", "#Obstetrics", "#DrHalima"],
+      "cta": "Save this and follow for calm, simple pregnancy tips."
+    },
+    {
+      "post_number": 3,
+      "post_type": "carousel",
+      "content_pillar": "Hormonal Health",
+      "topic": "How the 4 phases of the menstrual cycle can affect energy and mood",
+      "target_audience_segment": "Women 18–45 curious about their cycle, mood and energy changes",
+      "hook_style": "Curiosity",
+      "hook_english": "Ever wondered why you feel unstoppable one week and drained the next?",
+      "hook_bangla": "আপনার মাসিক চক্র কি আপনার মুড বদলায়?",
+      "script_or_slide_content": "Slide 1 (Hook): Ever wondered why you feel unstoppable one week and drained the next? Your cycle has 4 phases — here's how they can shape your energy.\n\nSlide 2: PHASE 1 — MENSTRUAL (your period)\nHormone levels are at their lowest. Many women feel lower energy and want more rest. Warmth, gentle movement and good sleep can feel supportive.\n\nPHASE 2 — FOLLICULAR (after your period)\nEstrogen gradually rises. Many women notice better energy, focus and motivation — a good time to start new plans.\n\nSlide 3: PHASE 3 — OVULATION (around mid-cycle)\nEstrogen peaks and an egg is released. Some women feel more social and confident. Mild one-sided pelvic twinges can be normal for some.\n\nPHASE 4 — LUTEAL (the days before your period)\nProgesterone rises, then both hormones fall. Tiredness, cravings, bloating or mood changes (PMS) are common here.\n\nSlide 4: GOOD TO KNOW\n• Every woman's cycle is unique — these are patterns, not rules.\n• A typical adult cycle is roughly 21–35 days.\n• Tracking your cycle for 2–3 months can help you spot your own pattern.\n• If mood changes before your period seriously affect your work, relationships or wellbeing, that's worth discussing with a doctor.\n\nSlide 5 (Summary / CTA): Your energy isn't random — it often follows your hormones. Save this, start noticing your pattern, and speak with a qualified doctor if something doesn't feel right.\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "caption": "Your energy and mood can shift across the month — and there's a reason for it. 🌙\n\nYour menstrual cycle has 4 phases: menstrual, follicular, ovulation and luteal. As estrogen and progesterone rise and fall, many women notice changes in energy, focus, sleep and mood.\n\n✨ Key takeaway: Understanding your cycle helps you plan with your body, not against it — and spot when something isn't typical for you.\n\n📌 Save this and try tracking your energy for the next 2–3 cycles.\n\nIf PMS symptoms feel severe or are affecting your daily life, a qualified doctor can help.\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "visual_prompt": "Clean educational carousel cover, 1080x1350 portrait. A soft circular cycle wheel divided into four gently colored segments (dusty rose, warm peach, soft gold, muted lavender), each with a tiny minimal icon: a resting moon, a sprouting leaf, a sun, and a cozy teacup. Beside the wheel, a minimal flat illustration of a young woman of ambiguous ethnicity in casual clothing, calmly journaling. Off-white background, plenty of negative space for headline text, modern minimal wellness aesthetic. No text, no anatomy, no blood, no logos.",
+      "hashtags": ["#MenstrualCycle", "#HormonalHealth", "#CycleSyncing", "#PMS", "#PeriodHealth", "#WomensWellness", "#KnowYourBody", "#DrHalima"],
+      "cta": "Save this and track your energy for your next 2–3 cycles."
+    },
+    {
+      "post_number": 4,
+      "post_type": "reel",
+      "content_pillar": "Early Warning Signs",
+      "topic": "When period pain is more than 'normal' cramps",
+      "target_audience_segment": "Women 16–35 who experience painful periods",
+      "hook_style": "Warning (non-alarmist)",
+      "hook_english": "Period cramps are common. But these 5 signs mean it's time to get checked.",
+      "hook_bangla": "সব পিরিয়ডের ব্যথা স্বাভাবিক নয় — এই লক্ষণগুলো জানুন।",
+      "script_or_slide_content": "Duration: ~38 seconds | Format: Dr. Halima speaking to camera, with a simple numbered list appearing on screen\n\n[0–4s] HOOK: \"Period cramps are common. But these 5 signs mean it's time to get checked.\"\n\n[4–10s] EXPLANATION: \"Mild cramps in the first day or two of your period are very common. They happen as the uterus contracts to shed its lining.\"\n\n[10–26s] KEY INSIGHTS — it's worth seeing a doctor if:\n1. \"The pain stops you from going to school, work or daily activities.\"\n2. \"Usual pain relief doesn't really help, or the pain is getting worse over time.\"\n3. \"You have pelvic pain outside your period, or pain during intimacy.\"\n4. \"Your bleeding is very heavy — like soaking through a pad every hour or two.\"\n5. \"You notice pain with bowel movements or passing urine during your period.\"\n\n[26–33s] GENTLE ADVICE: \"These signs don't automatically mean something serious. Conditions like endometriosis or fibroids can cause them — and they're manageable once properly assessed. A symptom diary can really help your doctor.\"\n\n[33–38s] SOFT CTA: \"Your pain is real and deserves to be heard. Save this and share it with someone who's been told to 'just deal with it.'\"\n\nOn-screen footer: For educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "caption": "Period pain is common — but 'common' doesn't always mean it should be ignored. 🌸\n\nIt's worth speaking with a doctor if your pain stops daily activities, doesn't ease with usual relief, gets worse over time, happens outside your period or during intimacy, or comes with very heavy bleeding.\n\n✨ Key takeaway: Severe or worsening period pain deserves a proper check-up. Conditions like endometriosis are common and manageable once assessed.\n\n📌 Save this and share it with someone who has been told to 'just deal with it.'\n\nKeeping a simple diary of your pain and bleeding can make your appointment much more helpful.\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "visual_prompt": "Vertical 1080x1920 reel cover. A young woman in her 20s with a calm, thoughtful expression sitting on her bed holding a warm hot-water bottle against her lower abdomen over a soft pastel pajama top, a notebook (symptom diary) and pen beside her. Muted blush pink, soft coral and warm beige palette, gentle morning light, cozy and reassuring rather than distressing. Modern minimal medical-education aesthetic, respectful and fully clothed. Clear space at top for title text. No text, no blood, no anatomy diagrams, no logos.",
+      "hashtags": ["#PeriodPain", "#Endometriosis", "#EndometriosisAwareness", "#MenstrualHealth", "#WomensHealth", "#Gynaecology", "#ListenToYourBody", "#DrHalima"],
+      "cta": "Save this and share it with a friend who needs to hear it."
+    },
+    {
+      "post_number": 5,
+      "post_type": "image",
+      "content_pillar": "Emotional Reassurance",
+      "topic": "Trying to conceive: realistic timelines and when to seek support",
+      "target_audience_segment": "Women and couples trying to conceive (TTC)",
+      "hook_style": "Reassurance",
+      "hook_english": "Trying for a baby and it hasn't happened yet? You are not alone — and you're not behind.",
+      "hook_bangla": "এখনো কনসিভ হয়নি? আপনি একা নন।",
+      "script_or_slide_content": "Single image text overlay:\n\nHEADLINE: \"It hasn't happened yet. That doesn't mean it won't.\"\n\nSUPPORTING LINES:\n• Most couples conceive within 12 months of regular trying.\n• Under 35? Consider seeing a doctor after 12 months of trying.\n• 35 or older? After 6 months.\n• Irregular periods or a known condition? You can ask for advice sooner.\n• Fertility is a team topic — it involves both partners.\n\nFOOTER: Be gentle with yourself. Support is available.\nFor educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "caption": "If you're trying for a baby and every month feels heavy, this is for you. 🤍\n\nConceiving can take time, even when everything is healthy. Most couples conceive within a year of regular trying — and needing a little longer is very common.\n\n✨ Key takeaway: Under 35, consider seeing a doctor after 12 months of trying; 35 or older, after 6 months; and sooner if your periods are irregular or you have a known condition. Fertility involves both partners — it's never one person's 'fault.'\n\n📌 Save this as a gentle reminder for the hard days.\n\nPlease be kind to yourself, lean on people you trust, and know that a qualified doctor can walk this journey with you.\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "visual_prompt": "Square 1080x1080 social image. A warm, hopeful scene: a couple (South Asian, early 30s, modestly dressed) sitting close together on a balcony at golden hour, the woman resting her head on her partner's shoulder, both looking calm, seen from a gentle side angle. Soft sage green, warm cream and muted gold palette, a small potted plant with new leaves in the foreground symbolizing growth. Clean, modern, minimal healthcare-brand aesthetic with an uncluttered lower third for text overlay. No text, no baby imagery, no pregnancy tests, no medical imagery, no logos.",
+      "hashtags": ["#TTC", "#TryingToConceive", "#FertilityJourney", "#FertilitySupport", "#YouAreNotAlone", "#WomensHealth", "#Gynaecology", "#DrHalima"],
+      "cta": "Save this for the hard days, and share it with someone on this journey."
+    }
+  ]
+}
