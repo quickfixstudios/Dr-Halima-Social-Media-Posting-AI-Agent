@@ -9,6 +9,7 @@ with an engagement-driven learning loop. 5 posts/day (2 reels + 3 image/carousel
 
 | # | Deliverable | Where |
 |---|---|---|
+| 0 | **Start here:** simple working Version 1 (ChatGPT → image → Sheet → Facebook, 2 Make scenarios) | [docs/00-quick-start-v1.md](docs/00-quick-start-v1.md) |
 | 1 | Full system architecture | [docs/01-architecture.md](docs/01-architecture.md) |
 | 2 | ChatGPT prompt system (final, ready to use) | [docs/02-content-engine.md](docs/02-content-engine.md) · [prompts/](prompts) |
 | 3 | Make.com scenarios, module by module | [docs/03-make-scenarios.md](docs/03-make-scenarios.md) |
@@ -33,6 +34,7 @@ with an engagement-driven learning loop. 5 posts/day (2 reels + 3 image/carousel
 .
 ├── README.md
 ├── docs/
+│   ├── 00-quick-start-v1.md
 │   ├── 01-architecture.md
 │   ├── 02-content-engine.md
 │   ├── 03-make-scenarios.md
