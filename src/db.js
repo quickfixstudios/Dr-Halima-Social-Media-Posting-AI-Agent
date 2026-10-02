@@ -4,17 +4,19 @@ import { config } from "./config.js";
 
 /**
  * Minimal JSON-file database (data/db.json). Swap for Postgres/Mongo/Airtable by
- * re-implementing these functions with the same signatures.
+ * re-implementing these functions with the same signatures (see README "Scaling").
  *
- * Shape: { posts: PostRecord[], runs: RunRecord[] }
- * PostRecord = generated post fields + { id, date, status, scheduled_at, images, media_urls,
- *              buffer_updates: [{ profile_id, update_id }], metrics, score }
+ * {
+ *   posts:       PostRecord[]          // daily_batch item + { date, status, scheduled_at, images, image_urls, buffer_updates, ... }
+ *   performance: PerformanceRecord[]   // { post_id, likes, comments, shares, saves, engagement_score }
+ *   runs:        RunRecord[]           // audit log of pipeline runs
+ * }
  */
-const EMPTY = { posts: [], runs: [] };
+const EMPTY = { posts: [], performance: [], runs: [] };
 
 function load() {
   if (!fs.existsSync(config.paths.db)) return structuredClone(EMPTY);
-  return JSON.parse(fs.readFileSync(config.paths.db, "utf8"));
+  return { ...structuredClone(EMPTY), ...JSON.parse(fs.readFileSync(config.paths.db, "utf8")) };
 }
 
 function save(db) {
@@ -24,17 +26,12 @@ function save(db) {
   fs.renameSync(tmp, config.paths.db); // atomic replace
 }
 
-export function postId(date, postNumber) {
-  return `${date}-${postNumber}`;
-}
-
 export function upsertPosts(date, posts) {
   const db = load();
   for (const post of posts) {
-    const id = postId(date, post.post_number);
-    const existing = db.posts.find((p) => p.id === id);
+    const existing = db.posts.find((p) => p.id === post.id);
     if (existing) Object.assign(existing, post);
-    else db.posts.push({ id, date, status: "generated", buffer_updates: [], metrics: null, score: null, ...post });
+    else db.posts.push({ date, status: "generated", buffer_updates: [], images: [], image_urls: [], ...post });
   }
   save(db);
   return db.posts.filter((p) => p.date === date);
@@ -49,12 +46,28 @@ export function updatePost(id, patch) {
   return post;
 }
 
+export function getPost(id) {
+  return load().posts.find((p) => p.id === id);
+}
+
 export function getPostsByDate(date) {
   return load().posts.filter((p) => p.date === date);
 }
 
 export function getAllPosts() {
   return load().posts;
+}
+
+export function upsertPerformance(record) {
+  const db = load();
+  const i = db.performance.findIndex((r) => r.post_id === record.post_id);
+  if (i >= 0) db.performance[i] = record;
+  else db.performance.push(record);
+  save(db);
+}
+
+export function getPerformance() {
+  return load().performance;
 }
 
 export function recordRun(run) {

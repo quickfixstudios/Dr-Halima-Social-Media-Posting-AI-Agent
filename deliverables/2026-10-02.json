@@ -1,0 +1,757 @@
+{
+  "daily_batch": [
+    {
+      "id": "2026-10-02-1",
+      "scheduled_slot": "slot1",
+      "post_type": "carousel",
+      "content_pillar": "Myth vs Fact",
+      "topic": "4 common PCOS myths",
+      "hook_pattern": "Myth-breaking",
+      "content_goal": "share-worthy",
+      "target_audience_segment": "Women 18–35 with irregular cycles or a recent PCOS diagnosis",
+      "hook_english": "4 PCOS myths you can stop believing today.",
+      "hook_bangla_short": "PCOS নিয়ে ৪টি ভুল ধারণা",
+      "script": "",
+      "video_storyboard": [],
+      "caption": "PCOS is one of the most common hormonal conditions in women — and one of the most misunderstood. 💜\n\nMany women hear frightening things after a diagnosis. The truth is calmer: PCOS looks different in every body, and many women with PCOS go on to have healthy pregnancies.\n\n✨ PCOS is a hormonal pattern, not a life sentence.\n✨ It isn't defined by your weight or a single scan.\n\n📌 Save this, and share it with a friend who has just been diagnosed.\n\nIf your periods are irregular or you notice new skin or hair changes, a qualified doctor can guide you.\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "key_takeaways": [
+        "PCOS is common and manageable — many women with PCOS conceive, some with medical support.",
+        "PCOS happens in every body type and isn't diagnosed by weight or a scan alone."
+      ],
+      "visual_prompt": "Clean, modern medical-education carousel cover, portrait 4:5. Soft lavender and blush-pink pastel background with subtle rounded shapes. Minimal flat illustration of a calm, confident South Asian woman in her late 20s in a simple cardigan, holding a cup of tea, gentle smile, waist-up. Soft diffused lighting. Large empty space at the top for headline text. Small muted-teal icons of a crossed-out speech bubble and a check-mark bubble. Airy, trustworthy, female-focused healthcare aesthetic. No text, no anatomy, no medical instruments, no logos.",
+      "carousel_slides": [
+        {
+          "slide_number": 1,
+          "headline": "4 PCOS myths you can stop believing today",
+          "body": "Swipe for the facts →",
+          "visual_direction": "Cover illustration from visual_prompt; headline in large rounded sans-serif."
+        },
+        {
+          "slide_number": 2,
+          "headline": "MYTH: You can't get pregnant with PCOS",
+          "body": "FACT: Many women with PCOS conceive — some naturally, some with medical support. PCOS can affect ovulation, but it is not the same as infertility.",
+          "visual_direction": "Lavender card, crossed-out myth bubble above, teal check beside the fact."
+        },
+        {
+          "slide_number": 3,
+          "headline": "MYTH: Only women with higher body weight get PCOS",
+          "body": "FACT: PCOS happens in every body type. Lean women can have PCOS too — weight is not the diagnosis.",
+          "visual_direction": "Row of three diverse women's silhouettes of different body shapes, pastel tones."
+        },
+        {
+          "slide_number": 4,
+          "headline": "MYTH: PCOS means cysts on your ovaries",
+          "body": "FACT: The 'cysts' are usually small, immature follicles. A scan is only one part of the picture — PCOS can be present without that finding.",
+          "visual_direction": "Simple abstract circles motif (not anatomical), blush and teal."
+        },
+        {
+          "slide_number": 5,
+          "headline": "MYTH: PCOS is just about irregular periods",
+          "body": "FACT: PCOS can also affect skin, hair, mood and long-term metabolic health — which is why regular check-ups matter.",
+          "visual_direction": "Four small line icons: calendar, leaf, heart, sun."
+        },
+        {
+          "slide_number": 6,
+          "headline": "Know the facts. Share the calm.",
+          "body": "PCOS is common, manageable, and different for every woman. Save this and talk to a qualified doctor about your own symptoms.\n\nFor educational purposes only. Consult a qualified doctor for personal medical advice.",
+          "visual_direction": "Brand close slide: soft lavender, Dr. Halima name, save + share icons."
+        }
+      ],
+      "hashtags": [
+        "#PCOS",
+        "#PCOSAwareness",
+        "#WomensHealth",
+        "#MythVsFact",
+        "#HormonalHealth",
+        "#Gynaecology",
+        "#PCOSSupport",
+        "#DrHalima"
+      ],
+      "cta": "Save this and share it with someone who has just been diagnosed.",
+      "alt_text": "Illustration of a calm young South Asian woman holding a cup of tea on a soft lavender background, with myth and fact icons — cover of a carousel busting four PCOS myths.",
+      "estimated_length_seconds": 0,
+      "notes_for_editor": "6-slide carousel, 1080x1350. Keep one idea per slide, max ~30 words of body text. Myth in muted grey, FACT in brand teal. Disclaimer must stay on slide 6."
+    },
+    {
+      "id": "2026-10-02-2",
+      "scheduled_slot": "slot2",
+      "post_type": "reel",
+      "content_pillar": "Pregnancy Guidance",
+      "topic": "Why first-trimester fatigue happens and how to cope",
+      "hook_pattern": "Relatability",
+      "content_goal": "save-worthy",
+      "target_audience_segment": "Newly pregnant women in their first trimester",
+      "hook_english": "Pregnant and too tired to keep your eyes open at 3 PM? You're not lazy.",
+      "hook_bangla_short": "প্রেগন্যান্সির শুরুতে এত ক্লান্তি কেন?",
+      "script": "Pregnant and too tired to keep your eyes open at 3 PM? You're not lazy.\n\nIn the first trimester your body is working hard behind the scenes — building the placenta, increasing your blood volume, and adjusting to rising pregnancy hormones like progesterone.\n\nHere's what helps. One: know that this tiredness is very common, and for many women it eases around the second trimester. Two: small, frequent meals and water through the day can help with energy and nausea. Three: rest when you can — even a 20-minute lie-down counts — and try gentle movement like a short walk if you feel up to it.\n\nIf you feel extremely exhausted, dizzy or breathless, mention it to your doctor — they may simply check things like your iron levels.\n\nSave this for the tired days, and keep your antenatal check-ups. Your body is doing something amazing.",
+      "video_storyboard": [
+        {
+          "start_s": 0,
+          "end_s": 3,
+          "section": "Hook",
+          "visual": "Close-up of Dr. Halima, warm smile, soft-lit clinic corner with plants.",
+          "voiceover": "Pregnant and too tired to keep your eyes open at 3 PM? You're not lazy.",
+          "on_screen_text": "Tired all the time in early pregnancy?"
+        },
+        {
+          "start_s": 3,
+          "end_s": 10,
+          "section": "Simple explanation",
+          "visual": "Medium shot of Dr. Halima; simple animated icons appear: placenta-shaped leaf, droplet, hormone wave.",
+          "voiceover": "In the first trimester your body is building the placenta, increasing blood volume and adjusting to new hormones.",
+          "on_screen_text": "Your body is working hard behind the scenes"
+        },
+        {
+          "start_s": 10,
+          "end_s": 16,
+          "section": "Insight 1",
+          "visual": "B-roll: woman resting on a sofa with a blanket, afternoon light.",
+          "voiceover": "This tiredness is very common — and for many women it eases in the second trimester.",
+          "on_screen_text": "1. Very common — often eases by trimester 2"
+        },
+        {
+          "start_s": 16,
+          "end_s": 22,
+          "section": "Insight 2",
+          "visual": "B-roll: hands placing small snacks and a glass of water on a table.",
+          "voiceover": "Small, frequent meals and water through the day can help with energy and nausea.",
+          "on_screen_text": "2. Small, frequent meals + water"
+        },
+        {
+          "start_s": 22,
+          "end_s": 28,
+          "section": "Insight 3",
+          "visual": "B-roll: woman walking slowly in a park, then lying down to rest.",
+          "voiceover": "Rest when you can, and try gentle movement like a short walk if you feel up to it.",
+          "on_screen_text": "3. Rest + gentle movement"
+        },
+        {
+          "start_s": 28,
+          "end_s": 33,
+          "section": "Safety note",
+          "visual": "Back to Dr. Halima, reassuring nod.",
+          "voiceover": "If you feel extremely exhausted, dizzy or breathless, mention it to your doctor.",
+          "on_screen_text": "Very exhausted, dizzy or breathless? Tell your doctor"
+        },
+        {
+          "start_s": 33,
+          "end_s": 37,
+          "section": "Gentle CTA",
+          "visual": "Dr. Halima smiles; save icon animation.",
+          "voiceover": "Save this for the tired days. Your body is doing something amazing.",
+          "on_screen_text": "Save for the tired days 🤍 | Educational only — consult your doctor"
+        }
+      ],
+      "caption": "Feeling exhausted in early pregnancy? You're not imagining it — and you're definitely not lazy. 🤍\n\nIn the first trimester your body is building the placenta, increasing blood volume and adjusting to new hormones. That takes a lot of energy.\n\n✨ First-trimester tiredness is common and often improves in the second trimester.\n✨ Rest, small frequent meals and water are part of looking after you both.\n\n📌 Save this for the days you need a reminder to slow down — and share it with a mum-to-be.\n\nIf the tiredness feels extreme, or comes with dizziness or breathlessness, let your doctor know.\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "key_takeaways": [
+        "First-trimester fatigue is very common and often eases in the second trimester.",
+        "Extreme exhaustion, dizziness or breathlessness is worth mentioning to your doctor."
+      ],
+      "visual_prompt": "Vertical 9:16 reel cover. Calm interior: a woman in early pregnancy (no visible bump), wearing a comfortable oversized sweater, resting peacefully on a sofa under a light blanket, a glass of water on a side table. Warm soft afternoon light through sheer curtains. Palette of soft peach, cream and sage green. Modern, minimal, clean healthcare aesthetic, gentle and reassuring, respectful and fully clothed. Empty upper third for title text. No text, no medical equipment, no logos.",
+      "carousel_slides": [],
+      "hashtags": [
+        "#FirstTrimester",
+        "#PregnancyTips",
+        "#PregnancyFatigue",
+        "#PregnancyCare",
+        "#MomToBe",
+        "#WomensHealth",
+        "#Obstetrics",
+        "#DrHalima"
+      ],
+      "cta": "Save this and follow for calm, simple pregnancy tips.",
+      "alt_text": "A woman in early pregnancy resting on a sofa under a blanket in warm afternoon light, with a glass of water beside her.",
+      "estimated_length_seconds": 37,
+      "notes_for_editor": "Talking-head + B-roll, 9:16, burned-in captions. Hook text must appear within the first second. Soft piano bed, no dramatic music. Keep the disclaimer on the final frame for at least 2 seconds."
+    },
+    {
+      "id": "2026-10-02-3",
+      "scheduled_slot": "slot3",
+      "post_type": "carousel",
+      "content_pillar": "Hormonal/Period Health",
+      "topic": "How the 4 phases of the menstrual cycle can affect energy and mood",
+      "hook_pattern": "Curiosity",
+      "content_goal": "save-worthy",
+      "target_audience_segment": "Women 18–45 curious about cycle-related energy and mood changes",
+      "hook_english": "Ever wondered why you feel unstoppable one week and drained the next?",
+      "hook_bangla_short": "মাসিক চক্র কি মুড বদলায়?",
+      "script": "",
+      "video_storyboard": [],
+      "caption": "Your energy and mood can shift across the month — and there's a reason for it. 🌙\n\nYour menstrual cycle has 4 phases: menstrual, follicular, ovulation and luteal. As estrogen and progesterone rise and fall, many women notice changes in energy, focus, sleep and mood.\n\n✨ Understanding your cycle helps you plan with your body, not against it.\n✨ Tracking for 2–3 months helps you spot what's typical for you.\n\n📌 Save this, try tracking your energy for your next few cycles, and share it with a friend who'd find it useful.\n\nIf PMS symptoms feel severe or affect your daily life, a qualified doctor can help.\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "key_takeaways": [
+        "Hormone shifts across the 4 cycle phases can change energy, focus and mood.",
+        "Severe PMS that disrupts daily life is worth discussing with a doctor."
+      ],
+      "visual_prompt": "Clean educational carousel cover, portrait 4:5. A soft circular cycle wheel in four gently coloured segments (dusty rose, warm peach, soft gold, muted lavender), each with a tiny minimal icon: resting moon, sprouting leaf, sun, cozy teacup. Beside it, a minimal flat illustration of a young woman calmly journaling, casual modest clothing. Off-white background, soft lighting, generous negative space for a headline. Modern minimal female-focused wellness aesthetic. No text, no anatomy, no blood, no logos.",
+      "carousel_slides": [
+        {
+          "slide_number": 1,
+          "headline": "Unstoppable one week, drained the next?",
+          "body": "Your cycle has 4 phases — here's how they can shape your energy. →",
+          "visual_direction": "Cover: cycle wheel + journaling woman."
+        },
+        {
+          "slide_number": 2,
+          "headline": "Phase 1 · Menstrual (your period)",
+          "body": "Hormones are at their lowest. Many women feel lower energy and want more rest. Warmth, gentle movement and good sleep can feel supportive.",
+          "visual_direction": "Dusty-rose card, moon icon."
+        },
+        {
+          "slide_number": 3,
+          "headline": "Phase 2 · Follicular (after your period)",
+          "body": "Estrogen gradually rises. Many women notice better energy, focus and motivation — a good time to start new plans.",
+          "visual_direction": "Warm-peach card, sprouting leaf icon."
+        },
+        {
+          "slide_number": 4,
+          "headline": "Phase 3 · Ovulation (around mid-cycle)",
+          "body": "Estrogen peaks and an egg is released. Some women feel more social and confident. Mild one-sided twinges can be normal for some.",
+          "visual_direction": "Soft-gold card, sun icon."
+        },
+        {
+          "slide_number": 5,
+          "headline": "Phase 4 · Luteal (before your period)",
+          "body": "Progesterone rises, then hormones fall. Tiredness, cravings, bloating or mood changes (PMS) are common here.",
+          "visual_direction": "Muted-lavender card, teacup icon."
+        },
+        {
+          "slide_number": 6,
+          "headline": "Good to know",
+          "body": "Every cycle is unique — these are patterns, not rules. A typical adult cycle is about 21–35 days. If PMS seriously affects your life, talk to a doctor. Save this and start noticing your pattern.\n\nFor educational purposes only. Consult a qualified doctor for personal medical advice.",
+          "visual_direction": "Brand close slide with save icon."
+        }
+      ],
+      "hashtags": [
+        "#MenstrualCycle",
+        "#HormonalHealth",
+        "#CycleAwareness",
+        "#PMS",
+        "#PeriodHealth",
+        "#WomensWellness",
+        "#KnowYourBody",
+        "#DrHalima"
+      ],
+      "cta": "Save this and track your energy for your next 2–3 cycles.",
+      "alt_text": "A pastel four-segment cycle wheel with moon, leaf, sun and teacup icons next to an illustration of a young woman writing in a journal.",
+      "estimated_length_seconds": 0,
+      "notes_for_editor": "6-slide carousel, 1080x1350. Each phase slide uses its own wheel colour so the series reads as a set. Avoid the term 'cycle syncing' as a promise — keep wording as 'many women notice'."
+    },
+    {
+      "id": "2026-10-02-4",
+      "scheduled_slot": "slot4",
+      "post_type": "reel",
+      "content_pillar": "Warning/Awareness",
+      "topic": "When period pain is more than 'normal' cramps",
+      "hook_pattern": "Gentle warning",
+      "content_goal": "authority-building",
+      "target_audience_segment": "Women 16–35 who experience painful periods",
+      "hook_english": "Period cramps are common. But these signs mean it's time to get checked.",
+      "hook_bangla_short": "সব পিরিয়ডের ব্যথা স্বাভাবিক নয়",
+      "script": "Period cramps are common. But these signs mean it's time to get checked.\n\nMild cramps in the first day or two of your period are very common — they happen as the uterus contracts to shed its lining.\n\nBut it's worth seeing a doctor if: the pain stops you from school, work or daily life; usual pain relief doesn't really help, or the pain is getting worse over time; you have pelvic pain outside your period or during intimacy; or your bleeding is very heavy — like soaking through a pad every hour or two.\n\nThese signs don't automatically mean something serious. Conditions like endometriosis or fibroids can cause them, and they're manageable once properly assessed. A simple symptom diary can really help your appointment.\n\nYour pain is real and deserves to be heard. Save this and share it with someone who's been told to 'just deal with it.'",
+      "video_storyboard": [
+        {
+          "start_s": 0,
+          "end_s": 3,
+          "section": "Hook",
+          "visual": "Dr. Halima to camera, calm expression, soft clinic background.",
+          "voiceover": "Period cramps are common. But these signs mean it's time to get checked.",
+          "on_screen_text": "When period pain isn't 'just cramps'"
+        },
+        {
+          "start_s": 3,
+          "end_s": 9,
+          "section": "Simple explanation",
+          "visual": "Simple animated pastel calendar icon with a soft wave line.",
+          "voiceover": "Mild cramps in the first day or two are very common — the uterus contracts to shed its lining.",
+          "on_screen_text": "Mild cramps on day 1–2 = common"
+        },
+        {
+          "start_s": 9,
+          "end_s": 15,
+          "section": "Insight 1",
+          "visual": "B-roll: woman sitting on bed with a hot-water bottle, missing a work call on her laptop.",
+          "voiceover": "See a doctor if pain stops you from school, work or daily life.",
+          "on_screen_text": "1. Pain stops your daily life"
+        },
+        {
+          "start_s": 15,
+          "end_s": 20,
+          "section": "Insight 2",
+          "visual": "Animated line rising gently over three calendar months.",
+          "voiceover": "Or if usual pain relief doesn't help, or it's getting worse over time.",
+          "on_screen_text": "2. Not easing or getting worse"
+        },
+        {
+          "start_s": 20,
+          "end_s": 26,
+          "section": "Insight 3",
+          "visual": "Text card with soft icons.",
+          "voiceover": "Or if you have pain outside your period, pain during intimacy, or very heavy bleeding.",
+          "on_screen_text": "3. Pain between periods · pain with intimacy · very heavy bleeding"
+        },
+        {
+          "start_s": 26,
+          "end_s": 33,
+          "section": "Reassurance + action",
+          "visual": "B-roll: hand writing in a symptom diary.",
+          "voiceover": "This doesn't automatically mean something serious — conditions like endometriosis are manageable once assessed. A symptom diary helps.",
+          "on_screen_text": "Tip: keep a symptom diary"
+        },
+        {
+          "start_s": 33,
+          "end_s": 38,
+          "section": "Gentle CTA",
+          "visual": "Dr. Halima, warm smile; share icon animation.",
+          "voiceover": "Your pain is real. Save this and share it with someone who needs to hear it.",
+          "on_screen_text": "Your pain deserves to be heard 🌸 | Educational only — consult your doctor"
+        }
+      ],
+      "caption": "Period pain is common — but 'common' doesn't always mean it should be ignored. 🌸\n\nIt's worth speaking with a doctor if your pain stops daily activities, doesn't ease with usual relief, gets worse over time, happens outside your period or during intimacy, or comes with very heavy bleeding.\n\n✨ Severe or worsening period pain deserves a proper check-up.\n✨ Conditions like endometriosis are common and manageable once assessed.\n\n📌 Save this and share it with someone who has been told to 'just deal with it.'\n\nA simple diary of your pain and bleeding can make your appointment much more helpful.\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "key_takeaways": [
+        "Mild cramps are common; pain that disrupts life, worsens, or comes with very heavy bleeding deserves a check-up.",
+        "A symptom diary helps your doctor understand your pattern."
+      ],
+      "visual_prompt": "Vertical 9:16 reel cover. A young woman in her 20s with a calm, thoughtful expression sitting on her bed in soft pastel pajamas, holding a warm hot-water bottle against her lower abdomen, a notebook and pen beside her. Muted blush pink, soft coral and warm beige palette, gentle morning light, cozy and reassuring rather than distressing. Modern minimal medical-education aesthetic, respectful and fully clothed. Clear space at top for title text. No text, no blood, no anatomy diagrams, no logos.",
+      "carousel_slides": [],
+      "hashtags": [
+        "#PeriodPain",
+        "#Endometriosis",
+        "#EndometriosisAwareness",
+        "#MenstrualHealth",
+        "#WomensHealth",
+        "#Gynaecology",
+        "#ListenToYourBody",
+        "#DrHalima"
+      ],
+      "cta": "Save this and share it with a friend who needs to hear it.",
+      "alt_text": "A young woman sitting calmly on her bed holding a hot-water bottle, with a notebook and pen beside her, in soft morning light.",
+      "estimated_length_seconds": 38,
+      "notes_for_editor": "Authority piece: Dr. Halima on camera for hook and close. No anatomical graphics — use calendar/line icons only. Number the signs on screen so viewers can screenshot. Disclaimer on final frame."
+    },
+    {
+      "id": "2026-10-02-5",
+      "scheduled_slot": "slot5",
+      "post_type": "image",
+      "content_pillar": "Emotional Support",
+      "topic": "Trying to conceive: realistic timelines and when to seek support",
+      "hook_pattern": "Reassurance",
+      "content_goal": "share-worthy",
+      "target_audience_segment": "Women and couples trying to conceive (TTC)",
+      "hook_english": "It hasn't happened yet. That doesn't mean it won't.",
+      "hook_bangla_short": "এখনো হয়নি? আপনি একা নন",
+      "script": "",
+      "video_storyboard": [],
+      "caption": "If you're trying for a baby and every month feels heavy, this is for you. 🤍\n\nConceiving can take time, even when everything is healthy. Most couples conceive within a year of regular trying — and needing a little longer is very common.\n\n✨ Under 35, consider seeing a doctor after 12 months of trying; 35 or older, after 6 months; sooner if your periods are irregular or you have a known condition.\n✨ Fertility involves both partners — it's never one person's 'fault.'\n\n📌 Save this for the hard days, and share it with someone on this journey.\n\nBe kind to yourself, lean on people you trust, and know that a qualified doctor can walk this journey with you.\n\nThis is for educational purposes only. Consult a qualified doctor for personal medical advice.",
+      "key_takeaways": [
+        "Most couples conceive within 12 months; seek advice after 12 months (under 35) or 6 months (35+), or sooner with irregular periods.",
+        "Fertility is a shared journey involving both partners."
+      ],
+      "visual_prompt": "Square 1:1 social image. A warm, hopeful scene: a couple in their early 30s, modestly dressed, sitting close together on a balcony at golden hour, the woman resting her head on her partner's shoulder, both calm, seen from a gentle side angle. A small potted plant with new leaves in the foreground symbolising growth. Soft sage green, warm cream and muted gold palette, soft lighting. Clean, modern, minimal healthcare-brand aesthetic with an uncluttered lower third for text overlay. No text, no baby imagery, no pregnancy tests, no medical imagery, no logos.",
+      "carousel_slides": [
+        {
+          "slide_number": 1,
+          "headline": "It hasn't happened yet. That doesn't mean it won't.",
+          "body": "• Most couples conceive within 12 months of regular trying\n• Under 35? See a doctor after 12 months\n• 35 or older? After 6 months\n• Irregular periods or a known condition? Ask sooner\n• Fertility is a team topic — it involves both partners\n\nBe gentle with yourself. Support is available.\nFor educational purposes only. Consult a qualified doctor for personal medical advice.",
+          "visual_direction": "Single image: text overlay in the lower third on a translucent cream panel over the couple photo."
+        }
+      ],
+      "hashtags": [
+        "#TTC",
+        "#TryingToConceive",
+        "#FertilityJourney",
+        "#FertilitySupport",
+        "#YouAreNotAlone",
+        "#WomensHealth",
+        "#Gynaecology",
+        "#DrHalima"
+      ],
+      "cta": "Save this for the hard days, and share it with someone on this journey.",
+      "alt_text": "A couple sitting close together on a balcony at sunset, the woman resting her head on her partner's shoulder, with a small sprouting plant in the foreground.",
+      "estimated_length_seconds": 0,
+      "notes_for_editor": "Single 1080x1080 image. Late-night slot: keep tone soft and hopeful. Avoid baby or pregnancy-test imagery to stay sensitive to people struggling with fertility."
+    }
+  ],
+  "automation_system": {
+    "runtime": "Node.js >= 20 (ES modules)",
+    "dependencies": [
+      "@anthropic-ai/sdk",
+      "openai",
+      "zod",
+      "node-cron",
+      "luxon",
+      "dotenv"
+    ],
+    "architecture": {
+      "overview": "A daily agentic pipeline. A learning step plans the 5 slots (pillar, format, hook pattern, goal); Claude writes the batch as schema-validated JSON; a compliance gate holds unsafe posts; gpt-image-1 renders visuals, which are uploaded to get public URLs; Buffer queues each post for its slot; slot watchdog crons guarantee delivery; a nightly sync turns engagement into performance records that steer the next plan.",
+      "components": [
+        {
+          "name": "Planner",
+          "file": "src/engagement.js#planDay",
+          "responsibility": "STEP 1/3/4: choose pillar, post_type, hook_pattern, content_goal per slot from learned performance + rotation"
+        },
+        {
+          "name": "Content generator",
+          "file": "src/generateContent.js#generateContent",
+          "responsibility": "STEP 2 + copy: Claude structured output (JSON schema), self-revision on format/safety issues"
+        },
+        {
+          "name": "Compliance gate",
+          "file": "src/safety.js",
+          "responsibility": "Blocks diagnosis, prescribing, dosing, absolute claims, fear language, sensitive visuals; enforces disclaimer + save/share CTA"
+        },
+        {
+          "name": "Image generator",
+          "file": "src/generateImage.js#generateImage",
+          "responsibility": "gpt-image-1 from visual_prompt → PNG → public image URL"
+        },
+        {
+          "name": "Media host",
+          "file": "src/mediaHost.js#publishMedia",
+          "responsibility": "Cloudinary unsigned upload (or static CDN) so Buffer can fetch media"
+        },
+        {
+          "name": "Publisher",
+          "file": "src/buffer.js#postToBuffer",
+          "responsibility": "Buffer API: schedule at slot time or publish now"
+        },
+        {
+          "name": "Scheduler",
+          "file": "src/schedulePosts.js + src/index.js#cron",
+          "responsibility": "Daily generation cron, 5 slot watchdog crons, nightly engagement sync"
+        },
+        {
+          "name": "Storage",
+          "file": "src/db.js",
+          "responsibility": "posts, image URLs, Buffer update IDs, performance records, run log"
+        },
+        {
+          "name": "Alerts",
+          "file": "src/alerts.js#sendAlert",
+          "responsibility": "Webhook alerts (Slack/Discord) on any failure or held post"
+        }
+      ],
+      "data_flow": [
+        "06:15 cron → computeInsights(history, performance)",
+        "planDay(insights) → 5-slot plan",
+        "generateContent({ plan, insights, topicSuggestions }) → daily_batch JSON (validated)",
+        "checkPostSafety → needs_review + alert for any flagged post",
+        "generatePostImages → images[] + image_urls[] saved on the post",
+        "schedulePosts → postToBuffer(scheduled_at = slot time in Asia/Dhaka) → buffer_updates saved",
+        "slot time + 2 min → publishDueSlot(slot): publish now if not already queued, else alert",
+        "23:30 cron → syncEngagement → performance records → next morning's insights"
+      ],
+      "post_status_lifecycle": [
+        "generated",
+        "images_ready",
+        "scheduled",
+        "published",
+        "awaiting_video",
+        "needs_review",
+        "image_failed",
+        "schedule_failed",
+        "dry_run"
+      ]
+    },
+    "functions": {
+      "generateContent": {
+        "file": "src/generateContent.js",
+        "signature": "generateContent({ date, plan, insights, topicSuggestions }) => Promise<{ posts, flagged }>",
+        "api": "Claude Messages API (streaming), model claude-opus-5-5, adaptive thinking, output_config.format = JSON schema, server-side refusal fallback, cached system prompt",
+        "request_example": {
+          "model": "claude-opus-5-5",
+          "max_tokens": 48000,
+          "betas": [
+            "server-side-fallback-2026-07-01"
+          ],
+          "fallbacks": "default",
+          "thinking": {
+            "type": "adaptive"
+          },
+          "output_config": {
+            "effort": "medium",
+            "format": {
+              "type": "json_schema",
+              "schema": "<dailyBatchJsonSchema>"
+            }
+          },
+          "system": [
+            {
+              "type": "text",
+              "text": "<SYSTEM_PROMPT>",
+              "cache_control": {
+                "type": "ephemeral"
+              }
+            }
+          ],
+          "messages": [
+            {
+              "role": "user",
+              "content": "Create Dr. Halima's daily batch for 2026-10-02 ... SLOT PLAN ..."
+            }
+          ]
+        }
+      },
+      "generateImage": {
+        "file": "src/generateImage.js",
+        "signature": "generateImage({ prompt, postType, fileName }) => Promise<{ path, url }>",
+        "api": "OpenAI Images API, model gpt-image-1 (b64 output) → saved PNG → Cloudinary URL",
+        "request_example": {
+          "model": "gpt-image-1",
+          "prompt": "<visual_prompt> + style guard",
+          "size": "1024x1536",
+          "quality": "high",
+          "n": 1
+        },
+        "sizes": {
+          "reel": "1024x1536",
+          "carousel": "1024x1536",
+          "image": "1024x1024"
+        }
+      },
+      "postToBuffer": {
+        "file": "src/buffer.js",
+        "signature": "postToBuffer(post, { scheduledAt, mediaUrls, videoUrl, now }) => Promise<{ profile_id, update_id }[]>",
+        "api": "POST https://api.bufferapp.com/1/updates/create.json (form-encoded)",
+        "request_example": {
+          "profile_ids[]": [
+            "<BUFFER_PROFILE_ID>"
+          ],
+          "text": "<hook>\n\n<caption>\n\n<hashtags>",
+          "media[photo]": "https://res.cloudinary.com/<cloud>/image/upload/dr-halima/2026-10-02-1-cover.png",
+          "scheduled_at": "2026-10-02T04:00:00.000Z",
+          "shorten": "false"
+        }
+      },
+      "scheduler": {
+        "file": "src/schedulePosts.js",
+        "signature": "schedulePosts(date, posts, { dryRun }) / publishDueSlot(slot) / startSlotCrons()"
+      }
+    },
+    "scheduler": {
+      "timezone": "Asia/Dhaka",
+      "slots": {
+        "slot1": "10:00",
+        "slot2": "13:00",
+        "slot3": "16:00",
+        "slot4": "19:00",
+        "slot5": "22:00"
+      },
+      "cron_jobs": [
+        {
+          "name": "daily-generate",
+          "cron": "15 6 * * *",
+          "action": "runDaily(): plan → generate → images → queue on Buffer"
+        },
+        {
+          "name": "watchdog-slot1",
+          "cron": "2 10 * * *",
+          "action": "publishDueSlot(\"slot1\"): publish now if not queued; alert if empty"
+        },
+        {
+          "name": "watchdog-slot2",
+          "cron": "2 13 * * *",
+          "action": "publishDueSlot(\"slot2\"): publish now if not queued; alert if empty"
+        },
+        {
+          "name": "watchdog-slot3",
+          "cron": "2 16 * * *",
+          "action": "publishDueSlot(\"slot3\"): publish now if not queued; alert if empty"
+        },
+        {
+          "name": "watchdog-slot4",
+          "cron": "2 19 * * *",
+          "action": "publishDueSlot(\"slot4\"): publish now if not queued; alert if empty"
+        },
+        {
+          "name": "watchdog-slot5",
+          "cron": "2 22 * * *",
+          "action": "publishDueSlot(\"slot5\"): publish now if not queued; alert if empty"
+        },
+        {
+          "name": "engagement-sync",
+          "cron": "30 23 * * *",
+          "action": "syncEngagement(): Buffer stats → performance records"
+        }
+      ],
+      "reels": "REELS_MODE=await_video holds reels until `attach-video <postId> <url>`; REELS_MODE=cover_image posts the cover image as a teaser."
+    },
+    "storage": {
+      "engine": "JSON file (data/db.json), atomic writes; swap-in interface for Postgres/Mongo",
+      "collections": {
+        "posts": "daily_batch item + { date, status, scheduled_at, images[], image_urls[], video_url, buffer_updates[{profile_id, update_id}], metrics, safety_issues, last_error }",
+        "performance": "{ post_id, likes, comments, shares, saves, engagement_score }",
+        "runs": "{ date, ok, dryRun, results, error, ms, at }"
+      },
+      "files": {
+        "batches": "content/<date>.json",
+        "media": "data/media/<postId>-cover.png",
+        "logs": "logs/<date>.log (JSON lines)"
+      }
+    },
+    "error_handling": {
+      "retries": "Exponential backoff + jitter for 408/409/429/5xx/network (utils/retry.js); SDK-level retries for Claude (3) and OpenAI (2); no retry on 400/401 or image content-policy rejections",
+      "generation": "Up to 3 Claude attempts; format or safety issues are sent back for a targeted rewrite of only the failing posts; refusals use the server-side fallback model",
+      "idempotency": "Each step records status per post; re-running a date resumes where it failed and never double-posts",
+      "logging": "Structured JSON lines to stdout + logs/<date>.log with scope, message and metadata",
+      "alerts": "sendAlert() → ALERT_WEBHOOK_URL on: daily run failure, image failure, Buffer failure, empty slot, post held for compliance, engagement sync failure, unhandled errors",
+      "compliance_gate": "Posts failing checks are status needs_review and never auto-published. Disclaimer enforced: \"This is for educational purposes only. Consult a qualified doctor for personal medical advice.\""
+    },
+    "environment_variables": {
+      "ANTHROPIC_API_KEY": "sk-ant-...",
+      "CLAUDE_MODEL": "claude-opus-5-5",
+      "CLAUDE_EFFORT": "high",
+      "OPENAI_API_KEY": "sk-...",
+      "OPENAI_IMAGE_MODEL": "gpt-image-1",
+      "OPENAI_IMAGE_QUALITY": "high",
+      "CAROUSEL_SLIDE_IMAGES": "false",
+      "MEDIA_HOST": "cloudinary",
+      "CLOUDINARY_CLOUD_NAME": "<required>",
+      "CLOUDINARY_UPLOAD_PRESET": "<required>",
+      "PUBLIC_MEDIA_BASE_URL": "<required>",
+      "BUFFER_ACCESS_TOKEN": "<required>",
+      "BUFFER_PROFILE_IDS": "<required>",
+      "BUFFER_API_BASE": "https://api.bufferapp.com/1",
+      "REELS_MODE": "await_video",
+      "TIMEZONE": "Asia/Dhaka",
+      "POST_TIMES": "10:00,13:00,16:00,19:00,22:00",
+      "GENERATE_CRON": "15 6 * * *",
+      "ENGAGEMENT_CRON": "30 23 * * *",
+      "ALERT_WEBHOOK_URL": "<required>",
+      "DATA_DIR": "./data",
+      "LOG_LEVEL": "info"
+    },
+    "project_structure": [
+      "content/<date>.json — daily_batch",
+      "deliverables/<date>.json — this document",
+      "src/config.js · src/logger.js · src/alerts.js · src/db.js",
+      "src/schema.js — zod + JSON schema for the batch and performance records",
+      "src/prompts.js · src/topicBank.js · src/safety.js",
+      "src/generateContent.js · src/generateImage.js · src/mediaHost.js · src/buffer.js",
+      "src/schedulePosts.js · src/engagement.js · src/pipeline.js · src/index.js",
+      "test/*.test.js"
+    ],
+    "commands": {
+      "npm start": "long-running scheduler (all crons)",
+      "node src/index.js run [--date=] [--dry-run] [--skip-images]": "one daily run",
+      "node src/index.js import content/2026-10-02.json": "schedule a pre-written batch",
+      "node src/index.js attach-video <postId> <url>": "release a held reel",
+      "node src/index.js insights": "learned patterns + tomorrow's plan",
+      "node src/index.js deliverable": "rebuild this JSON"
+    },
+    "scaling": [
+      "Storage: move db.js to Postgres (posts, performance, runs tables; JSONB for batch items).",
+      "Queue: run image rendering and Buffer calls as BullMQ/SQS jobs so slow APIs don't block the daily run.",
+      "Multi-brand: key everything by brand_id; one config + topic bank + Buffer profile set per brand.",
+      "Cost: use the Message Batches API to pre-generate a week of batches overnight at 50% cost; keep the system prompt cached.",
+      "Video: plug a text-to-video or template renderer (e.g. Remotion) into the reel step and set video_url automatically.",
+      "Observability: ship logs/*.log to a log platform; alert on runs.ok=false and on slot gaps."
+    ],
+    "sample_code": {
+      "src/generateContent.js": "import Anthropic from \"@anthropic-ai/sdk\";\nimport { config, requireEnv } from \"./config.js\";\nimport { createLogger, errorMeta } from \"./logger.js\";\nimport { DailyBatchSchema, dailyBatchJsonSchema, slotIndex } from \"./schema.js\";\nimport { SYSTEM_PROMPT, buildUserPrompt, buildRevisionPrompt } from \"./prompts.js\";\nimport { checkPostSafety, enforceCaptionRules } from \"./safety.js\";\n\nconst log = createLogger(\"generateContent\");\n\nlet client;\nfunction getClient() {\n  requireEnv(\"ANTHROPIC_API_KEY\");\n  client ??= new Anthropic({ maxRetries: 3, timeout: 10 * 60 * 1000 });\n  return client;\n}\n\n/**\n * One Claude call. Streaming avoids HTTP timeouts on long structured outputs;\n * `fallbacks: \"default\"` re-runs a safety-classifier decline on Anthropic's\n * recommended fallback model inside the same request.\n */\nasync function callClaude(messages) {\n  const stream = getClient().beta.messages.stream({\n    model: config.claude.model,\n    max_tokens: 48000,\n    betas: [\"server-side-fallback-2026-07-01\"],\n    fallbacks: \"default\",\n    thinking: { type: \"adaptive\" },\n    output_config: {\n      effort: config.claude.effort,\n      format: { type: \"json_schema\", schema: dailyBatchJsonSchema },\n    },\n    system: [{ type: \"text\", text: SYSTEM_PROMPT, cache_control: { type: \"ephemeral\" } }],\n    messages,\n  });\n  const message = await stream.finalMessage();\n\n  if (message.stop_reason === \"refusal\") {\n    throw new Error(`Claude declined the request (${message.stop_details?.category ?? \"unknown category\"})`);\n  }\n  if (message.stop_reason === \"max_tokens\") {\n    throw new Error(\"Claude output hit max_tokens before the JSON was complete\");\n  }\n\n  const text = message.content.filter((b) => b.type === \"text\").map((b) => b.text).join(\"\");\n  log.info(\"Claude response received\", {\n    model: message.model,\n    input_tokens: message.usage.input_tokens,\n    output_tokens: message.usage.output_tokens,\n    cache_read_input_tokens: message.usage.cache_read_input_tokens,\n  });\n  return { message, text };\n}\n\n/** Parse + validate; returns { batch, problems } where problems are per-post format issues. */\nfunction parseBatch(text, plan) {\n  const raw = JSON.parse(text);\n  const result = DailyBatchSchema.safeParse(raw);\n  const problems = {};\n  if (!result.success) {\n    for (const issue of result.error.issues) {\n      const id = raw.daily_batch?.[issue.path[1]]?.id ?? \"batch\";\n      (problems[id] ??= []).push(`${issue.path.slice(2).join(\".\") || \"post\"}: ${issue.message}`);\n    }\n  }\n  // The decision system fixed type / pillar / hook / goal per slot — enforce it.\n  for (const post of raw.daily_batch ?? []) {\n    const slot = plan.find((s) => s.scheduled_slot === post.scheduled_slot);\n    if (!slot) continue;\n    for (const key of [\"post_type\", \"content_pillar\", \"hook_pattern\", \"content_goal\"]) {\n      if (post[key] !== slot[key]) (problems[post.id] ??= []).push(`${key} must be \"${slot[key]}\"`);\n    }\n  }\n  return { batch: raw, valid: result.success && !Object.keys(problems).length, problems };\n}\n\nfunction safetyIssues(posts) {\n  const issues = {};\n  for (const post of posts) {\n    const found = checkPostSafety(post);\n    if (found.length) issues[post.id] = found;\n  }\n  return issues;\n}\n\n/**\n * Generate the day's 5 posts with Claude (STEP 2 topic + all copy), following the\n * slot plan the learning system chose (STEP 1, 3, 4).\n * @returns {Promise<{ posts: object[], flagged: Record<string, string[]> }>}\n */\nexport async function generateContent({ date, plan, insights, topicSuggestions }) {\n  const messages = [{ role: \"user\", content: buildUserPrompt({ date, plan, insights, topicSuggestions }) }];\n  log.info(\"Generating content\", { date, plan });\n\n  let parsed;\n  let lastMessage;\n  for (let attempt = 1; attempt <= 3; attempt++) {\n    let text;\n    try {\n      ({ message: lastMessage, text } = await callClaude(messages));\n    } catch (err) {\n      log.error(\"Claude call failed\", { attempt, ...errorMeta(err) });\n      if (attempt === 3 || err instanceof Anthropic.AuthenticationError || err instanceof Anthropic.BadRequestError) throw err;\n      continue;\n    }\n    parsed = parseBatch(text, plan);\n    const issues = { ...parsed.problems };\n    for (const [id, list] of Object.entries(safetyIssues(parsed.batch.daily_batch ?? []))) (issues[id] ??= []).push(...list);\n    if (!Object.keys(issues).length) break;\n\n    log.warn(\"Batch needs revision\", { attempt, issues });\n    if (attempt === 3) break;\n    // Append the full response (append-only history keeps thinking blocks valid), then ask for fixes.\n    messages.push({ role: \"assistant\", content: lastMessage.content });\n    messages.push({ role: \"user\", content: buildRevisionPrompt(issues) });\n  }\n\n  if (!parsed?.batch?.daily_batch?.length) throw new Error(\"Claude returned no usable batch\");\n  if (!parsed.valid) {\n    throw new Error(`Batch still invalid after revisions: ${JSON.stringify(parsed.problems)}`);\n  }\n\n  const posts = parsed.batch.daily_batch\n    .map((p) => ({ ...enforceCaptionRules(p), id: `${date}-${slotIndex(p.scheduled_slot) + 1}` }))\n    .sort((a, b) => slotIndex(a.scheduled_slot) - slotIndex(b.scheduled_slot));\n  return { posts, flagged: safetyIssues(posts) };\n}\n",
+      "src/generateImage.js": "import fs from \"node:fs/promises\";\nimport path from \"node:path\";\nimport OpenAI from \"openai\";\nimport { config, requireEnv } from \"./config.js\";\nimport { createLogger, errorMeta } from \"./logger.js\";\nimport { withRetry } from \"./utils/retry.js\";\nimport { publishMedia } from \"./mediaHost.js\";\n\nconst log = createLogger(\"generateImage\");\n\n// gpt-image-1 supports 1024x1024, 1024x1536 (portrait) and 1536x1024.\nconst SIZE_BY_TYPE = { reel: \"1024x1536\", carousel: \"1024x1536\", image: \"1024x1024\" };\n\nconst STYLE_GUARD =\n  \"Style: clean medical-education aesthetic, soft pastel colours, modern minimal, respectful fully clothed women. \" +\n  \"Strictly avoid: explicit or clinical imagery, anatomy, blood, needles, nudity, logos, watermarks.\";\n\nlet client;\nfunction getClient() {\n  requireEnv(\"OPENAI_API_KEY\");\n  client ??= new OpenAI({ maxRetries: 2, timeout: 180_000 });\n  return client;\n}\n\n/**\n * Generate one image with gpt-image-1 from a visual_prompt, save it locally and\n * publish it to the media host.\n * @returns {Promise<{ path: string, url: string }>}  local file + public image URL\n */\nexport async function generateImage({ prompt, postType = \"image\", fileName }) {\n  const size = SIZE_BY_TYPE[postType] ?? \"1024x1024\";\n  const outPath = path.join(config.paths.media, fileName);\n\n  const response = await withRetry(\n    () =>\n      getClient().images.generate({\n        model: config.openai.imageModel,\n        prompt: `${prompt}\\n\\n${STYLE_GUARD}`,\n        size,\n        quality: config.openai.quality,\n        n: 1,\n      }),\n    {\n      label: `gpt-image-1 ${fileName}`,\n      // Content-policy rejections and bad requests will not succeed on retry.\n      shouldRetry: (err) => !(err instanceof OpenAI.BadRequestError || err instanceof OpenAI.AuthenticationError),\n    },\n  );\n\n  const b64 = response.data?.[0]?.b64_json;\n  if (!b64) throw new Error(`No image returned for ${fileName}`);\n  await fs.mkdir(config.paths.media, { recursive: true });\n  await fs.writeFile(outPath, Buffer.from(b64, \"base64\"));\n  const url = await publishMedia(outPath);\n  log.info(\"Image generated\", { fileName, size, url, usage: response.usage });\n  return { path: outPath, url };\n}\n\n/** Prompt for a text-on-design carousel slide, consistent with the cover's brand look. */\nexport function slidePrompt(slide) {\n  return (\n    `Instagram carousel slide, portrait 4:5, soft pastel women's-health brand, clean medical, soft lighting, minimal, modern. ` +\n    `Render this text clearly and legibly in a clean rounded sans-serif, generous spacing:\\n` +\n    `Headline: \"\"\"${slide.headline}\"\"\"\\nBody: \"\"\"${slide.body}\"\"\"\\n` +\n    `Design direction: ${slide.visual_direction}`\n  );\n}\n\n/**\n * All visuals for a post: a cover for every post, plus (optionally) one image per\n * carousel slide after the cover.\n * @returns {Promise<{ images: string[], image_urls: string[] }>}\n */\nexport async function generatePostImages(post) {\n  const results = [];\n  try {\n    results.push(await generateImage({ prompt: post.visual_prompt, postType: post.post_type, fileName: `${post.id}-cover.png` }));\n    if (post.post_type === \"carousel\" && config.openai.carouselSlideImages) {\n      for (const slide of post.carousel_slides.slice(1)) {\n        results.push(await generateImage({ prompt: slidePrompt(slide), postType: \"carousel\", fileName: `${post.id}-slide${slide.slide_number}.png` }));\n      }\n    }\n  } catch (err) {\n    log.error(\"Image generation failed\", { postId: post.id, ...errorMeta(err) });\n    throw err;\n  }\n  return { images: results.map((r) => r.path), image_urls: results.map((r) => r.url) };\n}\n",
+      "src/mediaHost.js": "import fs from \"node:fs/promises\";\nimport path from \"node:path\";\nimport { config } from \"./config.js\";\nimport { createLogger } from \"./logger.js\";\nimport { withRetry } from \"./utils/retry.js\";\n\nconst log = createLogger(\"mediaHost\");\n\n/**\n * Buffer only accepts media by public URL. Upload a local file and return its URL.\n * - cloudinary: unsigned upload preset (https://cloudinary.com/documentation/upload_images#unsigned_upload)\n * - static: you sync data/media to a CDN/bucket served at PUBLIC_MEDIA_BASE_URL\n */\nexport async function publishMedia(filePath) {\n  const { host, cloudinaryCloud, cloudinaryPreset, publicBaseUrl } = config.media;\n\n  if (host === \"static\") {\n    if (!publicBaseUrl) throw new Error(\"PUBLIC_MEDIA_BASE_URL is required when MEDIA_HOST=static\");\n    return `${publicBaseUrl.replace(/\\/$/, \"\")}/${path.basename(filePath)}`;\n  }\n\n  if (!cloudinaryCloud || !cloudinaryPreset) {\n    throw new Error(\"CLOUDINARY_CLOUD_NAME and CLOUDINARY_UPLOAD_PRESET are required when MEDIA_HOST=cloudinary\");\n  }\n  const data = await fs.readFile(filePath);\n  const form = new FormData();\n  form.append(\"file\", new Blob([data], { type: \"image/png\" }), path.basename(filePath));\n  form.append(\"upload_preset\", cloudinaryPreset);\n  form.append(\"folder\", \"dr-halima\");\n\n  const json = await withRetry(\n    async () => {\n      const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudinaryCloud}/image/upload`, { method: \"POST\", body: form });\n      const body = await res.json();\n      if (!res.ok) throw Object.assign(new Error(`Cloudinary upload failed: ${body?.error?.message ?? res.statusText}`), { status: res.status });\n      return body;\n    },\n    { label: `cloudinary ${path.basename(filePath)}` },\n  );\n  log.info(\"Media uploaded\", { file: path.basename(filePath), url: json.secure_url });\n  return json.secure_url;\n}\n",
+      "src/buffer.js": "import { config, requireEnv } from \"./config.js\";\nimport { createLogger } from \"./logger.js\";\nimport { withRetry } from \"./utils/retry.js\";\nimport { DISCLAIMER } from \"./safety.js\";\n\nconst log = createLogger(\"buffer\");\nconst INSTAGRAM_CAPTION_LIMIT = 2200;\n\n/**\n * Thin client for Buffer's REST API (v1: https://api.bufferapp.com/1).\n * Endpoints used:\n *   POST /updates/create.json   – queue/schedule a post on one or more profiles\n *   GET  /updates/:id.json      – read a sent update incl. `statistics`\n *   GET  /profiles.json         – list connected channels (to find profile IDs)\n * If your Buffer account is on the newer GraphQL API, re-implement these three\n * functions; the rest of the system only depends on their return shapes.\n */\nasync function bufferRequest(method, endpoint, params = {}) {\n  requireEnv(\"BUFFER_ACCESS_TOKEN\");\n  const url = new URL(`${config.buffer.apiBase}${endpoint}`);\n  url.searchParams.set(\"access_token\", config.buffer.accessToken);\n\n  const init = { method, headers: { Accept: \"application/json\" } };\n  if (method === \"POST\") {\n    const body = new URLSearchParams();\n    for (const [key, value] of Object.entries(params)) {\n      for (const v of Array.isArray(value) ? value : [value]) if (v !== undefined && v !== null) body.append(key, String(v));\n    }\n    init.body = body;\n    init.headers[\"Content-Type\"] = \"application/x-www-form-urlencoded\";\n  }\n\n  return withRetry(\n    async () => {\n      const res = await fetch(url, init);\n      const json = await res.json().catch(() => ({}));\n      if (!res.ok || json.success === false) {\n        const err = new Error(`Buffer ${method} ${endpoint} failed (${res.status}): ${json.message ?? json.error ?? res.statusText}`);\n        err.status = res.status;\n        throw err;\n      }\n      return json;\n    },\n    { label: `buffer ${endpoint}` },\n  );\n}\n\nexport function buildPostText(post) {\n  const tags = post.hashtags.join(\" \");\n  const full = `${post.hook_english}\\n\\n${post.caption}\\n\\n${tags}`;\n  if (full.length <= INSTAGRAM_CAPTION_LIMIT) return full;\n  // Drop the duplicated hook, then trim the body while keeping the disclaimer + hashtags at the end.\n  const tail = `\\n\\n${DISCLAIMER}\\n\\n${tags}`;\n  const body = post.caption.replace(DISCLAIMER, \"\").trim();\n  return body.slice(0, INSTAGRAM_CAPTION_LIMIT - tail.length - 1) + \"…\" + tail;\n}\n\n/**\n * Schedule one post on all configured Buffer profiles.\n * @param {object} post      stored post record\n * @param {object} opts\n * @param {Date}   opts.scheduledAt  UTC publish time\n * @param {string[]} opts.mediaUrls  public URLs (first = cover)\n * @param {string} [opts.videoUrl]   public video URL for reels\n * @returns {Promise<{ profile_id: string, update_id: string }[]>}\n */\nexport async function postToBuffer(post, { scheduledAt, mediaUrls = [], videoUrl, now = false }) {\n  const profileIds = config.buffer.profileIds;\n  if (!profileIds.length) throw new Error(\"BUFFER_PROFILE_IDS is empty\");\n\n  const params = {\n    \"profile_ids[]\": profileIds,\n    text: buildPostText(post),\n    shorten: \"false\",\n    ...(now ? { now: \"true\" } : { scheduled_at: scheduledAt.toISOString() }),\n  };\n  if (videoUrl) {\n    params[\"media[video]\"] = videoUrl;\n    if (mediaUrls[0]) params[\"media[thumbnail]\"] = mediaUrls[0];\n  } else if (mediaUrls[0]) {\n    params[\"media[photo]\"] = mediaUrls[0];\n    params[\"media[thumbnail]\"] = mediaUrls[0];\n    // Additional carousel images.\n    mediaUrls.slice(1).forEach((url, i) => {\n      params[`extra_media[${i}][photo]`] = url;\n      params[`extra_media[${i}][thumbnail]`] = url;\n    });\n  }\n\n  const json = await bufferRequest(\"POST\", \"/updates/create.json\", params);\n  const updates = (json.updates ?? []).map((u) => ({ profile_id: u.profile_id, update_id: u.id }));\n  log.info(now ? \"Published via Buffer\" : \"Scheduled on Buffer\", { postId: post.id, scheduledAt: scheduledAt?.toISOString(), updates });\n  return updates;\n}\n\n/** Fetch engagement stats for a sent update, normalised across networks. */\nexport async function getUpdateStats(updateId) {\n  const update = await bufferRequest(\"GET\", `/updates/${updateId}.json`);\n  const s = update.statistics ?? {};\n  return {\n    status: update.status,\n    likes: s.likes ?? s.favorites ?? s.reactions ?? 0,\n    comments: s.comments ?? s.replies ?? 0,\n    shares: s.shares ?? s.retweets ?? s.reshares ?? 0,\n    saves: s.saves ?? 0,\n    clicks: s.clicks ?? 0,\n    reach: s.reach ?? s.impressions ?? 0,\n  };\n}\n\nexport async function listProfiles() {\n  return bufferRequest(\"GET\", \"/profiles.json\");\n}\n",
+      "src/schedulePosts.js": "import cron from \"node-cron\";\nimport { config } from \"./config.js\";\nimport { getPostsByDate, updatePost } from \"./db.js\";\nimport { postToBuffer } from \"./buffer.js\";\nimport { sendAlert } from \"./alerts.js\";\nimport { createLogger, errorMeta } from \"./logger.js\";\nimport { SLOTS, slotIndex } from \"./schema.js\";\nimport { slotToUtc, todayIn } from \"./utils/time.js\";\n\nconst log = createLogger(\"schedulePosts\");\n\nconst SCHEDULABLE = new Set([\"images_ready\", \"schedule_failed\", \"dry_run\"]);\n\nexport function slotTime(slot, postTimes = config.schedule.postTimes) {\n  const time = postTimes[slotIndex(slot)];\n  if (!time) throw new Error(`No time configured for ${slot}`);\n  return time;\n}\n\n/** Map posts onto their slots (slot1 → 10:00 … slot5 → 22:00, Asia/Dhaka by default). */\nexport function assignSlots(date, posts, { postTimes = config.schedule.postTimes, timezone = config.schedule.timezone } = {}) {\n  return [...posts]\n    .sort((a, b) => slotIndex(a.scheduled_slot) - slotIndex(b.scheduled_slot))\n    .map((post) => {\n      const time = slotTime(post.scheduled_slot, postTimes);\n      return { post, time, scheduledAt: slotToUtc(date, time, timezone) };\n    });\n}\n\n/** Send one post to Buffer, either queued for its slot or published immediately (`now`). */\nexport async function scheduleOne(post, scheduledAt, { dryRun = false, now = false } = {}) {\n  const isReel = post.post_type === \"reel\";\n  if (isReel && !post.video_url && config.buffer.reelsMode === \"await_video\") {\n    log.info(\"Reel held until a video is attached\", { postId: post.id });\n    return updatePost(post.id, { status: \"awaiting_video\", scheduled_at: scheduledAt.toISOString() });\n  }\n  if (dryRun) {\n    log.info(\"[dry-run] would schedule\", { postId: post.id, scheduledAt: scheduledAt.toISOString(), images: post.image_urls?.length ?? 0 });\n    return updatePost(post.id, { status: \"dry_run\", scheduled_at: scheduledAt.toISOString() });\n  }\n  const bufferUpdates = await postToBuffer(post, {\n    scheduledAt,\n    now,\n    mediaUrls: post.image_urls ?? [],\n    videoUrl: isReel ? post.video_url : undefined,\n  });\n  return updatePost(post.id, { status: \"scheduled\", scheduled_at: scheduledAt.toISOString(), buffer_updates: bufferUpdates });\n}\n\n/**\n * Morning pass: queue all of the day's posts on Buffer for their slots.\n * Flagged posts, already-scheduled posts and passed slots are skipped.\n */\nexport async function schedulePosts(date, posts, { dryRun = false, now = new Date() } = {}) {\n  const results = [];\n  for (const { post, time, scheduledAt } of assignSlots(date, posts)) {\n    const result = { id: post.id, slot: post.scheduled_slot, time };\n    if (!SCHEDULABLE.has(post.status)) {\n      results.push({ ...result, status: post.status });\n      continue;\n    }\n    if (scheduledAt <= now) {\n      // The slot cron below will publish it immediately if it is still within its slot.\n      results.push({ ...result, status: \"slot_passed\" });\n      continue;\n    }\n    try {\n      const saved = await scheduleOne(post, scheduledAt, { dryRun });\n      results.push({ ...result, status: saved.status });\n    } catch (err) {\n      log.error(\"Failed to schedule post\", { postId: post.id, ...errorMeta(err) });\n      updatePost(post.id, { status: \"schedule_failed\", last_error: err.message });\n      await sendAlert(\"Buffer scheduling failed\", { post: post.id, slot: post.scheduled_slot, error: err.message });\n      results.push({ ...result, status: \"schedule_failed\" });\n    }\n  }\n  return results;\n}\n\n/**\n * Slot watchdog — runs at each slot time (10:00, 13:00, 16:00, 19:00, 22:00).\n * Guarantees 5 posts/day: if the slot's post never reached Buffer (late generation,\n * earlier failure, reel video attached late), publish it now; otherwise alert.\n */\nexport async function publishDueSlot(slot, { date = todayIn(config.schedule.timezone), now = new Date() } = {}) {\n  const post = getPostsByDate(date).find((p) => p.scheduled_slot === slot);\n  if (!post) return sendAlert(\"No post for slot\", { date, slot });\n  if (post.status === \"scheduled\" || post.status === \"published\") return log.info(\"Slot already covered\", { postId: post.id, slot });\n  if (!SCHEDULABLE.has(post.status) && !(post.status === \"awaiting_video\" && post.video_url)) {\n    return sendAlert(\"Slot will be empty\", { post: post.id, slot, status: post.status, error: post.last_error ?? \"-\" });\n  }\n  try {\n    await scheduleOne(post, now, { now: true });\n    log.info(\"Published at slot time\", { postId: post.id, slot });\n  } catch (err) {\n    updatePost(post.id, { status: \"schedule_failed\", last_error: err.message });\n    await sendAlert(\"Slot publish failed\", { post: post.id, slot, error: err.message });\n  }\n}\n\n/** Register one cron job per slot in the brand timezone. */\nexport function startSlotCrons({ postTimes = config.schedule.postTimes, timezone = config.schedule.timezone } = {}) {\n  return SLOTS.map((slot, i) => {\n    const [hour, minute] = postTimes[i].split(\":\").map(Number);\n    // +2 minutes so Buffer's own scheduled send has a chance to go first.\n    return cron.schedule(`${(minute + 2) % 60} ${minute + 2 >= 60 ? hour + 1 : hour} * * *`, () => publishDueSlot(slot), { timezone });\n  });\n}\n",
+      "src/engagement.js": "import { DateTime } from \"luxon\";\nimport { getAllPosts, getPerformance, updatePost, upsertPerformance } from \"./db.js\";\nimport { getUpdateStats } from \"./buffer.js\";\nimport { PILLARS, PILLAR_ALIASES, HOOK_PATTERNS, CONTENT_GOALS, SLOTS, PerformanceRecordSchema } from \"./schema.js\";\nimport { TOPIC_BANK } from \"./topicBank.js\";\nimport { config } from \"./config.js\";\nimport { createLogger, errorMeta } from \"./logger.js\";\n\nconst log = createLogger(\"engagement\");\n\nexport const LEARNING = {\n  weights: { likes: 1, comments: 3, shares: 4, saves: 4 }, // shares/saves signal trust + reach most\n  smoothingK: 3, // Bayesian prior: small samples are pulled toward the average (1.0)\n  winThreshold: 1.3, // ≥ 1.3× median engagement = winner\n  loseThreshold: 0.6, // ≤ 0.6× median = loser\n  topicCooldownDays: 45,\n  hookCooldownDays: 21,\n  recencyBonusPerDay: 0.15, // pillar rotation pressure, capped at 7 days\n  temperature: 1.5, // >1 sharpens toward winners, <1 explores more\n  reelSlots: [\"slot2\", \"slot4\"],\n};\n\nconst HOOK_ALIASES = { Relatable: \"Relatability\", \"Warning (non-alarmist)\": \"Gentle warning\" };\nconst canonicalPillar = (p) => PILLAR_ALIASES[p] ?? p;\nconst canonicalHook = (h) => HOOK_ALIASES[h] ?? h;\n\n/** engagement_score: weighted interactions per 1,000 reach (raw weighted sum when reach is unknown). */\nexport function engagementScore(m, reach = 0) {\n  const weighted = Object.entries(LEARNING.weights).reduce((sum, [k, w]) => sum + (m[k] ?? 0) * w, 0);\n  return reach > 0 ? +((weighted / reach) * 1000).toFixed(2) : weighted;\n}\n\n/** Build the performance feedback record in the canonical format. */\nexport function toPerformanceRecord(postId, totals) {\n  return PerformanceRecordSchema.parse({\n    post_id: postId,\n    likes: totals.likes,\n    comments: totals.comments,\n    shares: totals.shares,\n    saves: totals.saves,\n    engagement_score: engagementScore(totals, totals.reach),\n  });\n}\n\n/** Pull Buffer stats for posts published 1–14 days ago and refresh their performance records. */\nexport async function syncEngagement({ now = DateTime.utc() } = {}) {\n  const candidates = getAllPosts().filter((p) => {\n    if (!p.scheduled_at || !p.buffer_updates?.length) return false;\n    const age = now.diff(DateTime.fromISO(p.scheduled_at), \"days\").days;\n    return age >= 1 && age <= 14;\n  });\n  log.info(\"Syncing engagement\", { posts: candidates.length });\n\n  for (const post of candidates) {\n    try {\n      const stats = [];\n      for (const { update_id } of post.buffer_updates) stats.push(await getUpdateStats(update_id));\n      const totals = { likes: 0, comments: 0, shares: 0, saves: 0, clicks: 0, reach: 0 };\n      for (const s of stats) for (const k of Object.keys(totals)) totals[k] += s[k] ?? 0;\n      upsertPerformance(toPerformanceRecord(post.id, totals));\n      updatePost(post.id, {\n        metrics: { ...totals, updated_at: now.toISO() },\n        status: stats.some((s) => s.status === \"sent\") ? \"published\" : post.status,\n      });\n    } catch (err) {\n      log.error(\"Failed to sync post\", { postId: post.id, ...errorMeta(err) });\n    }\n  }\n}\n\nfunction median(values) {\n  if (!values.length) return 0;\n  const s = [...values].sort((a, b) => a - b);\n  const mid = Math.floor(s.length / 2);\n  return s.length % 2 ? s[mid] : (s[mid - 1] + s[mid]) / 2;\n}\n\nfunction groupPerformance(scored, key) {\n  const groups = {};\n  for (const p of scored) (groups[p[key]] ??= []).push(p.perf);\n  return Object.fromEntries(\n    Object.entries(groups).map(([k, perfs]) => [\n      k,\n      { n: perfs.length, score: +((perfs.reduce((a, b) => a + b, 0) + LEARNING.smoothingK) / (perfs.length + LEARNING.smoothingK)).toFixed(2) },\n    ]),\n  );\n}\n\n/**\n * Turn history + performance records into guidance for the next run.\n * Pure function → deterministic and unit-testable.\n */\nexport function computeInsights(posts, performance, { now = DateTime.utc() } = {}) {\n  const daysAgo = (p) => now.diff(DateTime.fromISO(p.date, { zone: \"utc\" }), \"days\").days;\n  const perfById = Object.fromEntries(performance.map((r) => [r.post_id, r.engagement_score]));\n  const norm = posts.map((p) => ({\n    ...p,\n    content_pillar: canonicalPillar(p.content_pillar),\n    hook_pattern: canonicalHook(p.hook_pattern ?? p.hook_style),\n    content_goal: p.content_goal ?? \"unknown\",\n    scheduled_slot: p.scheduled_slot ?? (p.post_number ? `slot${p.post_number}` : \"unknown\"),\n  }));\n\n  const scored = norm.filter((p) => typeof perfById[p.id] === \"number\");\n  const med = median(scored.map((p) => perfById[p.id])) || 1;\n  for (const p of scored) p.perf = +(perfById[p.id] / med).toFixed(2);\n  const byPerf = [...scored].sort((a, b) => b.perf - a.perf);\n  const winners = byPerf.filter((p) => p.perf >= LEARNING.winThreshold);\n  const losers = byPerf.filter((p) => p.perf <= LEARNING.loseThreshold).reverse();\n  const topic = (p) => ({ pillar: p.content_pillar, topic: p.topic, score: p.perf });\n\n  const lastUsedPillar = {};\n  for (const pillar of PILLARS) {\n    const used = norm.filter((p) => p.content_pillar === pillar).map(daysAgo);\n    lastUsedPillar[pillar] = used.length ? Math.min(...used) : null; // null = never used\n  }\n\n  return {\n    sampleSize: scored.length,\n    medianScore: med,\n    winningTopics: winners.slice(0, 6).map(topic),\n    losingTopics: losers.slice(0, 6).map(topic),\n    winningHooks: winners.slice(0, 5).map((p) => ({ pattern: p.hook_pattern, hook: p.hook_english, score: p.perf })),\n    pillarPerformance: groupPerformance(scored, \"content_pillar\"),\n    formatPerformance: groupPerformance(scored, \"post_type\"),\n    hookPatternPerformance: groupPerformance(scored, \"hook_pattern\"),\n    goalPerformance: groupPerformance(scored, \"content_goal\"),\n    slotPerformance: groupPerformance(scored, \"scheduled_slot\"),\n    recentTopics: norm.filter((p) => daysAgo(p) <= LEARNING.topicCooldownDays).map((p) => p.topic),\n    recentHooks: norm.filter((p) => daysAgo(p) <= LEARNING.hookCooldownDays).map((p) => p.hook_english),\n    lastUsedPillar,\n  };\n}\n\n// ---------- decision system (STEP 1, 3, 4) ----------\n\n/** Small seeded PRNG so a given date always produces the same plan (reproducible runs). */\nexport function seededRandom(seedText) {\n  let h = 1779033703 ^ seedText.length;\n  for (const c of seedText) h = Math.imul(h ^ c.charCodeAt(0), 3432918353), (h = (h << 13) | (h >>> 19));\n  return () => {\n    h = Math.imul(h ^ (h >>> 16), 2246822507);\n    h = Math.imul(h ^ (h >>> 13), 3266489909);\n    return ((h ^= h >>> 16) >>> 0) / 4294967296;\n  };\n}\n\n/** Sample `count` distinct keys with probability ∝ weight^temperature. */\nfunction weightedSample(weights, count, rng) {\n  const pool = Object.entries(weights).map(([key, w]) => [key, Math.max(w, 0.01) ** LEARNING.temperature]);\n  const picked = [];\n  while (picked.length < count && pool.length) {\n    let r = rng() * pool.reduce((s, [, w]) => s + w, 0);\n    const i = pool.findIndex(([, w]) => (r -= w) <= 0);\n    picked.push(pool.splice(i === -1 ? pool.length - 1 : i, 1)[0][0]);\n  }\n  return picked;\n}\n\nconst score = (group, key) => group[key]?.score ?? 1;\n\nconst HOOK_AFFINITY = { \"Myth vs Fact\": \"Myth-breaking\", \"Warning/Awareness\": \"Gentle warning\", \"Emotional Support\": \"Reassurance\" };\nconst GOAL_AFFINITY = {\n  \"Emotional Support\": \"share-worthy\",\n  \"Myth vs Fact\": \"share-worthy\",\n  \"Warning/Awareness\": \"authority-building\",\n  Education: \"authority-building\",\n  \"Preventive Tips\": \"save-worthy\",\n  \"Pregnancy Guidance\": \"save-worthy\",\n  \"Hormonal/Period Health\": \"save-worthy\",\n};\n\n/**\n * Build today's slot plan: which pillar, format, hook pattern and goal goes in each slot.\n * Exploits winners (performance-weighted sampling) while forcing rotation and variety.\n */\nexport function planDay(insights, { date, postTimes = config.schedule.postTimes } = {}) {\n  const rng = seededRandom(date ?? \"seed\");\n\n  // STEP 1 — pillars: performance × rotation bonus, sampled without replacement.\n  const pillarWeights = Object.fromEntries(\n    PILLARS.map((pillar) => {\n      const days = insights.lastUsedPillar[pillar];\n      const recency = 1 + LEARNING.recencyBonusPerDay * Math.min(days ?? 7, 7);\n      return [pillar, score(insights.pillarPerformance, pillar) * recency];\n    }),\n  );\n  const pillars = weightedSample(pillarWeights, 5, rng);\n\n  // Emotional content performs best late; the strongest pillar takes a reel slot.\n  const order = [...pillars];\n  const late = order.indexOf(\"Emotional Support\");\n  if (late >= 0) order.push(order.splice(late, 1)[0]);\n\n  // Formats: 2 reels at fixed slots; other slots choose carousel vs image by performance.\n  const carouselShare = Math.min(0.85, Math.max(0.34, score(insights.formatPerformance, \"carousel\") / (score(insights.formatPerformance, \"carousel\") + score(insights.formatPerformance, \"image\"))));\n  const plan = SLOTS.map((slot, i) => ({\n    scheduled_slot: slot,\n    time: postTimes[i],\n    post_type: LEARNING.reelSlots.includes(slot) ? \"reel\" : rng() < carouselShare ? \"carousel\" : \"image\",\n  }));\n  if (!plan.some((s) => s.post_type === \"carousel\")) plan.find((s) => s.post_type === \"image\").post_type = \"carousel\";\n\n  // Put Emotional Support in slot5; fill reels first with the highest-weight remaining pillars.\n  const assigned = new Array(5);\n  if (late >= 0) assigned[4] = order.pop();\n  const reelIdx = plan.map((s, i) => (s.post_type === \"reel\" && !assigned[i] ? i : -1)).filter((i) => i >= 0);\n  const rest = [...order].sort((a, b) => pillarWeights[b] - pillarWeights[a]);\n  for (const i of reelIdx) assigned[i] = rest.shift();\n  for (let i = 0; i < 5; i++) assigned[i] ??= rest.shift();\n  plan.forEach((s, i) => (s.content_pillar = assigned[i]));\n\n  // STEP 3 — hook patterns: each used once; natural pillar affinities first, then by performance.\n  const hooksLeft = new Set(HOOK_PATTERNS);\n  for (const s of plan) {\n    const h = HOOK_AFFINITY[s.content_pillar];\n    if (h && hooksLeft.has(h)) (s.hook_pattern = h), hooksLeft.delete(h);\n  }\n  for (const s of plan.filter((p) => !p.hook_pattern)) {\n    const [h] = weightedSample(Object.fromEntries([...hooksLeft].map((k) => [k, score(insights.hookPatternPerformance, k)])), 1, rng);\n    s.hook_pattern = h;\n    hooksLeft.delete(h);\n  }\n\n  // STEP 4 — goals: pillar affinity, then guarantee every goal appears at least once.\n  for (const s of plan) s.content_goal = GOAL_AFFINITY[s.content_pillar];\n  for (const goal of CONTENT_GOALS) {\n    if (plan.some((s) => s.content_goal === goal)) continue;\n    const counts = Object.fromEntries(CONTENT_GOALS.map((g) => [g, plan.filter((s) => s.content_goal === g).length]));\n    const donor = plan\n      .filter((s) => counts[s.content_goal] > 1)\n      .sort((a, b) => score(insights.goalPerformance, a.content_goal) - score(insights.goalPerformance, b.content_goal))[0];\n    donor.content_goal = goal;\n  }\n  return plan;\n}\n\n/** STEP 2 helper: topic ideas per pillar minus anything recently used or low-performing. */\nexport function topicSuggestions(insights, plan, perPillar = 5) {\n  const blocked = [...insights.recentTopics, ...insights.losingTopics.map((t) => t.topic)].map((t) => t.toLowerCase());\n  const isBlocked = (t) => blocked.some((b) => b.includes(t.toLowerCase()) || t.toLowerCase().includes(b));\n  return Object.fromEntries(plan.map((s) => [s.content_pillar, (TOPIC_BANK[s.content_pillar] ?? []).filter((t) => !isBlocked(t)).slice(0, perPillar)]));\n}\n\nexport function currentInsights(now) {\n  return computeInsights(getAllPosts(), getPerformance(), { now });\n}\n",
+      "src/pipeline.js": "import fs from \"node:fs/promises\";\nimport path from \"node:path\";\nimport { config } from \"./config.js\";\nimport { createLogger, errorMeta } from \"./logger.js\";\nimport { getAllPosts, getPerformance, getPostsByDate, recordRun, updatePost, upsertPosts } from \"./db.js\";\nimport { computeInsights, planDay, topicSuggestions } from \"./engagement.js\";\nimport { generateContent } from \"./generateContent.js\";\nimport { generatePostImages } from \"./generateImage.js\";\nimport { schedulePosts } from \"./schedulePosts.js\";\nimport { DailyBatchSchema, PostSchema } from \"./schema.js\";\nimport { checkPostSafety } from \"./safety.js\";\nimport { sendAlert } from \"./alerts.js\";\nimport { todayIn } from \"./utils/time.js\";\n\nconst log = createLogger(\"pipeline\");\nconst BATCH_FIELDS = Object.keys(PostSchema.shape);\n\n/** Strip storage-only fields so content/<date>.json stays in the daily_batch format. */\nexport function toBatchItem(post) {\n  return Object.fromEntries(BATCH_FIELDS.map((k) => [k, post[k]]));\n}\n\nasync function writeBatchFile(date, posts) {\n  await fs.mkdir(config.paths.content, { recursive: true });\n  await fs.writeFile(path.join(config.paths.content, `${date}.json`), JSON.stringify({ daily_batch: posts.map(toBatchItem) }, null, 2));\n}\n\nasync function flagForReview(posts) {\n  for (const post of posts) {\n    const issues = checkPostSafety(post);\n    if (!issues.length) continue;\n    updatePost(post.id, { status: \"needs_review\", safety_issues: issues });\n    await sendAlert(\"Post held for medical-compliance review\", { post: post.id, issues });\n  }\n}\n\nasync function renderImages(posts) {\n  for (const post of posts) {\n    if (post.image_urls?.length) {\n      if (post.status === \"generated\") updatePost(post.id, { status: \"images_ready\" });\n      continue; // already rendered on a previous run\n    }\n    try {\n      const { images, image_urls } = await generatePostImages(post);\n      updatePost(post.id, { images, image_urls, status: \"images_ready\" });\n    } catch (err) {\n      updatePost(post.id, { status: \"image_failed\", last_error: err.message });\n      await sendAlert(\"Image generation failed\", { post: post.id, error: err.message });\n    }\n  }\n}\n\n/**\n * Full daily run: insights → slot plan → Claude batch → compliance → images → store → Buffer.\n * Idempotent per date: re-running resumes from whatever step failed.\n */\nexport async function runDaily({ date = todayIn(config.schedule.timezone), dryRun = false, skipImages = false } = {}) {\n  const started = Date.now();\n  log.info(\"Daily run started\", { date, dryRun });\n  try {\n    if (!getPostsByDate(date).length) {\n      const insights = computeInsights(getAllPosts().filter((p) => p.date !== date), getPerformance());\n      const plan = planDay(insights, { date });\n      const { posts } = await generateContent({ date, plan, insights, topicSuggestions: topicSuggestions(insights, plan) });\n      upsertPosts(date, posts);\n      await flagForReview(posts);\n      await writeBatchFile(date, posts);\n    }\n\n    const posts = getPostsByDate(date);\n    if (skipImages) {\n      for (const p of posts) if (p.status === \"generated\") updatePost(p.id, { status: \"images_ready\" });\n    } else {\n      await renderImages(posts.filter((p) => p.status === \"generated\" || p.status === \"image_failed\"));\n    }\n    const results = await schedulePosts(date, getPostsByDate(date), { dryRun });\n\n    recordRun({ date, ok: true, dryRun, results, ms: Date.now() - started });\n    log.info(\"Daily run finished\", { date, results });\n    return results;\n  } catch (err) {\n    recordRun({ date, ok: false, error: err.message, ms: Date.now() - started });\n    log.error(\"Daily run failed\", { date, ...errorMeta(err) });\n    await sendAlert(\"Daily run failed\", { date, error: err.message });\n    throw err;\n  }\n}\n\n/** Import a pre-written batch file (e.g. content/2026-10-02.json) into the store. */\nexport async function importContent(file) {\n  const date = path.basename(file, \".json\");\n  const { daily_batch } = DailyBatchSchema.parse(JSON.parse(await fs.readFile(file, \"utf8\")));\n  upsertPosts(date, daily_batch);\n  await flagForReview(daily_batch);\n  log.info(\"Imported batch\", { date, posts: daily_batch.length });\n  return date;\n}\n",
+      "src/index.js": "#!/usr/bin/env node\nimport cron from \"node-cron\";\nimport { config } from \"./config.js\";\nimport { createLogger, errorMeta } from \"./logger.js\";\nimport { runDaily, importContent } from \"./pipeline.js\";\nimport { syncEngagement, currentInsights, planDay, topicSuggestions } from \"./engagement.js\";\nimport { getPost, getPerformance, updatePost } from \"./db.js\";\nimport { scheduleOne, startSlotCrons, publishDueSlot } from \"./schedulePosts.js\";\nimport { listProfiles } from \"./buffer.js\";\nimport { sendAlert } from \"./alerts.js\";\nimport { buildDeliverable } from \"./buildDeliverable.js\";\nimport { todayIn } from \"./utils/time.js\";\n\nconst log = createLogger(\"cli\");\nconst [command = \"help\", ...args] = process.argv.slice(2);\nconst flag = (name) => args.includes(`--${name}`);\nconst option = (name) => args.find((a) => a.startsWith(`--${name}=`))?.split(\"=\")[1];\nconst positional = args.filter((a) => !a.startsWith(\"--\"));\n\nconst commands = {\n  // Generate + render + schedule today's (or --date=YYYY-MM-DD) batch.\n  run: () => runDaily({ date: option(\"date\"), dryRun: flag(\"dry-run\"), skipImages: flag(\"skip-images\") }),\n\n  // Import content/<date>.json, then render + schedule it.\n  import: async () => {\n    if (!positional[0]) throw new Error(\"Usage: import <content/YYYY-MM-DD.json> [--dry-run] [--skip-images]\");\n    const date = await importContent(positional[0]);\n    return runDaily({ date, dryRun: flag(\"dry-run\"), skipImages: flag(\"skip-images\") });\n  },\n\n  // Attach a recorded/rendered video to a held reel and schedule it in its slot.\n  \"attach-video\": async () => {\n    const [postId, videoUrl] = positional;\n    const post = getPost(postId);\n    if (!post || !videoUrl) throw new Error(\"Usage: attach-video <postId> <publicVideoUrl>\");\n    const updated = updatePost(postId, { video_url: videoUrl, status: \"images_ready\" });\n    const slotAt = new Date(post.scheduled_at);\n    return scheduleOne(updated, slotAt > new Date() ? slotAt : new Date(), { now: slotAt <= new Date() });\n  },\n\n  // Manually fire a slot watchdog, e.g. `publish-slot slot3`.\n  \"publish-slot\": () => publishDueSlot(positional[0]),\n\n  sync: () => syncEngagement(),\n\n  performance: async () => console.log(JSON.stringify(getPerformance(), null, 2)),\n\n  insights: async () => {\n    const insights = currentInsights();\n    const plan = planDay(insights, { date: option(\"date\") ?? todayIn(config.schedule.timezone) });\n    console.log(JSON.stringify({ insights, nextPlan: plan, topicSuggestions: topicSuggestions(insights, plan) }, null, 2));\n  },\n\n  // Write deliverables/<date>.json = { daily_batch, automation_system, learning_system }.\n  deliverable: async () => console.log(await buildDeliverable(option(\"date\") ?? todayIn(config.schedule.timezone))),\n\n  profiles: async () => console.log(JSON.stringify(await listProfiles(), null, 2)),\n\n  // Long-running scheduler.\n  cron: async () => {\n    const tz = { timezone: config.schedule.timezone };\n    cron.schedule(config.schedule.generateCron, () => runDaily().catch(() => {}), tz);\n    cron.schedule(config.schedule.engagementCron, () => syncEngagement().catch((e) => sendAlert(\"Engagement sync failed\", { error: e.message })), tz);\n    startSlotCrons();\n    log.info(\"Scheduler running\", { ...config.schedule });\n    await new Promise(() => {}); // keep alive\n  },\n\n  help: async () =>\n    console.log(`Usage: node src/index.js <command>\n  run [--date=YYYY-MM-DD] [--dry-run] [--skip-images]   plan, generate, render and schedule a day\n  import <file.json> [--dry-run] [--skip-images]        import a pre-written batch and schedule it\n  attach-video <postId> <videoUrl>                      schedule a held reel once its video exists\n  publish-slot <slot1..slot5>                           run a slot watchdog now\n  sync                                                  pull engagement from Buffer -> performance records\n  performance                                           print performance records\n  insights [--date=]                                    learned patterns + next slot plan\n  deliverable [--date=]                                 build deliverables/<date>.json\n  profiles                                              list Buffer profiles\n  cron                                                  daily generation + 5 slot watchdogs + nightly sync`),\n};\n\nprocess.on(\"unhandledRejection\", (err) => sendAlert(\"Unhandled error\", { error: String(err?.message ?? err) }));\n(commands[command] ?? commands.help)().catch((err) => {\n  log.error(`Command \"${command}\" failed`, errorMeta(err));\n  process.exitCode = 1;\n});\n",
+      "src/safety.js": "export const DISCLAIMER =\n  \"This is for educational purposes only. Consult a qualified doctor for personal medical advice.\";\n\n// Patterns that suggest diagnosis, prescribing, guarantees or fear-based messaging.\nconst RED_FLAGS = [\n  { re: /\\b\\d+(\\.\\d+)?\\s?(mg|mcg|µg|iu|ml)\\b/i, reason: \"dosage / prescription detail\" },\n  { re: /\\b(take|start|use)\\s+(this|these)?\\s*(tablet|pill|medicine|medication|supplement)s?\\b/i, reason: \"direct medication instruction\" },\n  { re: /\\b(you (definitely|certainly) have|this means you have|you are suffering from)\\b/i, reason: \"diagnostic language\" },\n  { re: /\\b(cure[sd]?|guaranteed?|100% (safe|effective)|miracle)\\b/i, reason: \"unqualified medical claim\" },\n  { re: /\\b(will (definitely|always|never)|always works|never fails|proven to)\\b/i, reason: \"absolute claim\" },\n  { re: /\\b(deadly|kill you|you could die|terrifying|horrifying)\\b/i, reason: \"fear-based messaging\" },\n  { re: /\\b(graphic|blood[- ]soaked|surgery footage|nud(e|ity))\\b/i, reason: \"sensitive visual\" },\n];\n\n/** All user-facing copy in a post, flattened for scanning. */\nexport function postText(post) {\n  return [\n    post.hook_english,\n    post.script,\n    ...(post.video_storyboard ?? []).flatMap((b) => [b.voiceover, b.on_screen_text]),\n    ...(post.carousel_slides ?? []).flatMap((s) => [s.headline, s.body]),\n    post.caption,\n    ...(post.key_takeaways ?? []),\n    post.cta,\n  ]\n    .filter(Boolean)\n    .join(\"\\n\");\n}\n\n/** Returns a list of issues; empty list means the post passed. */\nexport function checkPostSafety(post) {\n  const issues = [];\n  const text = postText(post);\n  for (const { re, reason } of RED_FLAGS) {\n    const match = text.match(re);\n    if (match) issues.push(`${reason}: \"${match[0]}\"`);\n  }\n  for (const { re, reason } of RED_FLAGS.filter((f) => f.reason === \"sensitive visual\")) {\n    if (re.test(post.visual_prompt)) issues.push(`visual prompt: ${reason}`);\n  }\n  if (post.post_type === \"reel\") {\n    const lastFrame = post.video_storyboard?.at(-1)?.on_screen_text ?? \"\";\n    if (!/educational/i.test(lastFrame)) issues.push(\"reel: final frame must show the educational disclaimer\");\n  }\n  return issues;\n}\n\n/** Guarantee the caption carries the disclaimer and a \"save this\" + share CTA (disclaimer always last). */\nexport function enforceCaptionRules(post) {\n  let caption = post.caption.replace(DISCLAIMER, \"\").trim();\n  if (!/save this/i.test(caption)) caption += \"\\n\\n📌 Save this for later, and share it with someone who needs it.\";\n  else if (!/share/i.test(caption)) caption += \"\\n\\n💌 Share this with someone who needs it.\";\n  caption += `\\n\\n${DISCLAIMER}`;\n  return { ...post, caption };\n}\n",
+      "src/alerts.js": "import { createLogger, errorMeta } from \"./logger.js\";\n\nconst log = createLogger(\"alerts\");\n\n/**\n * Failure alerts. Posts a short message to ALERT_WEBHOOK_URL — works with Slack\n * incoming webhooks ({text}), Discord ({content}) and most generic receivers.\n * Never throws: alerting must not break the pipeline.\n */\nexport async function sendAlert(title, details = {}) {\n  const text = `🚨 Dr. Halima agent: ${title}\\n${Object.entries(details).map(([k, v]) => `• ${k}: ${typeof v === \"string\" ? v : JSON.stringify(v)}`).join(\"\\n\")}`;\n  log.error(title, details);\n  const url = process.env.ALERT_WEBHOOK_URL;\n  if (!url) return;\n  try {\n    const res = await fetch(url, {\n      method: \"POST\",\n      headers: { \"Content-Type\": \"application/json\" },\n      body: JSON.stringify({ text, content: text.slice(0, 2000) }),\n    });\n    if (!res.ok) log.warn(\"Alert webhook returned non-2xx\", { status: res.status });\n  } catch (err) {\n    log.warn(\"Alert webhook failed\", errorMeta(err));\n  }\n}\n",
+      "src/db.js": "import fs from \"node:fs\";\nimport path from \"node:path\";\nimport { config } from \"./config.js\";\n\n/**\n * Minimal JSON-file database (data/db.json). Swap for Postgres/Mongo/Airtable by\n * re-implementing these functions with the same signatures (see README \"Scaling\").\n *\n * {\n *   posts:       PostRecord[]          // daily_batch item + { date, status, scheduled_at, images, image_urls, buffer_updates, ... }\n *   performance: PerformanceRecord[]   // { post_id, likes, comments, shares, saves, engagement_score }\n *   runs:        RunRecord[]           // audit log of pipeline runs\n * }\n */\nconst EMPTY = { posts: [], performance: [], runs: [] };\n\nfunction load() {\n  if (!fs.existsSync(config.paths.db)) return structuredClone(EMPTY);\n  return { ...structuredClone(EMPTY), ...JSON.parse(fs.readFileSync(config.paths.db, \"utf8\")) };\n}\n\nfunction save(db) {\n  fs.mkdirSync(path.dirname(config.paths.db), { recursive: true });\n  const tmp = `${config.paths.db}.tmp`;\n  fs.writeFileSync(tmp, JSON.stringify(db, null, 2));\n  fs.renameSync(tmp, config.paths.db); // atomic replace\n}\n\nexport function upsertPosts(date, posts) {\n  const db = load();\n  for (const post of posts) {\n    const existing = db.posts.find((p) => p.id === post.id);\n    if (existing) Object.assign(existing, post);\n    else db.posts.push({ date, status: \"generated\", buffer_updates: [], images: [], image_urls: [], ...post });\n  }\n  save(db);\n  return db.posts.filter((p) => p.date === date);\n}\n\nexport function updatePost(id, patch) {\n  const db = load();\n  const post = db.posts.find((p) => p.id === id);\n  if (!post) throw new Error(`Post ${id} not found`);\n  Object.assign(post, patch);\n  save(db);\n  return post;\n}\n\nexport function getPost(id) {\n  return load().posts.find((p) => p.id === id);\n}\n\nexport function getPostsByDate(date) {\n  return load().posts.filter((p) => p.date === date);\n}\n\nexport function getAllPosts() {\n  return load().posts;\n}\n\nexport function upsertPerformance(record) {\n  const db = load();\n  const i = db.performance.findIndex((r) => r.post_id === record.post_id);\n  if (i >= 0) db.performance[i] = record;\n  else db.performance.push(record);\n  save(db);\n}\n\nexport function getPerformance() {\n  return load().performance;\n}\n\nexport function recordRun(run) {\n  const db = load();\n  db.runs.push({ ...run, at: new Date().toISOString() });\n  save(db);\n}\n",
+      "src/utils/retry.js": "import { createLogger, errorMeta } from \"../logger.js\";\n\nconst log = createLogger(\"retry\");\n\n/**\n * Retry an async fn with exponential backoff + jitter.\n * `shouldRetry(err)` decides whether an error is transient (429 / 5xx / network).\n */\nexport async function withRetry(fn, { label = \"operation\", retries = 3, baseMs = 1000, shouldRetry = isTransient } = {}) {\n  let attempt = 0;\n  for (;;) {\n    try {\n      return await fn(attempt);\n    } catch (err) {\n      attempt += 1;\n      if (attempt > retries || !shouldRetry(err)) throw err;\n      const delay = baseMs * 2 ** (attempt - 1) + Math.floor(Math.random() * 250);\n      log.warn(`${label} failed, retrying`, { attempt, delayMs: delay, ...errorMeta(err) });\n      await new Promise((r) => setTimeout(r, delay));\n    }\n  }\n}\n\nexport function isTransient(err) {\n  const status = err?.status ?? err?.response?.status;\n  if (status === undefined) return true; // network / timeout\n  return status === 408 || status === 409 || status === 429 || status >= 500;\n}\n"
+    }
+  },
+  "learning_system": {
+    "objective": "Increase the probability of winning patterns (hooks, topics, content types, goals) and reduce low performers, without ever repeating content.",
+    "signals": [
+      "likes",
+      "comments",
+      "shares",
+      "saves",
+      "reach (for normalisation)"
+    ],
+    "performance_record_format": {
+      "post_id": "",
+      "likes": 0,
+      "comments": 0,
+      "shares": 0,
+      "saves": 0,
+      "engagement_score": 0
+    },
+    "example_performance_record": {
+      "post_id": "2026-10-02-1",
+      "likes": 412,
+      "comments": 37,
+      "shares": 96,
+      "saves": 210,
+      "engagement_score": 178.27
+    },
+    "engagement_score": {
+      "formula": "(likes×1 + comments×3 + shares×4 + saves×4) / reach × 1000; raw weighted sum when reach is unavailable",
+      "weights": {
+        "likes": 1,
+        "comments": 3,
+        "shares": 4,
+        "saves": 4
+      },
+      "why": "Shares and saves signal trust and reach the strongest; normalising by reach compares posts fairly across days.",
+      "relative_performance": "perf = engagement_score / median(engagement_score) — 1.0 is a typical post"
+    },
+    "pattern_detection": {
+      "dimensions": [
+        "content_pillar",
+        "post_type",
+        "hook_pattern",
+        "content_goal",
+        "scheduled_slot",
+        "topic",
+        "hook_english"
+      ],
+      "smoothing": "Bayesian average per group: (Σperf + 3) / (n + 3) so one viral post can't dominate",
+      "winners": "perf ≥ 1.3 → winningTopics (fresh angles requested) and winningHooks (structure reused, wording never)",
+      "losers": "perf ≤ 0.6 → losingTopics (blocked from prompts and topic suggestions)"
+    },
+    "decision_policy": {
+      "step1_pillar": "Sample 5 of 7 pillars without replacement with weight = (pillar score × (1 + 0.15 × days since last used, max 7))^1.5. Seeded by date for reproducibility.",
+      "step2_topic": "Claude picks a globally high-search, practical topic; topic bank suggestions exclude recent and low-performing topics.",
+      "step3_hook": "Each of Curiosity, Relatability, Myth-breaking, Gentle warning, Reassurance used exactly once per day; natural pillar matches first (Myth vs Fact→Myth-breaking, Warning/Awareness→Gentle warning, Emotional Support→Reassurance), the rest sampled by hook-pattern score.",
+      "step4_goal": "Every day includes save-worthy, share-worthy, authority-building; pillar affinity sets the default and the weakest-performing duplicate goal is swapped to fill gaps.",
+      "formats": "Reels fixed at slot2 and slot4; other slots choose carousel vs image with P(carousel) = carousel score / (carousel + image score), clamped 0.34–0.85, at least one carousel.",
+      "slotting": "Emotional Support goes to slot5 (10 PM); the highest-weight pillars take the reel slots.",
+      "exploration": "Weighted sampling (not argmax) keeps a non-zero chance for every pillar and pattern, so new winners can be discovered."
+    },
+    "repetition_guard": {
+      "topics": "No topic from the last 45 days (prompt + topic bank filter + batch uniqueness check)",
+      "hooks": "No hook resembling one from the last 21 days",
+      "within_day": "Unique topic, pillar, hook pattern and slot per post (schema-enforced)"
+    },
+    "data_flow": [
+      "Buffer update stats (per profile) → summed per post",
+      "toPerformanceRecord() → performance collection",
+      "computeInsights(posts, performance) → group scores, winners, losers, cooldown lists",
+      "planDay(insights) → slot plan (STEP 1, 3, 4)",
+      "buildUserPrompt(plan, insights, topicSuggestions) → Claude (STEP 2 + copy)",
+      "new batch → published → measured → loop"
+    ],
+    "cold_start": "With no data every score is 1.0, so planning is driven by rotation and variety until engagement arrives (~1 week).",
+    "tunables": {
+      "weights": {
+        "likes": 1,
+        "comments": 3,
+        "shares": 4,
+        "saves": 4
+      },
+      "smoothingK": 3,
+      "winThreshold": 1.3,
+      "loseThreshold": 0.6,
+      "topicCooldownDays": 45,
+      "hookCooldownDays": 21,
+      "recencyBonusPerDay": 0.15,
+      "temperature": 1.5,
+      "reelSlots": [
+        "slot2",
+        "slot4"
+      ]
+    }
+  }
+}

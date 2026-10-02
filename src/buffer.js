@@ -1,6 +1,7 @@
 import { config, requireEnv } from "./config.js";
 import { createLogger } from "./logger.js";
 import { withRetry } from "./utils/retry.js";
+import { DISCLAIMER } from "./safety.js";
 
 const log = createLogger("buffer");
 const INSTAGRAM_CAPTION_LIMIT = 2200;
@@ -46,12 +47,12 @@ async function bufferRequest(method, endpoint, params = {}) {
 
 export function buildPostText(post) {
   const tags = post.hashtags.join(" ");
-  let text = `${post.hook_english}\n\n${post.caption}\n\n${tags}`;
-  if (text.length > INSTAGRAM_CAPTION_LIMIT) {
-    // Drop the duplicated hook first, then trim the caption body (disclaimer is kept at the end).
-    text = `${post.caption}\n\n${tags}`;
-  }
-  return text.slice(0, INSTAGRAM_CAPTION_LIMIT);
+  const full = `${post.hook_english}\n\n${post.caption}\n\n${tags}`;
+  if (full.length <= INSTAGRAM_CAPTION_LIMIT) return full;
+  // Drop the duplicated hook, then trim the body while keeping the disclaimer + hashtags at the end.
+  const tail = `\n\n${DISCLAIMER}\n\n${tags}`;
+  const body = post.caption.replace(DISCLAIMER, "").trim();
+  return body.slice(0, INSTAGRAM_CAPTION_LIMIT - tail.length - 1) + "…" + tail;
 }
 
 /**
@@ -63,15 +64,15 @@ export function buildPostText(post) {
  * @param {string} [opts.videoUrl]   public video URL for reels
  * @returns {Promise<{ profile_id: string, update_id: string }[]>}
  */
-export async function postToBuffer(post, { scheduledAt, mediaUrls = [], videoUrl }) {
+export async function postToBuffer(post, { scheduledAt, mediaUrls = [], videoUrl, now = false }) {
   const profileIds = config.buffer.profileIds;
   if (!profileIds.length) throw new Error("BUFFER_PROFILE_IDS is empty");
 
   const params = {
     "profile_ids[]": profileIds,
     text: buildPostText(post),
-    scheduled_at: scheduledAt.toISOString(),
     shorten: "false",
+    ...(now ? { now: "true" } : { scheduled_at: scheduledAt.toISOString() }),
   };
   if (videoUrl) {
     params["media[video]"] = videoUrl;
@@ -88,7 +89,7 @@ export async function postToBuffer(post, { scheduledAt, mediaUrls = [], videoUrl
 
   const json = await bufferRequest("POST", "/updates/create.json", params);
   const updates = (json.updates ?? []).map((u) => ({ profile_id: u.profile_id, update_id: u.id }));
-  log.info("Scheduled on Buffer", { postId: post.id, scheduledAt: scheduledAt.toISOString(), updates });
+  log.info(now ? "Published via Buffer" : "Scheduled on Buffer", { postId: post.id, scheduledAt: scheduledAt?.toISOString(), updates });
   return updates;
 }
 

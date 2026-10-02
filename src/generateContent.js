@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { config, requireEnv } from "./config.js";
 import { createLogger, errorMeta } from "./logger.js";
-import { DailyContentSchema, dailyContentJsonSchema } from "./schema.js";
+import { DailyBatchSchema, dailyBatchJsonSchema, slotIndex } from "./schema.js";
 import { SYSTEM_PROMPT, buildUserPrompt, buildRevisionPrompt } from "./prompts.js";
 import { checkPostSafety, enforceCaptionRules } from "./safety.js";
 
@@ -14,18 +14,21 @@ function getClient() {
   return client;
 }
 
+/**
+ * One Claude call. Streaming avoids HTTP timeouts on long structured outputs;
+ * `fallbacks: "default"` re-runs a safety-classifier decline on Anthropic's
+ * recommended fallback model inside the same request.
+ */
 async function callClaude(messages) {
-  // Streaming avoids HTTP timeouts on long structured outputs; finalMessage() collects the result.
-  // fallbacks: "default" re-runs a safety-classifier decline on Anthropic's recommended fallback model.
   const stream = getClient().beta.messages.stream({
     model: config.claude.model,
-    max_tokens: 32000,
+    max_tokens: 48000,
     betas: ["server-side-fallback-2026-07-01"],
     fallbacks: "default",
     thinking: { type: "adaptive" },
     output_config: {
       effort: config.claude.effort,
-      format: { type: "json_schema", schema: dailyContentJsonSchema },
+      format: { type: "json_schema", schema: dailyBatchJsonSchema },
     },
     system: [{ type: "text", text: SYSTEM_PROMPT, cache_control: { type: "ephemeral" } }],
     messages,
@@ -49,64 +52,76 @@ async function callClaude(messages) {
   return { message, text };
 }
 
-function parseAndValidate(text) {
-  const result = DailyContentSchema.safeParse(JSON.parse(text));
+/** Parse + validate; returns { batch, problems } where problems are per-post format issues. */
+function parseBatch(text, plan) {
+  const raw = JSON.parse(text);
+  const result = DailyBatchSchema.safeParse(raw);
+  const problems = {};
   if (!result.success) {
-    throw new Error(`Generated content failed validation: ${result.error.issues.map((i) => i.message).join("; ")}`);
+    for (const issue of result.error.issues) {
+      const id = raw.daily_batch?.[issue.path[1]]?.id ?? "batch";
+      (problems[id] ??= []).push(`${issue.path.slice(2).join(".") || "post"}: ${issue.message}`);
+    }
   }
-  return result.data;
+  // The decision system fixed type / pillar / hook / goal per slot — enforce it.
+  for (const post of raw.daily_batch ?? []) {
+    const slot = plan.find((s) => s.scheduled_slot === post.scheduled_slot);
+    if (!slot) continue;
+    for (const key of ["post_type", "content_pillar", "hook_pattern", "content_goal"]) {
+      if (post[key] !== slot[key]) (problems[post.id] ??= []).push(`${key} must be "${slot[key]}"`);
+    }
+  }
+  return { batch: raw, valid: result.success && !Object.keys(problems).length, problems };
 }
 
 function safetyIssues(posts) {
   const issues = {};
   for (const post of posts) {
     const found = checkPostSafety(post);
-    if (found.length) issues[post.post_number] = found;
+    if (found.length) issues[post.id] = found;
   }
   return issues;
 }
 
 /**
- * Generate the day's 5 posts with Claude.
- * @param {{ date: string, plan: { pillars: string[] }, insights: object }} input
- * @returns {Promise<{ posts: object[], flagged: Record<number, string[]> }>}
+ * Generate the day's 5 posts with Claude (STEP 2 topic + all copy), following the
+ * slot plan the learning system chose (STEP 1, 3, 4).
+ * @returns {Promise<{ posts: object[], flagged: Record<string, string[]> }>}
  */
-export async function generateContent({ date, plan, insights }) {
-  const messages = [{ role: "user", content: buildUserPrompt({ date, plan, insights }) }];
-  log.info("Generating content", { date, pillars: plan.pillars });
+export async function generateContent({ date, plan, insights, topicSuggestions }) {
+  const messages = [{ role: "user", content: buildUserPrompt({ date, plan, insights, topicSuggestions }) }];
+  log.info("Generating content", { date, plan });
 
-  let content;
+  let parsed;
   let lastMessage;
-  for (let attempt = 1; ; attempt++) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    let text;
     try {
-      const { message, text } = await callClaude(messages);
-      content = parseAndValidate(text);
-      lastMessage = message;
-      break;
+      ({ message: lastMessage, text } = await callClaude(messages));
     } catch (err) {
-      log.error("Content generation attempt failed", { attempt, ...errorMeta(err) });
-      if (attempt >= 2 || err instanceof Anthropic.AuthenticationError || err instanceof Anthropic.BadRequestError) throw err;
+      log.error("Claude call failed", { attempt, ...errorMeta(err) });
+      if (attempt === 3 || err instanceof Anthropic.AuthenticationError || err instanceof Anthropic.BadRequestError) throw err;
+      continue;
     }
-  }
+    parsed = parseBatch(text, plan);
+    const issues = { ...parsed.problems };
+    for (const [id, list] of Object.entries(safetyIssues(parsed.batch.daily_batch ?? []))) (issues[id] ??= []).push(...list);
+    if (!Object.keys(issues).length) break;
 
-  // One self-revision round for anything the rule-based safety check flags.
-  let flagged = safetyIssues(content.posts);
-  if (Object.keys(flagged).length) {
-    log.warn("Safety review flagged posts, requesting revision", { flagged });
-    // Append the full response content (append-only history keeps thinking blocks valid).
+    log.warn("Batch needs revision", { attempt, issues });
+    if (attempt === 3) break;
+    // Append the full response (append-only history keeps thinking blocks valid), then ask for fixes.
     messages.push({ role: "assistant", content: lastMessage.content });
-    messages.push({ role: "user", content: buildRevisionPrompt(flagged) });
-    try {
-      const { text } = await callClaude(messages);
-      content = parseAndValidate(text);
-      flagged = safetyIssues(content.posts);
-    } catch (err) {
-      log.error("Safety revision failed; keeping original with flags", errorMeta(err));
-    }
+    messages.push({ role: "user", content: buildRevisionPrompt(issues) });
   }
 
-  const posts = content.posts
-    .sort((a, b) => a.post_number - b.post_number)
-    .map(enforceCaptionRules);
-  return { posts, flagged };
+  if (!parsed?.batch?.daily_batch?.length) throw new Error("Claude returned no usable batch");
+  if (!parsed.valid) {
+    throw new Error(`Batch still invalid after revisions: ${JSON.stringify(parsed.problems)}`);
+  }
+
+  const posts = parsed.batch.daily_batch
+    .map((p) => ({ ...enforceCaptionRules(p), id: `${date}-${slotIndex(p.scheduled_slot) + 1}` }))
+    .sort((a, b) => slotIndex(a.scheduled_slot) - slotIndex(b.scheduled_slot));
+  return { posts, flagged: safetyIssues(posts) };
 }

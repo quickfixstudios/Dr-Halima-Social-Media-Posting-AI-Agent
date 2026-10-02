@@ -4,6 +4,7 @@ import OpenAI from "openai";
 import { config, requireEnv } from "./config.js";
 import { createLogger, errorMeta } from "./logger.js";
 import { withRetry } from "./utils/retry.js";
+import { publishMedia } from "./mediaHost.js";
 
 const log = createLogger("generateImage");
 
@@ -22,8 +23,9 @@ function getClient() {
 }
 
 /**
- * Generate one image with gpt-image-1 and save it as PNG.
- * @returns {Promise<string>} absolute path of the saved file
+ * Generate one image with gpt-image-1 from a visual_prompt, save it locally and
+ * publish it to the media host.
+ * @returns {Promise<{ path: string, url: string }>}  local file + public image URL
  */
 export async function generateImage({ prompt, postType = "image", fileName }) {
   const size = SIZE_BY_TYPE[postType] ?? "1024x1024";
@@ -49,40 +51,38 @@ export async function generateImage({ prompt, postType = "image", fileName }) {
   if (!b64) throw new Error(`No image returned for ${fileName}`);
   await fs.mkdir(config.paths.media, { recursive: true });
   await fs.writeFile(outPath, Buffer.from(b64, "base64"));
-  log.info("Image saved", { fileName, size, usage: response.usage });
-  return outPath;
+  const url = await publishMedia(outPath);
+  log.info("Image generated", { fileName, size, url, usage: response.usage });
+  return { path: outPath, url };
 }
 
-/** Split "Slide N ..." carousel text into per-slide strings. */
-export function splitSlides(text) {
-  return text
-    .split(/\n(?=Slide \d)/)
-    .map((s) => s.trim())
-    .filter((s) => /^Slide \d/.test(s));
+/** Prompt for a text-on-design carousel slide, consistent with the cover's brand look. */
+export function slidePrompt(slide) {
+  return (
+    `Instagram carousel slide, portrait 4:5, soft pastel women's-health brand, clean medical, soft lighting, minimal, modern. ` +
+    `Render this text clearly and legibly in a clean rounded sans-serif, generous spacing:\n` +
+    `Headline: """${slide.headline}"""\nBody: """${slide.body}"""\n` +
+    `Design direction: ${slide.visual_direction}`
+  );
 }
 
 /**
- * Generate all visuals for a post: a cover for every post, plus (optionally) one
- * text-on-design image per carousel slide 2–5.
+ * All visuals for a post: a cover for every post, plus (optionally) one image per
+ * carousel slide after the cover.
+ * @returns {Promise<{ images: string[], image_urls: string[] }>}
  */
 export async function generatePostImages(post) {
-  const base = post.id;
-  const images = [];
+  const results = [];
   try {
-    images.push(await generateImage({ prompt: post.visual_prompt, postType: post.post_type, fileName: `${base}-cover.png` }));
-
+    results.push(await generateImage({ prompt: post.visual_prompt, postType: post.post_type, fileName: `${post.id}-cover.png` }));
     if (post.post_type === "carousel" && config.openai.carouselSlideImages) {
-      const slides = splitSlides(post.script_or_slide_content).slice(1);
-      for (const [i, slide] of slides.entries()) {
-        const prompt =
-          `Instagram carousel slide, 1080x1350 portrait, matching a soft pastel women's-health brand. ` +
-          `Render this text clearly and legibly in a clean sans-serif, well spaced, with a small minimal icon:\n"""${slide}"""`;
-        images.push(await generateImage({ prompt, postType: "carousel", fileName: `${base}-slide${i + 2}.png` }));
+      for (const slide of post.carousel_slides.slice(1)) {
+        results.push(await generateImage({ prompt: slidePrompt(slide), postType: "carousel", fileName: `${post.id}-slide${slide.slide_number}.png` }));
       }
     }
   } catch (err) {
     log.error("Image generation failed", { postId: post.id, ...errorMeta(err) });
     throw err;
   }
-  return images;
+  return { images: results.map((r) => r.path), image_urls: results.map((r) => r.url) };
 }
