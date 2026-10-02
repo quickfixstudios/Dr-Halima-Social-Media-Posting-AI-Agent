@@ -164,7 +164,9 @@
         "id": 4,
         "module": "facebook-pages:CreatePostWithPhotos",
         "version": 6,
-        "parameters": {},
+        "parameters": {
+          "__IMTCONN__": 11459922
+        },
         "mapper": {
           "page_id": "103052652458065",
           "message": "{{6.caption}}",

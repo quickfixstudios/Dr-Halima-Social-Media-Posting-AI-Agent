@@ -21,4 +21,4 @@ Each of steps 2–4 has a Retry error handler (3 attempts, 2 minutes apart).
 
 **Not included yet:** real reels (slots 2 and 4 post quick-tip image posts), Instagram, engagement learning.
 
-**Facebook connection:** the Facebook step has no connection saved (the old ones were deleted). Pick the new connection in the Facebook Pages module after reconnecting.
+**Status (2 Oct 2026):** live. Facebook connection "Dr. Halima" (expires 1 Dec 2026 — reauthorize before then). First test post published 23:38 Dhaka; scheduled runs start 3 Oct 2026 at 10:00.
