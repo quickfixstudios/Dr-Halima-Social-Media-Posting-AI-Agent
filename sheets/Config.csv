@@ -1,0 +1,21 @@
+key,value,notes
+TIMEZONE,Asia/Dhaka,UTC+6 all year (no DST)
+SLOT_TIMES,10:00|13:00|16:00|19:00|22:00,slot1..slot5
+REEL_SLOTS,slot2|slot4,reels always in these slots
+TEXT_MODEL,gpt-6.1-sol,switch to gpt-6-astra for maximum quality
+IMAGE_MODEL,gpt-image-1,gpt-image-1 is shut down on 2026-10-23 — set to gpt-image-2 before then
+IMAGE_MODEL_FALLBACK,gpt-image-2,used automatically when IMAGE_MODEL is rejected
+REELS_MODE,await_video,await_video | cover_only
+LEARNING_WINDOW_DAYS,60,performance window for insights
+TOPIC_COOLDOWN_DAYS,45,no topic repeats inside this window
+HOOK_COOLDOWN_DAYS,21,no similar hooks inside this window
+SMOOTHING_K,3,Bayesian prior strength
+WIN_THRESHOLD,1.3,x median engagement = winner
+LOSE_THRESHOLD,0.6,x median engagement = loser
+RECENCY_BONUS,0.15,pillar rotation bonus per day unused (max 7 days)
+DISCLAIMER,This is for educational purposes only. Consult a qualified doctor for personal medical advice.,appended by the compliance engine
+SYSTEM_PROMPT,<paste prompts/system.prompt.md>,raw text (Config!B17)
+SYSTEM_PROMPT_ESCAPED,"=SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(B17,""\"",""\\""),"""""""",""\""""""),CHAR(13),""""),CHAR(10),""\n"")",JSON-escaped for the HTTP body (Config!B18)
+COMPLIANCE_PROMPT,<paste prompts/compliance.prompt.md>,raw text (Config!B19)
+COMPLIANCE_PROMPT_ESCAPED,"=SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(B19,""\"",""\\""),"""""""",""\""""""),CHAR(13),""""),CHAR(10),""\n"")",JSON-escaped (Config!B20)
+CAROUSEL_SLIDE_IMAGES,false,true = one generated image per carousel slide

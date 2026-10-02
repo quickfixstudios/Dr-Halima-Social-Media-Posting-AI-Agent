@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "performance.schema.json",
+  "title": "Performance record",
+  "description": "One engagement snapshot for one published post. Totals are summed across Instagram and Facebook; per-platform values are kept in `platforms`.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["post_id", "captured_at", "likes", "comments", "shares", "saves", "reach", "engagement_score", "platforms"],
+  "properties": {
+    "post_id": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}-[1-5]$" },
+    "captured_at": { "type": "string", "format": "date-time" },
+    "likes": { "type": "integer", "minimum": 0 },
+    "comments": { "type": "integer", "minimum": 0 },
+    "shares": { "type": "integer", "minimum": 0 },
+    "saves": { "type": "integer", "minimum": 0 },
+    "reach": { "type": "integer", "minimum": 0 },
+    "engagement_score": { "type": "number", "minimum": 0, "description": "(likes + 3*comments + 4*shares + 4*saves) / reach * 1000; raw weighted sum when reach = 0" },
+    "platforms": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instagram", "facebook"],
+      "properties": {
+        "instagram": { "$ref": "#/$defs/platformMetrics" },
+        "facebook": { "$ref": "#/$defs/platformMetrics" }
+      }
+    }
+  },
+  "$defs": {
+    "platformMetrics": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "required": ["media_id", "likes", "comments", "shares", "saves", "reach"],
+      "properties": {
+        "media_id": { "type": "string" },
+        "likes": { "type": "integer", "minimum": 0 },
+        "comments": { "type": "integer", "minimum": 0 },
+        "shares": { "type": "integer", "minimum": 0 },
+        "saves": { "type": "integer", "minimum": 0, "description": "Facebook does not expose saves; always 0 there." },
+        "reach": { "type": "integer", "minimum": 0 }
+      }
+    }
+  }
+}

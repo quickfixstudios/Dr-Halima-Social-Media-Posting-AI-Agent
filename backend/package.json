@@ -1,0 +1,20 @@
+{
+  "name": "dr-halima-content-os-backend",
+  "version": "1.0.0",
+  "description": "Orchestration backend for the Dr. Halima social media system (OpenAI + Google Sheets + Meta), called by Make.com.",
+  "type": "module",
+  "main": "src/server.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "google-auth-library": "^11.1.0",
+    "luxon": "^3.7.2",
+    "openai": "^7.27.0",
+    "zod": "^4.6.5"
+  }
+}
