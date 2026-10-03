@@ -62,37 +62,6 @@ export function extractListItems(caption) {
     .filter(Boolean);
 }
 
-/**
- * Adapter for posts produced by the existing content engine (prompts/daily_batch.schema.json / Content sheet rows),
- * so the same records can be sent straight into the image pipeline.
- */
-export function fromContentRecord(record, { business } = {}) {
-  const PILLAR_TO_TYPE = {
-    Education: "educational",
-    "Myth vs Fact": "myth_vs_fact",
-    "Warning/Awareness": "warning",
-    Pregnancy: "pregnancy",
-    "Hormonal Health": "menstrual",
-    "Emotional Support": "emotional",
-    "Preventive Tips": "checklist",
-  };
-  const slides = record.carousel_slides ?? [];
-  return {
-    post_id: record.id,
-    business,
-    platform: "facebook",
-    topic: record.topic,
-    content_type: record.post_type === "carousel" ? "carousel" : PILLAR_TO_TYPE[record.content_pillar] ?? "",
-    hook: record.hook_bangla_short || record.hook_english || record.topic,
-    caption: record.caption,
-    cta: record.cta ?? "",
-    goal: { "save-worthy": "save", "share-worthy": "share", "authority-building": "trust" }[record.content_goal] ?? "",
-    content_status: ["ready", "published", "publishing"].includes(record.status) ? "approved" : record.status ?? "draft",
-    key_points: slides.length > 1 ? slides.map((s) => s.headline) : [],
-    scheduled_time: record.scheduled_at ?? "",
-  };
-}
-
 /** Text the post's author approved — the only source on-image text may be taken from. */
 export function approvedSources(post) {
   return [

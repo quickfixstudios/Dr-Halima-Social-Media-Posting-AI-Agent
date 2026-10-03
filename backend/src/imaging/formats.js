@@ -61,5 +61,3 @@ export function generationSize(ratio, { arbitrarySizes = true } = {}) {
   }
   return `${round16(w)}x${round16(h)}`;
 }
-
-export const parseSize = (s) => s.split("x").map(Number);

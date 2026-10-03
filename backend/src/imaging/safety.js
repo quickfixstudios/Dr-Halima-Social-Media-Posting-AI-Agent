@@ -1,4 +1,3 @@
-import { COPY_RULES } from "../compliance.js";
 import { approvedSources } from "./content.js";
 
 /**
@@ -6,11 +5,20 @@ import { approvedSources } from "./content.js";
  *
  * Principle: the picture may only SUPPORT the already-approved message. It never adds medical advice.
  *  1. The post must be approved before any image work starts.
- *  2. Copy is scanned for risky claims (English rules shared with the existing compliance engine + Bangla rules).
+ *  2. Copy is scanned for risky claims (English + Bangla rules).
  *  3. Every word and every number drawn on the image must come from the approved post (or a fixed, neutral
  *     label such as "মিথ"/"সত্য"); anything else is flagged for a human.
  *  4. The person's titles may never be upgraded (e.g. calling a Medical Officer "বিশেষজ্ঞ"/specialist).
  */
+
+// English risky-claim rules (Bangla rules are further below).
+const COPY_RULES = [
+  { id: "dosage", re: /\b\d+(\.\d+)?\s?(mg|mcg|µg|iu|ml|tablets?|capsules?)\b/i },
+  { id: "medication_instruction", re: /\b(take|start|stop|use)\s+(this|these|your)?\s*(tablet|pill|medicine|medication|supplement|antibiotic)s?\b/i },
+  { id: "diagnosis", re: /\b(you (definitely |probably |certainly )?have (pcos|endometriosis|cancer|an infection|a tumou?r|fibroids|diabetes)|this means you have|you are suffering from|you've got)\b/i },
+  { id: "absolute_claim", re: /\b(cures?|cured|guaranteed?|100% (safe|effective)|miracle|always works|never fails|proven to)\b/i },
+  { id: "fear", re: /\b(deadly|kill you|you could die|terrifying|horrifying|dangerous for your baby|scary truth)\b/i },
+];
 
 // Neutral labels the templates add themselves. They carry no medical claim.
 export const FIXED_LABELS = [

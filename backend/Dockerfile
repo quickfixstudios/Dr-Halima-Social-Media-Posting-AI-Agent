@@ -1,4 +1,4 @@
-# Build from the repository root so the shared /prompts folder is included:
+# Build from the repository root so prompts/, brands/ and posts/ are included:
 #   docker build -f backend/Dockerfile -t dr-halima-backend .
 FROM node:22-alpine
 WORKDIR /app
@@ -11,7 +11,7 @@ COPY backend/src ./backend/src
 COPY backend/config ./backend/config
 # Generated images live in /app/assets — mount a persistent volume there in production.
 RUN mkdir -p /app/assets && chown node:node /app/assets
-ENV NODE_ENV=production PROMPTS_DIR=/app/prompts
+ENV NODE_ENV=production
 EXPOSE 8080
 USER node
 CMD ["node", "backend/src/server.js"]

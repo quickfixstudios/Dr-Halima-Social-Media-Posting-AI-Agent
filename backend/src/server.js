@@ -1,22 +1,12 @@
 import http from "node:http";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { config } from "./config.js";
+import { config, imagingConfig } from "./config.js";
 import { createLogger, errorMeta } from "./logger.js";
-import { dailyRun, buildBatch } from "./pipeline.js";
-import { syncEngagement } from "./sync.js";
-import { readContent } from "./storage/sheets.js";
-import { computeInsights, planDay } from "./learning.js";
-import { reviewCompliance } from "./openai/content.js";
-import { generateImage } from "./openai/images.js";
-import { decide } from "./compliance.js";
-import { todayLocal } from "./schedule.js";
 import { createImageJob, runAction, listJobs } from "./imaging/pipeline.js";
 import { ImageError } from "./imaging/errors.js";
 
 const log = createLogger("server");
-const running = new Set();
-const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 class HttpError extends Error {
   constructor(status, message) {
@@ -48,45 +38,9 @@ async function readJson(req, limit = 1_000_000) {
   }
 }
 
-const dateOf = (body) => {
-  const date = body.date ?? todayLocal();
-  if (!DATE_RE.test(date)) throw new HttpError(400, "date must be YYYY-MM-DD");
-  return date;
-};
-
 /** Route table. Handlers return [status, body]. */
 export const routes = {
-  "GET /healthz": async () => [200, { ok: true, textModel: config.openai.textModel, imageModel: config.openai.imageModel }],
-
-  // Async: Make gets 202 immediately; the run continues in the background and alerts on its own.
-  "POST /v1/daily-run": async (body) => {
-    const date = dateOf(body);
-    if (running.has(date)) return [409, { status: "already_running", date }];
-    running.add(date);
-    const runId = `${date}-${Date.now()}`;
-    dailyRun({ date, force: Boolean(body.force), runId })
-      .catch((err) => log.error("daily-run crashed", { runId, ...errorMeta(err) }))
-      .finally(() => running.delete(date));
-    return [202, { status: "accepted", date, run_id: runId }];
-  },
-
-  "POST /v1/generate": async (body) => {
-    const date = dateOf(body);
-    const { plan, decisions, validationProblems } = await buildBatch(date, await readContent());
-    return [200, { date, plan, daily_batch: decisions.map((d) => d.post), compliance: decisions.map(({ post, verdict, issues }) => ({ id: post.id, verdict, issues })), validation_problems: validationProblems }];
-  },
-
-  "POST /v1/images": async (body) => {
-    if (!body.prompt || !body.id) throw new HttpError(400, "id and prompt are required");
-    const result = await generateImage({ prompt: body.prompt, postType: body.post_type ?? "image", publicId: `${body.id}-${body.suffix ?? "cover"}`, folder: `dr-halima/${body.id.slice(0, 10)}` });
-    return [200, result];
-  },
-
-  "POST /v1/compliance": async (body) => {
-    if (!Array.isArray(body.posts) || !body.posts.length) throw new HttpError(400, "posts[] required");
-    const decisions = decide(body.posts, await reviewCompliance(body.posts));
-    return [200, { results: decisions.map(({ post, verdict, issues }) => ({ id: post.id, verdict, issues, post })) }];
-  },
+  "GET /healthz": async () => [200, { ok: true, textModel: imagingConfig().textModel, imageModel: imagingConfig().imageModel }],
 
   // Image automation (IMAGE_AUTOMATION.md). Body: { business?, post: {...approved post...}, dry_run?, visual_type?, concepts?, aspect? }
   "POST /v1/image-jobs": async (body) => {
@@ -106,14 +60,6 @@ export const routes = {
     200,
     { jobs: listJobs({ businessId: url.searchParams.get("business") ?? undefined, status: url.searchParams.get("status") ?? undefined }).map((m) => ({ post_id: m.post_id, status: m.status, updated_at: m.updated_at, selected: m.selected })) },
   ],
-
-  "POST /v1/sync": async () => [200, await syncEngagement()],
-
-  "GET /v1/insights": async (_body, url) => {
-    const date = url.searchParams.get("date") ?? todayLocal();
-    const insights = computeInsights((await readContent()).filter((p) => p.date !== date));
-    return [200, { date, insights, plan: planDay(insights, { date }) }];
-  },
 };
 
 function imageErrorStatus(code) {

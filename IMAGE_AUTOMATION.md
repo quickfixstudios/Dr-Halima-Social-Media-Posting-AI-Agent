@@ -27,7 +27,7 @@ Facebook image (or carousel). A person approves the image, and the system then h
 | **Prompt** | The written instructions sent to the image model ("a Bangladeshi woman in a calm Dhaka clinic…"). |
 | **Dry run** | A practice run: everything happens **except** the paid OpenAI call. It's free. |
 | **State machine / status** | Each post has exactly one status (e.g. `IMAGE_REVIEW_PENDING`) and may only move to allowed next statuses. That's how we guarantee nothing is published without approval. |
-| **Database / storage** | Where data is kept. Here it's simple folders and JSON files in `assets/` (plus your Google Sheet if you use the backend's daily run). |
+| **Database / storage** | Where data is kept. Here it's simple folders and JSON files in `assets/`. |
 
 ---
 
@@ -36,8 +36,7 @@ Facebook image (or carousel). A person approves the image, and the system then h
 | Part | What it does today | Changed? |
 |---|---|---|
 | **Live Make.com scenario** "Dr Halima – Daily plan (5 posts/day)" | Every 3 hours (10:00–22:00 Dhaka) it writes one Bangla post with OpenAI, makes a square picture **with no text on it**, and posts it to Facebook automatically. No human review. | **No.** It keeps running exactly as before. |
-| **Node.js backend** (`backend/`) | A designed-but-not-yet-deployed helper server: daily batch generation, compliance checks, Google Sheets storage, engagement learning, old simple image step (`openai/images.js`). | **Extended**, not rewritten. Old behaviour stays the default. |
-| Prompts, docs, sheet templates | Content-system design. | No. |
+| **Node.js backend** (`backend/`) | The image pipeline below, the post writer (`npm run content`) and a small API server for them. Not deployed yet; you run it on your computer. The old Google-Sheets daily-run design was removed (it is in git history). | — |
 
 **New:** `backend/src/imaging/` (the image pipeline), `brands/` (business profiles + font), `posts/` (post files incl. 8 samples),
 `assets/` (generated images, created automatically, not stored in git), `make/publish-approved.blueprint.json`, and this guide.
@@ -46,7 +45,7 @@ Facebook image (or carousel). A person approves the image, and the system then h
 
 ```
 Business profile (brands/dr_halima.json)
-  → Approved post (posts/…json, or from the backend daily run / API)
+  → Approved post (posts/…json, from `npm run content`, or via the API)
   → Decision engine: which of 20 image styles fits? (+ reasons)
   → Image Creative Brief (every visual + text decision, saved)
   → Safety check (approved text only, no invented numbers, no title upgrades)
@@ -320,8 +319,7 @@ the same colours and told to avoid bright hot pink, too many colours and the pur
 * Official `openai` Node SDK (`backend/src/imaging/generator.js`); key from `OPENAI_API_KEY`, only on your computer
   or server, never in logs, metadata or the browser.
 * Model names come from settings only: `OPENAI_IMAGE_MODEL` (default `gpt-image-2.5-sunburst`, OpenAI's current
-  image model) and `OPENAI_TEXT_MODEL` (optional text shortening). Note: `gpt-image-1` is switched off by
-  OpenAI on 23 Oct 2026.
+  image model) and `OPENAI_TEXT_MODEL` (optional text shortening).
 * The picture is requested in the **shape of the area it fills** (e.g. 1536×800 for the top band of a 4:5 list
   post), so nothing important gets cropped. The final file is exactly 1080×1350 (4:5) / 1080×1080 / 1080×1920 /
   1200×628 (`imaging/formats.js`).
@@ -406,8 +404,6 @@ Operations: about 3 per published post (webhook, Facebook, response), small comp
 **Other ways in:** the backend API (needs `BACKEND_API_KEY` as `Authorization: Bearer …`):
 `POST /v1/image-jobs` (body `{ "post": {...}, "dry_run": true }`), `POST /v1/image-jobs/action`
 (`{ "post_id", "action": "approve" | "regenerate" | … }`), `GET /v1/image-jobs?status=IMAGE_REVIEW_PENDING`.
-And with `IMAGE_PIPELINE=v2`, the backend's daily run sends every compliance-passed post into this pipeline and
-keeps it `needs_review` in the Sheet until the image is approved.
 
 ---
 
@@ -572,7 +568,6 @@ Until you do, costs show as **"unknown"** (never guessed) and only the count lim
 | `IMAGE_TEXT_MODE` | `overlay` (default) or `model` (experimental) |
 | `IMAGE_TEXT_SHORTEN_WITH_LLM` | Allow automatic shortening of long headlines |
 | `IMAGE_DEFAULT_BUSINESS` | Business used when `--business` is not given |
-| `IMAGE_PIPELINE` | `v2` = backend daily run uses this pipeline |
 | `MAX_IMAGE_GENERATIONS_PER_POST`, `MAX_REGENERATIONS`, `DAILY_IMAGE_GENERATION_LIMIT`, `DAILY_IMAGE_BUDGET`, `MONTHLY_IMAGE_BUDGET` | Cost controls |
 | `REVIEW_HOST`, `REVIEW_PORT`, `REVIEW_PASSWORD` | Review screen (password required if not on this computer only) |
 | `MAKE_WEBHOOK_URL_DR_HALIMA`, `MAKE_WEBHOOK_URL_QUICKFIX_STUDIOS` | Make publisher webhooks |

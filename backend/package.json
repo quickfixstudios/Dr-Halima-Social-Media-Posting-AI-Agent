@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "dotenv": "^16.4.5",
-    "google-auth-library": "^11.1.0",
     "lucide-static": "^1.51.0",
     "luxon": "^3.7.2",
     "openai": "^7.27.0",

@@ -713,7 +713,6 @@ const LAYOUTS = {
   doctor_quote: doctorQuote,
   stat,
 };
-export const LAYOUT_IDS = [...Object.keys(LAYOUTS), "carousel"];
 
 async function flatten(ctx, format) {
   // Order: background picture → vector shapes (panels, badges, icons) → text and logo on top.
@@ -725,7 +724,7 @@ async function flatten(ctx, format) {
 /**
  * Draw one finished image: AI background + shapes + Bangla text.
  * @param {object} p
- * @param {string} p.layout      layout id (see LAYOUT_IDS)
+ * @param {string} p.layout      layout id (a LAYOUTS key or "carousel")
  * @param {Buffer|null} p.background  generated picture, or null → grey dry-run placeholder
  * @param {Buffer|null} [p.photo]  approved real photo (doctor_quote) — used instead of the AI picture
  * @returns {Promise<{ buffer: Buffer, report: object }>}

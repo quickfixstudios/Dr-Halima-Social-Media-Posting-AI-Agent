@@ -43,7 +43,7 @@ function resolveDeps(deps = {}) {
     upload: deps.upload,
     shorten: deps.shorten ?? shortenText,
     env: deps.env ?? process.env,
-    timezone: config.schedule.timezone,
+    timezone: config.timezone,
   };
 }
 
