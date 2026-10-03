@@ -103,6 +103,20 @@ test("CTA colour follows the brand guideline (appointment / save / health tip)",
   assert.match(buildImagePrompt(brief, brand), /deep rose \(#C65D7B\)[\s\S]*Avoid: bright hot pink/);
 });
 
+test("illustration is the brand's default look; several myths become a table", () => {
+  const brief = buildBrief(normalizePost(sample(2)), brand, "pain_solution");
+  assert.equal(brief.concept_mode, "illustration");
+  assert.equal(brief.label_symbolic, false, "drawings need no 'symbolic image' label");
+  assert.match(buildImagePrompt(brief, brand), /flat vector shapes with soft watercolour texture/);
+  const photo = buildBrief(normalizePost(sample(2)), brand, "pain_solution", { conceptMode: "photo" });
+  assert.equal(photo.label_symbolic, true);
+  const myths = [1, 2, 3].map((i) => ({ myth: `মিথ ${i}`, fact: `সত্য ${i}` }));
+  const table = buildBrief(normalizePost({ ...sample(3), myths }), brand, "myth_vs_fact");
+  assert.equal(table.layout, "myth_fact_table");
+  assert.equal(table.text.myths.length, 3);
+  assert.throws(() => normalizePost({ ...sample(3), myths: [...myths, ...myths] }), { code: "INVALID_CONTENT" });
+});
+
 // ── formats ──
 test("aspect ratios map to Facebook sizes and model sizes divisible by 16", () => {
   assert.deepEqual(outputSize("facebook", "4:5"), { width: 1080, height: 1350 });
@@ -313,8 +327,11 @@ test("missing verified statistic halts the data visual (no API call, status BLOC
   assert.equal(ok.concepts[0].halts.length, 0);
 });
 
-test("missing contact details halt the appointment poster", async () => {
-  const r = await createImageJob({ post: sample(8), options: { dryRun: true }, deps: deps() });
+test("appointment poster: inbox CTA is fine, anything needing contact details is never invented", async () => {
+  const ok = await createImageJob({ post: sample(8), options: { dryRun: true }, deps: deps() });
+  assert.equal(ok.concepts[0].visual_type, "appointment_cta");
+  assert.deepEqual(ok.concepts[0].halts, []);
+  const r = await createImageJob({ post: { ...sample(8), post_id: "s8-phone", cta: "আজই ফোন করে সিরিয়াল দিন" }, options: { dryRun: true }, deps: deps() });
   assert.ok(r.concepts[0].halts.some((h) => h.code === "requires_contact_details"));
 });
 
@@ -455,4 +472,45 @@ test("POST /v1/image-jobs (dry run) works through the existing API", async () =>
     else process.env.ASSETS_DIR = saved;
     server.close();
   }
+});
+
+// ── content generator (shared prompt with the live Make scenario) ──
+import { generatePost, toDraftPost, loadFacts, systemPrompt } from "../src/content/postGenerator.js";
+
+test("content generator: verified facts only, pure-Bangla check, drafts flow into the image pipeline", async () => {
+  const facts = loadFacts();
+  assert.ok(facts.length >= 5 && facts.every((f) => f.source_url.startsWith("https://www.who.int/")));
+  const D = "এই পোস্টটি শুধুমাত্র শিক্ষামূলক উদ্দেশ্যে। ব্যক্তিগত চিকিৎসা পরামর্শের জন্য একজন যোগ্য চিকিৎসকের সাথে পরামর্শ করুন।";
+  const fake = (json) => async (req) => {
+    assert.match(req.instructions, /pure Bangla/);
+    assert.match(req.instructions, /\[anaemia_pregnancy\]/);
+    return { json };
+  };
+  const stat = await generatePost({
+    type: "data_statistics",
+    call: fake({ content_type: "data_statistics", topic: "রক্তস্বল্পতা", hook: "ক্লান্তি মানেই কাজের চাপ নয়", caption: `ক্লান্ত লাগছে?\n\nবিশ্বজুড়ে প্রায় ৩৭% গর্ভবতী নারী রক্তস্বল্পতায় ভোগেন।\nসূত্র: বিশ্ব স্বাস্থ্য সংস্থা\n\n📌 পোস্টটি সেভ করে রাখুন\n${D}`, hashtags: "", overlay_main: "ক্লান্তি মানেই কাজের চাপ নয়", overlay_sub: "", key_points: [], myths: [], fact_id: "anaemia_pregnancy", image_prompt: "x" }),
+  });
+  assert.equal(stat.content_type, "statistic");
+  assert.equal(stat.cta, "পোস্টটি সেভ করে রাখুন");
+  assert.deepEqual(stat.verified_statistics[0].value, "৩৭%");
+  assert.deepEqual(stat.generator.warnings, []);
+  const r = await createImageJob({ post: { ...stat, content_status: "approved" }, options: { dryRun: true }, deps: deps() });
+  assert.equal(r.concepts[0].visual_type, "statistics");
+  assert.deepEqual(r.concepts[0].halts, []);
+
+  const myth = toDraftPost(
+    { content_type: "myth_vs_fact", topic: "t", hook: "Pregnancy myth", caption: `x\n${D}`, hashtags: "", overlay_main: "গর্ভাবস্থার ভুল ধারণা", overlay_sub: "", key_points: [], myths: [{ myth: "ক", fact: "খ" }, { myth: "গ", fact: "ঘ" }], fact_id: "", image_prompt: "" },
+    { postId: "m1", business: "dr_halima" },
+  );
+  assert.equal(myth.myths.length, 2);
+  assert.equal(buildBrief(normalizePost({ ...myth, content_status: "approved" }), brand, "myth_vs_fact").layout, "myth_fact_table");
+  const latin = toDraftPost({ ...myth, content_type: "pain_solution", hook: "Period pain? Eta normal na", overlay_main: "", myths: [], key_points: ["a"] }, { postId: "m2", business: "dr_halima" });
+  assert.ok(latin.generator.warnings.some((w) => /pure Bangla/.test(w)));
+});
+
+test("live Make scenario uses the same prompt as prompts/facebook_post.system.md", () => {
+  const live = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "make/daily-plan.scenario.json"), "utf8")).blueprint.flow.find((m) => m.id === 2).mapper.messages[0].content;
+  const shared = systemPrompt().split("VERIFIED FACTS")[0];
+  assert.ok(live.startsWith(shared), "live system prompt drifted from prompts/facebook_post.system.md");
+  for (const f of loadFacts()) assert.ok(live.includes(f.fact_bn), f.id);
 });

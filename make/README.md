@@ -6,16 +6,16 @@ How it works (one scenario, no storage needed — fits the Make Free plan):
 
 | Step | Module | What it does |
 |---|---|---|
-| 1 | Tools › Set variables | Works out the slot from the current Dhaka hour (10→1, 13→2, 16→3, 19→4, 22→5) and a rotation number `n = day_of_year × 5 + slot` |
-| 2 | OpenAI › Generate a completion (`gpt-6.1-sol`) | Writes one post **in Bangla** (image prompt in English, Bangladeshi visuals, Bangla disclaimer): pillar = `n − floor(n/7)×7`, topic = `floor(n/7) − floor(n/70)×10` (Make has no `mod` operator) from a 70-topic bank, style quick-tip in slots 2 and 4. Returns JSON text |
-| 2b | JSON › Parse JSON (data structure "Dr Halima post") | Turns the reply into `topic`, `caption`, `image_prompt` |
-| 3 | OpenAI › Generate images (`gpt-image-2.5-sunburst`) | Creates a square JPEG from `image_prompt` (falls back to a safe default prompt if it's ever empty) |
-| 4 | Facebook Pages › Create a Post with Photos | Posts caption + image to **Dr. Halima (Dubai)** |
+| 1 | Tools › Set variables | Slot from the Dhaka hour (10→1 … 22→5) and rotation number `n = day_of_year × 5 + slot` |
+| 2 | OpenAI › Generate a completion (`gpt-6.1-sol`) | Writes one **pure-Bangla** post with the shared prompt [`../prompts/facebook_post.system.md`](../prompts/facebook_post.system.md) (+ verified WHO facts). Content type = `(n + floor(n/7)) mod 7` over the 7 types (Pain → Solution, Myth vs Fact, Educational Carousel, Emotional Story, Data/Statistics, Call-to-Action, Doctor Trust); pillar = `n mod 7`, topic = `floor(n/7) mod 10` (Make has no `mod`, so `x − floor(x/7)×7`) |
+| 2b | JSON › Parse JSON (data structure "Dr Halima post") | `content_type`, `topic`, `hook`, `caption`, `hashtags`, `overlay_main/sub`, `image_prompt` |
+| 3 | OpenAI › Generate images (`gpt-image-2.5-sunburst`) | Square warm infographic-style **illustration in the brand palette, with no words** (AI-drawn Bangla is unreliable without review) |
+| 4 | Facebook Pages › Create a Post with Photos | Caption + Bangla signature + 0–3 hashtags |
 
 Each of steps 2–4 has a Retry error handler (3 attempts, 2 minutes apart).
 
-**Schedule:** every 3 hours from 10:00 on 3 Oct 2026, only between 09:55 and 22:10 (Asia/Dhaka)
-→ 10:00, 13:00, 16:00, 19:00, 22:00. The 5 slots always get 5 different pillars on the same day.
+**Schedule:** every 3 hours, only between 10:00 and 22:10 (Asia/Dhaka) → 10:00, 13:00, 16:00, 19:00, 22:00.
+(The window must start at exactly 10:00: Make restarts the timer at the window start each day.) The 5 slots always get 5 different pillars on the same day.
 
 **Operations:** ≈ 4 per run × 5 runs ≈ 20/day ≈ 600/month (Free plan: 1,000).
 

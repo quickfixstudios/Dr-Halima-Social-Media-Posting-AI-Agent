@@ -52,6 +52,7 @@ const BrandSchema = z.object({
   secondary_language: z.string().default("en"),
   audience: str,
   visual_style: str,
+  image_style: z.enum(["photo", "illustration"]).default("photo"), // default look for pictures with people
   tone: str,
   preferred_formats: z.array(z.string()).default(["4:5"]),
   person: z

@@ -16,6 +16,7 @@
   "brand_feel": "A caring, experienced doctor who explains things gently. Warm, maternal and emotionally reassuring, with a premium, expert tone. Feels safe for pregnant women and trustworthy for all audiences.",
   "visual_style": "warm, soft, maternal and premium modern medical editorial; calm and reassuring, never clinical or emergency-like",
   "tone": "caring, gentle, emotionally reassuring, educational, premium and expert",
+  "image_style": "illustration",
   "preferred_formats": [
     "4:5",
     "1:1"

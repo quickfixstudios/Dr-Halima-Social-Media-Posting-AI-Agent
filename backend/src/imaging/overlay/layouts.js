@@ -17,7 +17,7 @@ import { mix } from "../brands.js";
  */
 
 // Fraction of the canvas height covered by the AI picture for each layout (the rest is a text panel).
-const IMAGE_FRACTION = { list: 0.42, myth_fact: 0.36, cta_poster: 0.45, doctor_quote: 0.52, timeline: 0.36 };
+const IMAGE_FRACTION = { list: 0.42, myth_fact: 0.36, myth_fact_table: 0.26, cta_poster: 0.45, doctor_quote: 0.52, timeline: 0.36 };
 
 /** Where the generated picture goes on the canvas — used to request the right shape from the model. */
 export function imageArea(layout, width, height) {
@@ -288,6 +288,70 @@ async function mythFact(ctx) {
   }
 }
 
+/** Several myths: column headers "মিথ" | "সত্য", then one row per myth (✕ myth → ✓ fact), shrinking together to fit. */
+async function mythFactTable(ctx) {
+  const { W, H, M, s, c, t, brand } = ctx;
+  const top = imageArea("myth_fact_table", W, H).height - 40 * s;
+  panel(ctx, top);
+  let y = top + 40 * s;
+  const h = await ctx.text("headline", t.headline, { weight: "Bold", size: 48, min: 36, width: W - 2 * M, maxLines: 2, color: c.title });
+  place(ctx, h, M, y);
+  y += h.height + 26 * s;
+  let bottom = (await footer(ctx)) - 26 * s;
+  if (t.cta) bottom -= (await ctaPill(ctx, M, bottom)) + 22 * s;
+  const gap = 20 * s;
+  const arrowW = 44 * s;
+  const colW = (W - 2 * M - arrowW) / 2;
+  const icon = 34 * s;
+  const pad = 18 * s;
+  const mythBg = mix(c.background, c.highlight, 0.28);
+  const factBg = mix(c.background, c.health, 0.3);
+  // Column headers
+  const headers = [];
+  for (const [i, [label, fill]] of [[t.myth_label, c.title], [t.fact_label, c.health]].entries()) {
+    headers.push({ i, fill, r: await ctx.text(`${i ? "fact" : "myth"}_label`, label, { weight: "Bold", size: 28, min: 24, width: colW, maxLines: 1, color: c.on(fill), align: "centre" }) });
+  }
+  const headH = Math.max(...headers.map((x) => x.r.height)) + 20 * s;
+  for (const { i, fill, r } of headers) {
+    const x = M + i * (colW + arrowW);
+    ctx.shapes.push(rect(x, y, colW, headH, fill, { r: headH / 2 }));
+    place(ctx, r, x + (colW - r.width) / 2, y + (headH - r.height) / 2);
+  }
+  y += headH + gap;
+  const textW = colW - icon - 3 * pad;
+  for (let px = 30; ; px -= 2) {
+    const rows = [];
+    for (const [i, m] of t.myths.entries()) {
+      const a = await renderText({ text: m.myth, fontFile: brand.fontFiles.semibold, family: brand.fonts.family, weight: "SemiBold", sizePx: px * s, minPx: px * s, width: textW, color: c.text, label: `myth ${i + 1}` });
+      const b = await renderText({ text: m.fact, fontFile: brand.fontFiles.semibold, family: brand.fonts.family, weight: "SemiBold", sizePx: px * s, minPx: px * s, width: textW, color: c.text, label: `fact ${i + 1}` });
+      rows.push({ a, b, h: Math.max(a.height, b.height, icon) + 2 * pad });
+    }
+    const total = rows.reduce((sum, r) => sum + r.h, 0) + gap * (rows.length - 1);
+    if (total <= bottom - y || px - 2 < 22) {
+      if (total > bottom - y) throw new ImageError("TEXT_TOO_LONG", `${t.myths.length} myths do not fit — use fewer or shorter myths, or a carousel`, { label: "myth_fact_table", recommend: "carousel" });
+      ctx.report.sizes.myth_fact = px;
+      y += Math.max(0, (bottom - y - total) / 2);
+      for (const [i, r] of rows.entries()) {
+        const rx = M + colW + arrowW;
+        ctx.shapes.push(rect(M, y, colW, r.h, mythBg, { r: 18 * s }), rect(rx, y, colW, r.h, factBg, { r: 18 * s }));
+        const cy = y + r.h / 2;
+        ctx.shapes.push(circle(M + pad + icon / 2, cy, icon / 2, c.title) + crossIcon(M + pad + icon / 2, cy, icon / 2, c.on(c.title)));
+        ctx.shapes.push(circle(rx + pad + icon / 2, cy, icon / 2, c.health) + checkIcon(rx + pad + icon / 2, cy, icon / 2, c.on(c.health)));
+        const ax = M + colW + arrowW / 2;
+        ctx.shapes.push(`<path d="M ${ax - 12 * s} ${cy} L ${ax + 10 * s} ${cy} M ${ax + 2 * s} ${cy - 8 * s} L ${ax + 10 * s} ${cy} L ${ax + 2 * s} ${cy + 8 * s}" stroke="${c.title}" stroke-width="${4 * s}" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`);
+        place(ctx, r.a, M + 2 * pad + icon, cy - r.a.height / 2);
+        place(ctx, r.b, rx + 2 * pad + icon, cy - r.b.height / 2);
+        for (const [label, text] of [[`myth ${i + 1}`, t.myths[i].myth], [`fact ${i + 1}`, t.myths[i].fact]]) {
+          ctx.report.blocks.push({ label, text });
+          ctx.report.graphemes += graphemeCount(text);
+        }
+        y += r.h + gap;
+      }
+      return;
+    }
+  }
+}
+
 async function twoColumn(ctx) {
   const { W, H, M, s, c, t, brief } = ctx;
   ctx.shapes.push(rect(M / 2, M / 2, W - M, H - M, c.background, { r: 32 * s, opacity: 0.94 }));
@@ -461,6 +525,7 @@ const LAYOUTS = {
   list: (ctx) => listLayout(ctx),
   timeline: (ctx) => listLayout(ctx, { timeline: true }),
   myth_fact: mythFact,
+  myth_fact_table: mythFactTable,
   two_column: twoColumn,
   question,
   cta_poster: ctaPoster,

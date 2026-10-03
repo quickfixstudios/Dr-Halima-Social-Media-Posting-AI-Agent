@@ -147,6 +147,42 @@ Facebook post id.
 
 ---
 
+## 3b. The content system: 7 content types (live Make + `npm run content`)
+
+Both the live Make scenario and the backend use **one shared prompt**, `prompts/facebook_post.system.md`
+(a test checks that they never drift apart). Every post is pure Bangla and is one of 7 content types:
+
+| Type | What the post does |
+|---|---|
+| Pain → Solution | names a problem women recognise, then the gentle solution / when to see a doctor |
+| Myth vs Fact | 1–4 common beliefs, each with the correct fact (several → a Myth/Fact table image) |
+| Educational Carousel | 4–5 numbered steps (a multi-slide carousel in the review pipeline) |
+| Emotional Story | a clearly hypothetical "ধরুন…" scenario — never a real patient |
+| Data/Statistics | ONE fact from `prompts/verified_facts.json` (WHO, with source links), copied exactly |
+| Call-to-Action | invites messages to the page ("ইনবক্সে মেসেজ করুন") — no invented phone numbers, prices or offers |
+| Doctor Trust | ডা. হালিমা's own voice sharing a value — no invented stories, patient numbers or achievements |
+
+Caption shape: hook again → 2–4 short lines → 2–3 "✅" points → one soft call to action (📩 message / 📌 save & share)
+→ the disclaimer. Hooks stop the scroll with care, not fear.
+
+**Live Make scenario:** the 5 daily posts rotate through all 7 types evenly. Its pictures are warm infographic-style
+illustrations **without words**: AI image models still misspell Bangla, and Make posts without review. The hook is
+the caption's first line instead.
+
+**Backend drafts (with on-image Bangla text):**
+```bash
+npm run content -- --type myth_vs_fact     # writes posts/dr_halima/drafts/<id>.json (status: draft)
+npm run content -- --approve <id>          # after you have read it
+npm run image -- --post <id> --dry-run     # free preview, then without --dry-run for the real image
+```
+The draft carries everything the image needs (hook, small line, CTA, key points, myths, the verified statistic and
+its source). Any English letters in the Bangla text are listed as warnings.
+
+**Verified facts:** before adding a statistic to `prompts/verified_facts.json`, open its source page and check the
+exact number; add a `source_url` for every fact. Then copy the new fact line into the live Make prompt too (§9).
+
+---
+
 ## 4. Writing your own post file
 
 Create a JSON file in `posts/dr_halima/` (copy a sample). Only four fields are required.
@@ -163,6 +199,7 @@ Create a JSON file in `posts/dr_halima/` (copy a sample). Only four fields are r
 | `subtitle`, `cta` | | Second line and call-to-action drawn on the image |
 | `key_points` | | List items for infographics/checklists/carousels. If missing, numbered lines (`১.` `২.` …) in the caption are used |
 | `myth`, `fact` | | Needed for Myth vs Fact (the fact is never invented) |
+| `myths` | | Up to 4 `{ "myth", "fact" }` pairs → a Myth/Fact table image |
 | `columns` | | `{ "left": {"title","items"}, "right": {…} }` for Do/Don't and comparisons |
 | `slides` | | Explicit carousel slides `[{ "title", "body" }]` |
 | `verified_statistics` | | `[{ "value", "label", "source", "source_url" }]` — required for statistic images |
@@ -192,6 +229,11 @@ medical-safety notes, and any flags or halts.
 Educational carousel · Emotional story · Statistics · Appointment/CTA poster · Doctor trust · Warning signs ·
 Checklist · Comparison · Do vs Don't · Pregnancy timeline · Menstrual-cycle education · Fertility education ·
 PCOS awareness · Pregnancy nutrition · Postpartum education · Newborn/maternal care · Question/curiosity.
+
+**Image style:** Dr. Halima's default look is a **warm illustrated infographic** (flat vector shapes with soft
+watercolour texture), set by `"image_style": "illustration"` in the brand file. Use `--concepts 2` to also get a photo
+version, or set `"image_style": "photo"`. Drawn people get no "প্রতীকী ছবি" label (only photos do). Fetus/womb
+drawings are deliberately never made.
 
 **Bangladeshi context:** every person is described as Bangladeshi with realistic South Asian features. Clothing
 rotates between salwar kameez, saree, modern kurti, modest office wear and hijab, and settings rotate between
@@ -275,8 +317,9 @@ the same colours and told to avoid bright hot pink, too many colours and the pur
 * **Titles are never upgraded.** Sample 5 says "গাইনী **বিশেষজ্ঞ**" (specialist). Dr. Halima's real title is
   Medical Officer (FCPS Final Part), so it is **blocked**. Sample 6 shows the corrected wording.
   The list is in `brands/dr_halima.json` → `person.forbidden_titles`.
-* **Never invents statistics** (sample 7 → `requires_verified_statistic`) or **contact details** (sample 8 →
-  `requires_contact_details`).
+* **Never invents statistics** (sample 7 → `requires_verified_statistic`) or **contact details**. Appointment
+  posters that invite messages to the page ("ইনবক্সে মেসেজ করুন", sample 8) need nothing else; a CTA such as
+  "ফোন করুন" without a phone number in the brand file stops with `requires_contact_details`.
 * **Never fakes Dr. Halima's face.** Without an approved photo, doctor posts use a non-identifying clinic still-life
   and flag "missing doctor photo". With an approved photo, her **real** photo is used and no AI face is made.
 * Images of people carry a small **"প্রতীকী ছবি"** ("symbolic image") label, as Bangladeshi media do, so no
@@ -434,7 +477,7 @@ Until you do, costs show as **"unknown"** (never guessed) and only the count lim
 1. Open `backend/src/imaging/categories.js`.
 2. Copy an entry that looks similar, change `id` and `label`, and adjust `triggers` (words and content types that
    should select it), `visual` (what the picture shows) and `text` limits.
-3. Pick an existing `layout`: `hook_band`, `list`, `timeline`, `myth_fact`, `two_column`, `question`,
+3. Pick an existing `layout`: `hook_band`, `list`, `timeline`, `myth_fact`, `myth_fact_table`, `two_column`, `question`,
    `cta_poster`, `doctor_quote`, `stat` or `carousel`. (A brand-new layout means adding one function in
    `overlay/layouts.js`.)
 4. `npm test`, then `npm run image -- --post <a post> --type <your id> --dry-run` and look at the preview.

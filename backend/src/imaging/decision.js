@@ -44,7 +44,7 @@ export function rankCategories(post, brand) {
     if (kw) bump(Math.min(kw, 7), "matching words in hook/topic/caption");
     if (goal && cat.triggers.goals.includes(goal)) bump(2, `goal "${post.goal}"`);
     // Structure of the content.
-    if (cat.id === "myth_vs_fact" && post.myth && post.fact) bump(8, "post has myth + fact");
+    if (cat.id === "myth_vs_fact" && ((post.myth && post.fact) || post.myths.length)) bump(8, "post has myth + fact");
     if (["comparison", "do_dont"].includes(cat.id) && post.columns) bump(6, "post has two columns");
     if (cat.id === "statistics" && post.verified_statistics.length) bump(6, "post has a verified statistic");
     if (cat.id === "question_curiosity" && /[?？]\s*$/.test(post.hook)) bump(4, "hook is a question");
@@ -54,8 +54,8 @@ export function rankCategories(post, brand) {
     // type we keep it, so the pipeline halts with a clear reason instead of silently switching style.
     if (explicit) return { id: cat.id, score: Math.round(score * 10) / 10, reasons, order };
     if (cat.requires.includes("verified_statistic") && !post.verified_statistics.length) bump(-8, "no verified statistic");
-    if (cat.requires.includes("contact_details") && !contactLines(brand).length) bump(-4, "no contact details in the brand file");
-    if (cat.requires.includes("myth_fact") && !(post.myth && post.fact) && !/মিথ|myth/i.test(post.hook)) bump(-4, "no myth/fact text");
+    if (cat.requires.includes("contact_details") && !contactLines(brand).length && !/ইনবক্স|মেসেজ|inbox|message/i.test(post.cta)) bump(-4, "no contact details in the brand file");
+    if (cat.requires.includes("myth_fact") && !(post.myth && post.fact) && !post.myths.length && !/মিথ|myth/i.test(post.hook)) bump(-4, "no myth/fact text");
     if (cat.requires.includes("two_columns") && !post.columns) bump(-6, "no two-column content");
     return { id: cat.id, score: Math.round(score * 10) / 10, reasons, order };
   });
@@ -128,9 +128,11 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
     if (!text.items.length) flags.push({ code: "no_list_items", message: "No numbered/bulleted points found in the post — the image shows only the headline. Add key_points for a stronger infographic." });
   }
   if (layout === "myth_fact") {
-    const myth = post.myth || (MYTH_PREFIX.test(post.hook) ? post.hook.replace(MYTH_PREFIX, "") : "");
-    if (!myth || !post.fact) halts.push({ code: "requires_myth_and_fact", message: 'Myth vs Fact needs both "myth" and "fact" text in the approved post — the image will not invent the fact.' });
-    Object.assign(text, { headline: MYTH_PREFIX.test(post.hook) ? "মিথ বনাম সত্য" : post.hook, myth, fact: post.fact, myth_label: "মিথ", fact_label: "সত্য" });
+    const single = post.myth || (MYTH_PREFIX.test(post.hook) ? post.hook.replace(MYTH_PREFIX, "") : "");
+    const pairs = post.myths.length ? post.myths : single && post.fact ? [{ myth: single, fact: post.fact }] : [];
+    if (!pairs.length) halts.push({ code: "requires_myth_and_fact", message: 'Myth vs Fact needs "myth" + "fact" (or "myths": [{myth, fact}]) in the approved post — the image will not invent the fact.' });
+    if (pairs.length > 1) layout = "myth_fact_table"; // several myths → a table of rows, like the reference infographics
+    Object.assign(text, { headline: MYTH_PREFIX.test(post.hook) ? "মিথ বনাম সত্য" : post.hook, myths: pairs, myth: pairs[0]?.myth ?? "", fact: pairs[0]?.fact ?? "", myth_label: "মিথ", fact_label: "সত্য" });
     Object.assign(origins, { headline: MYTH_PREFIX.test(post.hook) ? "fixed" : "content", myth: "content", fact: "content", myth_label: "fixed", fact_label: "fixed" });
   }
   if (layout === "two_column") {
@@ -145,7 +147,9 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
     origins.source_note = "content";
   }
   if (cat.requires.includes("contact_details")) {
-    if (!text.contact.length) halts.push({ code: "requires_contact_details", message: "Appointment posters need at least one contact detail in the brand file (contact_details). Nothing will be invented." });
+    // Messaging the page itself is a real contact route, so "ইনবক্সে মেসেজ করুন" posters need no extra details.
+    const viaInbox = /ইনবক্স|মেসেজ|inbox|message/i.test(post.cta);
+    if (!text.contact.length && !viaInbox) halts.push({ code: "requires_contact_details", message: "Appointment posters need a contact detail in the brand file (contact_details) or a CTA that invites messages to the page. Nothing will be invented." });
     if (!text.cta) (text.cta = "অ্যাপয়েন্টমেন্টের জন্য যোগাযোগ করুন"), (origins.cta = "fixed");
   }
   let doctorPresence = false;
@@ -175,8 +179,9 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
   }
 
   // ── picture ──
-  const mode = opts.conceptMode || cat.visual.mode;
-  const peopleInScene = mode === "photo" && !/no people|no person|no face/.test(cat.visual.subject);
+  // Brand default look: Dr. Halima uses warm infographic illustrations instead of photos (unless a concept asks otherwise).
+  const mode = opts.conceptMode || (cat.visual.mode === "photo" && brand.image_style === "illustration" && !usePhoto ? "illustration" : cat.visual.mode);
+  const peopleInScene = mode !== "graphic" && !/no people|no person|no face/.test(cat.visual.subject);
   const area = imageArea(layout, out.width, out.height);
   const wardrobe = peopleInScene ? pick(brand.visual_context?.wardrobe, `${post.post_id}:${cat.id}`, opts.variant ?? 0) : "";
   const settingKey = cat.visual.setting;
@@ -214,8 +219,8 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
     camera_angle: cat.visual.camera,
     background: settingKey === "none" ? "soft, low-detail abstract background" : environment,
     lighting: "soft natural daylight, gentle contrast",
-    visual_style: mode === "illustration" ? "clean, flat, modern editorial vector illustration with soft shading" : brand.visual_style || "clean modern editorial",
-    realism: mode === "photo" ? "photorealistic, natural and unretouched" : mode === "illustration" ? "stylised illustration" : "flat graphic",
+    visual_style: mode === "illustration" ? "warm, premium editorial health illustration in a modern infographic style: flat vector shapes with soft watercolour texture, friendly characters, simple supporting icons" : brand.visual_style || "clean modern editorial",
+    realism: mode === "photo" ? "photorealistic, natural and unretouched" : mode === "illustration" ? "stylised illustration (clearly not a photograph)" : "flat graphic",
     color_direction: colorDirection(brand),
     brand_treatment: `${brand.brand_name}: ${brand.brand_feel || brand.tone || "professional"} Brand text, logo and attribution are added afterwards, never by the image model`,
     cta_kind: ctaKind(cat, text.cta),
@@ -228,7 +233,7 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
     text,
     text_origins: origins,
     text_density: textChars > 160 ? "high" : textChars > 80 ? "medium" : "low",
-    label_symbolic: peopleInScene && brand.medical,
+    label_symbolic: peopleInScene && mode === "photo" && brand.medical, // drawings are obviously not real patients
     badge: cat.badge ?? null,
     negative_constraints: negativeConstraints(cat, brand, { peopleInScene, textMode: opts.textMode ?? "overlay" }),
     medical_safety: brand.medical ? MEDICAL_SAFETY : [],
@@ -263,7 +268,8 @@ function graphicalElements(layout, text) {
     hook_band: ["dark gradient band at the bottom", "headline", text.cta ? "CTA pill" : null, "attribution line"],
     list: ["picture at the top", "rounded text panel", text.badge ? `badge "${text.badge}"` : null, "numbered/icon list", "attribution line"],
     timeline: ["picture at the top", "rounded text panel", "vertical timeline with numbered dots", "attribution line"],
-    myth_fact: ["picture at the top", "MYTH card (red ✕)", "FACT card (green ✓)", "attribution line"],
+    myth_fact: ["picture at the top", "MYTH card (deep rose ✕)", "FACT card (sage ✓)", "attribution line"],
+    myth_fact_table: ["picture band at the top", "MYTH | FACT column headers", "one row per myth with ✕ → ✓", "attribution line"],
     two_column: ["soft background", "two titled columns with icons", "attribution line"],
     question: ["dark gradient", "large question headline", "accent ? badge", "attribution line"],
     cta_poster: ["picture at the top", "headline", "contact lines", "CTA button", "attribution line"],
@@ -323,8 +329,11 @@ export function briefTextBlocks(brief) {
   add("attribution", t.attribution, "brand");
   add("badge", t.badge, "fixed");
   (t.items ?? []).forEach((x, i) => add(`item ${i + 1}`, x, o.items));
-  add("myth", t.myth, o.myth);
-  add("fact", t.fact, o.fact);
+  if (t.myths?.length > 1) t.myths.forEach((m, i) => (add(`myth ${i + 1}`, m.myth, "content"), add(`fact ${i + 1}`, m.fact, "content")));
+  else {
+    add("myth", t.myth, o.myth);
+    add("fact", t.fact, o.fact);
+  }
   add("myth_label", t.myth_label, "fixed");
   add("fact_label", t.fact_label, "fixed");
   if (t.columns) {

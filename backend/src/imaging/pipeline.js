@@ -50,12 +50,13 @@ function resolveDeps(deps = {}) {
 const clamp = (n, lo, hi) => Math.max(lo, Math.min(hi, n));
 
 /** Choose 1–4 creative directions: best categories first, then alternative treatments of the best one. */
-export function planConcepts(ranking, count) {
+export function planConcepts(ranking, count, brand) {
   const positive = ranking.filter((r) => r.score > 0 || ranking.length === 1);
   const picks = (positive.length ? positive : ranking.slice(0, 1)).slice(0, count).map((r) => ({ visual_type: r.id, fit_score: r.score, reasons: r.reasons }));
   const top = picks[0];
   const extras = [
-    { ...top, concept_mode: "illustration", fit_score: top.fit_score - 1, reasons: [...top.reasons, "alternative treatment: illustration"] },
+    // Alternative treatment: the opposite of the brand's default look.
+    ...(brand?.image_style === "illustration" ? [{ ...top, concept_mode: "photo", fit_score: top.fit_score - 1, reasons: [...top.reasons, "alternative treatment: photo"] }] : [{ ...top, concept_mode: "illustration", fit_score: top.fit_score - 1, reasons: [...top.reasons, "alternative treatment: illustration"] }]),
     { visual_type: "doctor_trust", fit_score: top.fit_score - 2, reasons: ["alternative treatment: doctor authority visual"] },
   ];
   for (const e of extras) {
@@ -195,7 +196,7 @@ export async function createImageJob({ businessId, post: raw, options = {}, deps
 
   const ranking = rankCategories(post, brand);
   log.step(`Selected type: ${getCategory(ranking[0].id).label} (score ${ranking[0].score}: ${ranking[0].reasons.join(", ") || "default"})`);
-  const concepts = planConcepts(ranking, clamp(Number(options.concepts ?? 1), 1, 4));
+  const concepts = planConcepts(ranking, clamp(Number(options.concepts ?? 1), 1, 4), brand);
   log.step("Generating creative brief" + (concepts.length > 1 ? `s for ${concepts.length} concepts` : ""));
   const prepared = [];
   for (const [i, c] of concepts.entries()) prepared.push({ concept: c, ...(await prepareConcept(c, post, brand, { ...options, dryRun }, d, log, i)) });
