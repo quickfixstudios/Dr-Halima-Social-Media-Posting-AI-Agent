@@ -215,7 +215,7 @@
         "maxErrors": 3,
         "autoCommit": true,
         "roundtrips": 1,
-        "sequential": true,
+        "sequential": false,
         "confidential": false,
         "freshVariables": false,
         "autoCommitTriggerLast": true
