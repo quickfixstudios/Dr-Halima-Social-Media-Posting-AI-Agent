@@ -11,6 +11,8 @@ import { reviewCompliance } from "./openai/content.js";
 import { generateImage } from "./openai/images.js";
 import { decide } from "./compliance.js";
 import { todayLocal } from "./schedule.js";
+import { createImageJob, runAction, listJobs } from "./imaging/pipeline.js";
+import { ImageError } from "./imaging/errors.js";
 
 const log = createLogger("server");
 const running = new Set();
@@ -86,6 +88,25 @@ export const routes = {
     return [200, { results: decisions.map(({ post, verdict, issues }) => ({ id: post.id, verdict, issues, post })) }];
   },
 
+  // Image automation (IMAGE_AUTOMATION.md). Body: { business?, post: {...approved post...}, dry_run?, visual_type?, concepts?, aspect? }
+  "POST /v1/image-jobs": async (body) => {
+    if (!body.post || typeof body.post !== "object") throw new HttpError(400, "post object required");
+    const result = await createImageJob({ businessId: body.business, post: body.post, options: { dryRun: body.dry_run, visualType: body.visual_type, concepts: body.concepts, aspect: body.aspect, force: body.force } });
+    return [result.dry_run ? 200 : 201, result];
+  },
+
+  // Body: { business?, post_id, action: approve|reject|select|regenerate|edit_prompt|edit_headline|change_type|send|published|unapprove, ...params }
+  "POST /v1/image-jobs/action": async (body) => {
+    if (!body.post_id || !body.action) throw new HttpError(400, "post_id and action required");
+    const { business, post_id, action, ...params } = body;
+    return [200, await runAction({ businessId: business, postId: post_id, action, params })];
+  },
+
+  "GET /v1/image-jobs": async (_body, url) => [
+    200,
+    { jobs: listJobs({ businessId: url.searchParams.get("business") ?? undefined, status: url.searchParams.get("status") ?? undefined }).map((m) => ({ post_id: m.post_id, status: m.status, updated_at: m.updated_at, selected: m.selected })) },
+  ],
+
   "POST /v1/sync": async () => [200, await syncEngagement()],
 
   "GET /v1/insights": async (_body, url) => {
@@ -94,6 +115,15 @@ export const routes = {
     return [200, { date, insights, plan: planDay(insights, { date }) }];
   },
 };
+
+function imageErrorStatus(code) {
+  if (["POST_NOT_FOUND", "BRAND_NOT_FOUND"].includes(code)) return 404;
+  if (["ALREADY_EXISTS", "INVALID_TRANSITION", "NOT_APPROVED"].includes(code)) return 409;
+  if (code.startsWith("BUDGET")) return 429;
+  if (["MISSING_API_KEY", "MAKE_WEBHOOK_MISSING"].includes(code)) return 503;
+  if (code.startsWith("API_")) return 502;
+  return 400;
+}
 
 export function createServer({ apiKey = config.apiKey } = {}) {
   return http.createServer(async (req, res) => {
@@ -111,9 +141,9 @@ export function createServer({ apiKey = config.apiKey } = {}) {
       const [status, payload] = await handler(body, url);
       send(status, payload);
     } catch (err) {
-      const status = err instanceof HttpError ? err.status : 500;
-      log.error("Request failed", { route: key, ...errorMeta(err) });
-      send(status, { error: err.message });
+      const status = err instanceof HttpError ? err.status : err instanceof ImageError ? imageErrorStatus(err.code) : 500;
+      log.error("Request failed", { route: key, ...errorMeta(err), ...(err.code && { code: err.code }) });
+      send(status, { error: err.message, ...(err instanceof ImageError && { code: err.code }) });
     }
   });
 }

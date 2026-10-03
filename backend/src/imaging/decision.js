@@ -1,0 +1,330 @@
+import crypto from "node:crypto";
+import { CATEGORIES, getCategory } from "./categories.js";
+import { DEFAULT_ASPECT, outputSize, generationSize } from "./formats.js";
+import { imageArea, negativeSpaceHint } from "./overlay/layouts.js";
+import { contactLines } from "./brands.js";
+import { graphemeCount } from "./overlay/text.js";
+import { FIXED_LABELS } from "./safety.js";
+
+/**
+ * Content → image decision engine.
+ *
+ * 1. rankCategories(): scores every visual category against the post (content type, words in the hook/topic,
+ *    goal, and the structure of the content such as myth+fact or a list of points) and explains each score.
+ * 2. buildBrief(): turns the chosen category into an Image Creative Brief — every decision about the picture
+ *    and the text, stored with the asset. The prompt builder and the text renderer work only from this brief.
+ */
+
+const lc = (s = "") => s.toLowerCase();
+
+export function rankCategories(post, brand) {
+  if (post.visual_type) return [{ id: getCategory(post.visual_type).id, score: 100, reasons: [`visual_type "${post.visual_type}" was set on the post`] }];
+  const hook = lc(post.hook);
+  const topic = lc(post.topic);
+  const caption = lc(post.caption);
+  const type = lc(post.content_type);
+  const goal = lc(post.goal);
+  const ranked = CATEGORIES.map((cat, order) => {
+    let score = 0;
+    const reasons = [];
+    const bump = (points, why) => {
+      score += points;
+      reasons.push(`${why} (${points > 0 ? "+" : "−"}${Math.abs(points)})`);
+    };
+    const explicit = Boolean(type && cat.triggers.content_types.includes(type));
+    if (explicit) bump(10, `content_type "${post.content_type}"`);
+    let kw = 0;
+    for (const word of cat.triggers.keywords) {
+      const w = lc(word);
+      if (w === "?") continue;
+      if (hook.includes(w)) kw += 3;
+      else if (topic.includes(w)) kw += 2;
+      else if (caption.includes(w)) kw += 0.5;
+    }
+    if (kw) bump(Math.min(kw, 7), "matching words in hook/topic/caption");
+    if (goal && cat.triggers.goals.includes(goal)) bump(2, `goal "${post.goal}"`);
+    // Structure of the content.
+    if (cat.id === "myth_vs_fact" && post.myth && post.fact) bump(8, "post has myth + fact");
+    if (["comparison", "do_dont"].includes(cat.id) && post.columns) bump(6, "post has two columns");
+    if (cat.id === "statistics" && post.verified_statistics.length) bump(6, "post has a verified statistic");
+    if (cat.id === "question_curiosity" && /[?？]\s*$/.test(post.hook)) bump(4, "hook is a question");
+    if (cat.layout === "list" && post.key_points.length >= 3) bump(3, `${post.key_points.length} list points`);
+    if (cat.id === "educational_carousel" && post.key_points.length > 5) bump(4, "more points than fit on one image");
+    // Unmet hard requirements make a category a poor *default* choice. When the post explicitly asks for this
+    // type we keep it, so the pipeline halts with a clear reason instead of silently switching style.
+    if (explicit) return { id: cat.id, score: Math.round(score * 10) / 10, reasons, order };
+    if (cat.requires.includes("verified_statistic") && !post.verified_statistics.length) bump(-8, "no verified statistic");
+    if (cat.requires.includes("contact_details") && !contactLines(brand).length) bump(-4, "no contact details in the brand file");
+    if (cat.requires.includes("myth_fact") && !(post.myth && post.fact) && !/মিথ|myth/i.test(post.hook)) bump(-4, "no myth/fact text");
+    if (cat.requires.includes("two_columns") && !post.columns) bump(-6, "no two-column content");
+    return { id: cat.id, score: Math.round(score * 10) / 10, reasons, order };
+  });
+  ranked.sort((a, b) => b.score - a.score || a.order - b.order);
+  const top = ranked.filter((r) => r.score > 0);
+  if (!top.length) {
+    const fallback = post.key_points.length >= 2 ? "educational_infographic" : "emotional_story";
+    return [{ id: fallback, score: 0, reasons: ["no strong signal — default choice"] }, ...ranked.filter((r) => r.id !== fallback)].map(({ order, ...r }) => r);
+  }
+  return ranked.map(({ order, ...r }) => r);
+}
+
+/** Stable pseudo-random pick so the same post always gets the same wardrobe/setting (variant shifts it). */
+function pick(list, seed, variant = 0) {
+  if (!list?.length) return "";
+  const h = crypto.createHash("sha1").update(seed).digest().readUInt32BE(0);
+  return list[(h + variant) % list.length];
+}
+
+const GOAL_LABEL = {
+  education: "stop_scroll_and_educate",
+  awareness: "raise_awareness_calmly",
+  save: "be_worth_saving",
+  share: "be_worth_sharing",
+  engagement: "start_a_conversation",
+  curiosity: "spark_curiosity",
+  trust: "build_trust",
+  connection: "build_emotional_connection",
+  conversion: "invite_appointment_enquiries",
+  appointments: "invite_appointment_enquiries",
+};
+
+const MYTH_PREFIX = /^\s*(মিথ|myth)\s*[:：-]\s*/i;
+
+/**
+ * Build the Image Creative Brief for one post + category.
+ * @param {object} opts  { aspect, textMode, variant (int, rotates wardrobe/setting), conceptMode ("photo"|"illustration"), autoCarousel }
+ * @returns {object} brief  (JSON-serialisable; stored in metadata.json)
+ */
+export function buildBrief(post, brand, categoryId, opts = {}) {
+  let cat = getCategory(categoryId);
+  const flags = [];
+  const halts = [];
+  const platform = post.platform || "facebook";
+  const aspect = opts.aspect || post.aspect_ratio || (brand.preferred_formats?.[0] ?? DEFAULT_ASPECT[platform] ?? "4:5");
+  const out = outputSize(platform, aspect);
+
+  // Long lists do not belong on one image → carousel (keeping the category's picture).
+  let layout = cat.layout;
+  if (cat.text.items_max && post.key_points.length > cat.text.items_max && cat.carousel_capable && opts.autoCarousel !== false) {
+    flags.push({ code: "converted_to_carousel", message: `${post.key_points.length} points are too many for one ${cat.label} image (max ${cat.text.items_max}) — producing a carousel instead.` });
+    layout = "carousel";
+  }
+
+  // ── on-image text (only from the approved post, brand file or fixed neutral labels) ──
+  const text = {
+    headline: post.hook,
+    subtitle: post.subtitle || "",
+    cta: post.cta || "",
+    attribution: brand.person?.attribution_bn || brand.brand_name,
+    items: [],
+    contact: contactLines(brand).map((l) => l.text),
+  };
+  const origins = { headline: "content", subtitle: "content", cta: "content", attribution: "brand", items: "content", contact: "brand" };
+
+  if (layout === "list" || layout === "timeline") {
+    text.items = post.key_points.slice(0, cat.text.items_max);
+    if (cat.badge === "warning") (text.badge = "সতর্কতা"), (origins.badge = "fixed");
+    if (cat.badge === "check") (text.badge = "জেনে রাখুন"), (origins.badge = "fixed");
+    if (!text.items.length) flags.push({ code: "no_list_items", message: "No numbered/bulleted points found in the post — the image shows only the headline. Add key_points for a stronger infographic." });
+  }
+  if (layout === "myth_fact") {
+    const myth = post.myth || (MYTH_PREFIX.test(post.hook) ? post.hook.replace(MYTH_PREFIX, "") : "");
+    if (!myth || !post.fact) halts.push({ code: "requires_myth_and_fact", message: 'Myth vs Fact needs both "myth" and "fact" text in the approved post — the image will not invent the fact.' });
+    Object.assign(text, { headline: MYTH_PREFIX.test(post.hook) ? "মিথ বনাম সত্য" : post.hook, myth, fact: post.fact, myth_label: "মিথ", fact_label: "সত্য" });
+    Object.assign(origins, { headline: MYTH_PREFIX.test(post.hook) ? "fixed" : "content", myth: "content", fact: "content", myth_label: "fixed", fact_label: "fixed" });
+  }
+  if (layout === "two_column") {
+    if (!post.columns) halts.push({ code: "requires_two_columns", message: `${cat.label} needs "columns" (left/right title + items) in the approved post.` });
+    text.columns = post.columns ?? { left: { title: "করণীয়", items: [] }, right: { title: "বর্জনীয়", items: [] } };
+  }
+  if (cat.requires.includes("verified_statistic")) {
+    const s = post.verified_statistics[0];
+    if (!s) halts.push({ code: "requires_verified_statistic", message: "Statistics images need a verified statistic with its source in the post (verified_statistics). No numbers will be invented." });
+    text.stat = s ? { value: s.value, label: s.label } : { value: "", label: "" };
+    text.source_note = s ? `সূত্র: ${s.source}` : "";
+    origins.source_note = "content";
+  }
+  if (cat.requires.includes("contact_details")) {
+    if (!text.contact.length) halts.push({ code: "requires_contact_details", message: "Appointment posters need at least one contact detail in the brand file (contact_details). Nothing will be invented." });
+    if (!text.cta) (text.cta = "অ্যাপয়েন্টমেন্টের জন্য যোগাযোগ করুন"), (origins.cta = "fixed");
+  }
+  let doctorPresence = false;
+  let usePhoto = false;
+  if (cat.requires.includes("doctor_photo_or_fallback")) {
+    if (brand.photoFile) {
+      usePhoto = true;
+      doctorPresence = true;
+    } else {
+      flags.push({ code: "missing_doctor_photo", message: `No approved photo of ${brand.person?.display_name_en || brand.brand_name} in the brand file — using a non-identifying clinic still-life instead. An AI face will never be presented as the doctor. Add person.photo_path + photo_approved=true to use her real photo.` });
+    }
+  }
+  if (layout === "carousel") {
+    const source = post.slides?.length ? post.slides : post.key_points.map((p) => ({ title: p, body: "" }));
+    const max = (getCategory("educational_carousel").text.slides_max ?? 7) - 2;
+    text.slides = source.slice(0, max);
+    text.swipe_label = "পরের স্লাইডে দেখুন →";
+    text.end_label = "পোস্টটি সেভ করে রাখুন";
+    Object.assign(origins, { slides: "content", swipe_label: "fixed", end_label: "fixed" });
+    if (source.length > max) flags.push({ code: "carousel_truncated", message: `Only the first ${max} points fit in a carousel; ${source.length - max} were left out.` });
+  }
+
+  // Layouts without room for a CTA keep it in the caption only (nothing is drawn that the layout cannot show).
+  if (["two_column", "stat", "doctor_quote"].includes(layout) && text.cta) {
+    flags.push({ code: "cta_in_caption_only", message: `The ${layout} layout has no CTA area — the CTA stays in the caption.` });
+    text.cta = "";
+  }
+
+  // ── picture ──
+  const mode = opts.conceptMode || cat.visual.mode;
+  const peopleInScene = mode === "photo" && !/no people|no person|no face/.test(cat.visual.subject);
+  const area = imageArea(layout, out.width, out.height);
+  const wardrobe = peopleInScene ? pick(brand.visual_context?.wardrobe, `${post.post_id}:${cat.id}`, opts.variant ?? 0) : "";
+  const settingKey = cat.visual.setting;
+  const environment = settingKey === "none" ? "abstract background" : brand.visual_context?.settings?.[settingKey] || pick(Object.values(brand.visual_context?.settings ?? {}), post.post_id, opts.variant ?? 0);
+
+  const lengthOf = (s) => graphemeCount(s ?? "");
+  const textChars = lengthOf(text.headline) + lengthOf(text.subtitle) + (text.items ?? []).reduce((a, s) => a + lengthOf(s), 0) + lengthOf(text.myth) + lengthOf(text.fact);
+  if (cat.text.headline_max && lengthOf(text.headline) > cat.text.headline_max && layout !== "myth_fact") {
+    flags.push({ code: "headline_long", message: `Headline has ${lengthOf(text.headline)} characters (limit ${cat.text.headline_max} for ${cat.label}); it will be set smaller or must be shortened.` });
+  }
+
+  return {
+    brief_version: 1,
+    business: brand.id,
+    post_id: post.post_id,
+    platform,
+    visual_type: cat.id,
+    visual_type_label: cat.label,
+    layout,
+    goal: GOAL_LABEL[lc(post.goal)] ?? GOAL_LABEL[cat.triggers.goals[0]] ?? "stop_scroll_and_educate",
+    topic: post.topic,
+    hook: post.hook,
+    visual_concept: `${cat.label}: ${cat.visual.subject}`,
+    concept_mode: mode,
+    subject: usePhoto ? `approved real photograph of ${brand.person.display_name_en}` : cat.visual.subject,
+    people_count: peopleInScene ? (/couple|mother .* newborn|mother and baby/.test(cat.visual.subject) ? 2 : 1) : 0,
+    doctor_presence: doctorPresence,
+    use_real_photo: usePhoto,
+    emotional_tone: cat.visual.emotion,
+    facial_expression: peopleInScene ? cat.visual.emotion.split(/[,—]/)[0].trim() : "",
+    wardrobe,
+    environment,
+    props: cat.visual.props ?? "",
+    composition: `${cat.visual.composition}; ${negativeSpaceHint(layout)}`,
+    camera_angle: cat.visual.camera,
+    background: settingKey === "none" ? "soft, low-detail abstract background" : environment,
+    lighting: "soft natural daylight, gentle contrast",
+    visual_style: mode === "illustration" ? "clean, flat, modern editorial vector illustration with soft shading" : brand.visual_style || "clean modern editorial",
+    realism: mode === "photo" ? "photorealistic, natural and unretouched" : mode === "illustration" ? "stylised illustration" : "flat graphic",
+    color_direction: brand.colorsArePlaceholders ? "soft, warm neutrals with calm teal and muted plum accents" : `harmonise with brand colours ${brand.colorsResolved.primary}, ${brand.colorsResolved.accent}, ${brand.colorsResolved.secondary}`,
+    brand_treatment: `${brand.brand_name}: ${brand.tone || "professional"}; brand text, logo and attribution are added afterwards, never by the image model`,
+    graphical_elements: graphicalElements(layout, text),
+    aspect_ratio: aspect,
+    output: out,
+    image_area: { width: area.width, height: area.height },
+    generation_size: usePhoto ? null : generationSize(area.width / area.height, { arbitrarySizes: opts.arbitrarySizes ?? true }),
+    text_mode: opts.textMode ?? "overlay",
+    text,
+    text_origins: origins,
+    text_density: textChars > 160 ? "high" : textChars > 80 ? "medium" : "low",
+    label_symbolic: peopleInScene && brand.medical,
+    badge: cat.badge ?? null,
+    negative_constraints: negativeConstraints(cat, brand, { peopleInScene, textMode: opts.textMode ?? "overlay" }),
+    medical_safety: brand.medical ? MEDICAL_SAFETY : [],
+    flags,
+    halts,
+    requires_verified_statistic: halts.some((h) => h.code === "requires_verified_statistic"),
+  };
+}
+
+function graphicalElements(layout, text) {
+  const el = {
+    hook_band: ["dark gradient band at the bottom", "headline", text.cta ? "CTA pill" : null, "attribution line"],
+    list: ["picture at the top", "rounded text panel", text.badge ? `badge "${text.badge}"` : null, "numbered/icon list", "attribution line"],
+    timeline: ["picture at the top", "rounded text panel", "vertical timeline with numbered dots", "attribution line"],
+    myth_fact: ["picture at the top", "MYTH card (red ✕)", "FACT card (green ✓)", "attribution line"],
+    two_column: ["soft background", "two titled columns with icons", "attribution line"],
+    question: ["dark gradient", "large question headline", "accent ? badge", "attribution line"],
+    cta_poster: ["picture at the top", "headline", "contact lines", "CTA button", "attribution line"],
+    doctor_quote: ["photo at the top", "large quote mark", "quote", "name + credentials"],
+    stat: ["soft background", "statistic card with big number, label and source"],
+    carousel: ["cover slide with picture + hook", "one slide per point", "closing CTA slide with attribution"],
+  };
+  return (el[layout] ?? []).filter(Boolean);
+}
+
+const MEDICAL_SAFETY = [
+  "The picture supports the approved educational message only; it adds no medical claim of its own",
+  "No depiction of medicines, pills, injections, procedures or surgery",
+  "No anatomy, no blood, no explicit or exposed body, no sexualisation",
+  "No fetus imagery; pregnancy shown only as a modestly dressed pregnant woman",
+  "No frightening hospital or emergency scenes; concern is shown calmly",
+  "No fabricated patient testimonial: people are symbolic models, not real patients",
+  "No before/after or cure imagery",
+];
+
+export const BASE_NEGATIVES = [
+  "watermarks",
+  "random or garbled text",
+  "fake logos or brand marks",
+  "distorted hands or extra fingers",
+  "malformed anatomy or unnatural faces",
+  "sexualisation or revealing clothing",
+  "graphic blood",
+  "explicit genital imagery",
+  "unnecessarily exposed body",
+  "frightening hospital scenes",
+  "fake or incorrect medical equipment",
+  "inaccurate fetus depiction",
+  "fake patient testimonials",
+  "misleading before/after imagery",
+  "unrealistic pregnancy anatomy",
+  "Western stock-photo aesthetic",
+  "overly promotional hospital-advert style",
+];
+
+function negativeConstraints(cat, brand, { peopleInScene, textMode }) {
+  const list = [...BASE_NEGATIVES, ...(cat.avoid ?? []), ...(brand.disallowed_styles ?? [])];
+  if (textMode === "overlay") list.unshift("any text, letters, numbers, captions, signage, labels or UI on screens");
+  if (!peopleInScene) list.push("people or faces");
+  return [...new Set(list)];
+}
+
+/** All on-image text blocks with where they came from — fed to the safety check. */
+export function briefTextBlocks(brief) {
+  const t = brief.text;
+  const o = brief.text_origins ?? {};
+  const blocks = [];
+  const add = (label, text, origin) => text && blocks.push({ label, text, origin });
+  add("headline", t.headline, o.headline);
+  add("subtitle", t.subtitle, o.subtitle);
+  add("cta", t.cta, o.cta);
+  add("attribution", t.attribution, "brand");
+  add("badge", t.badge, "fixed");
+  (t.items ?? []).forEach((x, i) => add(`item ${i + 1}`, x, o.items));
+  add("myth", t.myth, o.myth);
+  add("fact", t.fact, o.fact);
+  add("myth_label", t.myth_label, "fixed");
+  add("fact_label", t.fact_label, "fixed");
+  if (t.columns) {
+    for (const side of ["left", "right"]) {
+      add(`${side} title`, t.columns[side].title, post_or_fixed(t.columns[side].title));
+      t.columns[side].items.forEach((x, i) => add(`${side} item ${i + 1}`, x, "content"));
+    }
+  }
+  if (t.stat) {
+    add("stat value", t.stat.value, "content");
+    add("stat label", t.stat.label, "content");
+  }
+  add("source note", t.source_note?.replace(/^সূত্র:\s*/, ""), "content");
+  (t.contact ?? []).forEach((x, i) => add(`contact ${i + 1}`, x.replace(/^[^:]+:\s*/, ""), "brand"));
+  (t.slides ?? []).forEach((sl, i) => {
+    add(`slide ${i + 2} title`, sl.title, "content");
+    add(`slide ${i + 2} body`, sl.body, "content");
+  });
+  if (brief.layout === "carousel") add("slide topic", brief.topic, "content");
+  add("swipe label", t.swipe_label, "fixed");
+  if (!t.cta) add("end label", t.end_label, "fixed");
+  return blocks;
+}
+const post_or_fixed = (title) => (FIXED_LABELS.includes(title) ? "fixed" : "content");

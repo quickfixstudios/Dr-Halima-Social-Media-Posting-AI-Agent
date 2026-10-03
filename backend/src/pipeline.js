@@ -9,12 +9,14 @@ import { generateBatch, reviewCompliance } from "./openai/content.js";
 import { generatePostImages } from "./openai/images.js";
 import { decide } from "./compliance.js";
 import { scheduledAt, todayLocal } from "./schedule.js";
+import { createImageJob } from "./imaging/pipeline.js";
+import { fromContentRecord } from "./imaging/content.js";
 
 const log = createLogger("pipeline");
 
 /** Status a post lands in after compliance + images. */
-export function initialStatus({ post, verdict }, { imageError } = {}) {
-  if (verdict === "block" || verdict === "unreviewed" || imageError) return "needs_review";
+export function initialStatus({ post, verdict }, { imageError, imageReviewPending } = {}) {
+  if (verdict === "block" || verdict === "unreviewed" || imageError || imageReviewPending) return "needs_review";
   if (config.approvalRequired) return "needs_review";
   if (post.post_type === "reel" && config.reelsMode !== "cover_only") return "awaiting_video";
   return "ready";
@@ -63,9 +65,19 @@ export async function dailyRun({ date = todayLocal(), force = false, runId = `${
     for (const d of decisions) {
       let imageUrls = [];
       let imageError;
+      let imageReviewPending = false;
       if (d.verdict !== "block") {
         try {
-          imageUrls = await generatePostImages(d.post, date);
+          if (config.imaging.pipelineVersion === "v2") {
+            // New pipeline: compliance-passed content counts as approved; the image then waits for human review.
+            if (["pass", "fix_applied"].includes(d.verdict)) {
+              const job = await createImageJob({ post: { ...fromContentRecord(d.post), content_status: "approved", scheduled_time: scheduledAt(date, d.post.scheduled_slot) } });
+              imageReviewPending = true;
+              if (job.status !== "IMAGE_REVIEW_PENDING") imageError = `image job ${job.status}: ${(job.blocked ?? []).map((b) => b.message).join("; ")}`;
+            }
+          } else {
+            imageUrls = await generatePostImages(d.post, date);
+          }
         } catch (err) {
           imageError = err.message;
           await alert("Image generation failed", { post: d.post.id, error: err.message });
@@ -77,11 +89,11 @@ export async function dailyRun({ date = todayLocal(), force = false, runId = `${
         date,
         scheduled_at: scheduledAt(date, d.post.scheduled_slot),
         image_urls: imageUrls,
-        status: initialStatus(d, { imageError }),
+        status: initialStatus(d, { imageError, imageReviewPending }),
         compliance_status: d.verdict,
         compliance_notes: notes.join("; "),
         retry_count: 0,
-        last_error: imageError ?? "",
+        last_error: imageError ?? (imageReviewPending ? "image awaiting review (npm run review)" : ""),
         run_id: runId,
       });
     }

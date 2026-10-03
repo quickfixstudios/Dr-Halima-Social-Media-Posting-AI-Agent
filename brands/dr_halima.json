@@ -1,0 +1,95 @@
+{
+  "$comment": "Business profile for Dr. Halima. The image pipeline reads ONLY this file to know who the business is. Empty strings / nulls are placeholders still to be decided — see IMAGE_AUTOMATION.md §'Brand decisions still open'.",
+  "id": "dr_halima",
+  "brand_name": "Dr. Halima",
+  "asset_folder": "dr-halima",
+  "category": "Gynaecology & Obstetrics",
+  "industry": "healthcare",
+  "medical": true,
+  "primary_language": "bn",
+  "secondary_language": "en",
+  "platforms": ["facebook"],
+  "audience": "women in Bangladesh (18-45), pregnant women, women with menstrual, hormonal or fertility concerns",
+  "visual_style": "warm, clean, trustworthy, modern medical editorial",
+  "tone": "reassuring, educational, professional",
+  "preferred_formats": ["4:5", "1:1"],
+
+  "person": {
+    "display_name_bn": "ডা. হালিমা",
+    "display_name_en": "Dr. Halima",
+    "credentials_bn": "এমবিবিএস (এমএমসি), সিএমইউ (আল্ট্রা), এফসিপিএস - ফাইনাল পার্ট (অবস অ্যান্ড গাইনি)",
+    "role_bn": "মেডিকেল অফিসার, ময়মনসিংহ মেডিকেল কলেজ হাসপাতাল",
+    "attribution_bn": "ডা. হালিমা · গাইনি ও প্রসূতি",
+    "photo_path": "",
+    "photo_approved": false,
+    "forbidden_titles": ["specialist", "consultant", "professor", "বিশেষজ্ঞ", "কনসালটেন্ট", "অধ্যাপক", "প্রফেসর"]
+  },
+
+  "caption_signature": [
+    "— ডা. হালিমা",
+    "এমবিবিএস (এমএমসি), সিএমইউ (আল্ট্রা)",
+    "এফসিপিএস - ফাইনাল পার্ট (অবস অ্যান্ড গাইনি)",
+    "মেডিকেল অফিসার, ময়মনসিংহ মেডিকেল কলেজ হাসপাতাল"
+  ],
+
+  "logo_path": "",
+
+  "contact_details": {
+    "chamber_location": "",
+    "appointment_phone": "",
+    "consultation_days": "",
+    "booking_link": "",
+    "whatsapp": "",
+    "messenger": ""
+  },
+
+  "colors": {
+    "primary": "",
+    "secondary": "",
+    "accent": "",
+    "text_dark": "",
+    "text_light": "",
+    "panel": ""
+  },
+
+  "fonts": {
+    "family": "Hind Siliguri",
+    "regular": "brands/fonts/HindSiliguri-Regular.ttf",
+    "semibold": "brands/fonts/HindSiliguri-SemiBold.ttf",
+    "bold": "brands/fonts/HindSiliguri-Bold.ttf"
+  },
+
+  "visual_context": {
+    "people": "Bangladeshi women with realistic South Asian features and skin tones",
+    "wardrobe": [
+      "a contemporary modest salwar kameez with a light dupatta",
+      "an elegant everyday cotton saree",
+      "a modern kurti with straight trousers and a light scarf",
+      "modest professional office wear: a long tunic with a cardigan",
+      "a modest contemporary outfit with a hijab"
+    ],
+    "settings": {
+      "clinic": "a bright, modern, uncluttered consultation room in a Dhaka clinic",
+      "home": "a calm urban Dhaka apartment with soft daylight and simple furniture",
+      "bedroom": "a tidy home bedroom with soft morning light",
+      "waiting": "a clean, calm antenatal waiting area with natural light",
+      "outdoor": "a quiet green rooftop garden in Dhaka in the early morning"
+    }
+  },
+
+  "disallowed_styles": [
+    "Western stock-photo look",
+    "overly promotional hospital advertising",
+    "dramatic emergency-room scenes",
+    "cartoonish or childish illustration"
+  ],
+
+  "safety": {
+    "require_content_approval": true,
+    "require_image_approval": true
+  },
+
+  "make": {
+    "webhook_url_env": "MAKE_WEBHOOK_URL_DR_HALIMA"
+  }
+}

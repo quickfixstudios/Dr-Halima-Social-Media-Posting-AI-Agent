@@ -3,9 +3,14 @@
 FROM node:22-alpine
 WORKDIR /app
 COPY prompts ./prompts
+COPY brands ./brands
+COPY posts ./posts
 COPY backend/package*.json ./backend/
 RUN cd backend && npm ci --omit=dev
 COPY backend/src ./backend/src
+COPY backend/config ./backend/config
+# Generated images live in /app/assets — mount a persistent volume there in production.
+RUN mkdir -p /app/assets && chown node:node /app/assets
 ENV NODE_ENV=production PROMPTS_DIR=/app/prompts
 EXPOSE 8080
 USER node
