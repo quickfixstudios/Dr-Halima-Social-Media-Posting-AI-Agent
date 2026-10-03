@@ -2,6 +2,10 @@ import sharp from "sharp";
 import { renderText, graphemeCount, toBanglaDigits } from "./text.js";
 import { ImageError } from "../errors.js";
 import { mix } from "../brands.js";
+import { iconSvg } from "./icons.js";
+
+/** Designed infographic layouts that need no AI picture at all (icons + text only — free and fully reliable). */
+export const NO_PICTURE_LAYOUTS = new Set(["icon_grid", "stat_visual", "stage_columns"]);
 
 /**
  * Text layout templates ("Pipeline A": the AI draws the picture, we draw every letter).
@@ -71,7 +75,7 @@ function makeContext({ brand, brief, width, height }) {
     report.graphemes += graphemeCount(value);
     return r;
   };
-  return { s, W, H, M, c, brand, brief, t: brief.text, text, report, shapes: [], layers: [] };
+  return { s, W, H, M, c, brand, brief, t: brief.text, text, report, shapes: [], layers: [], layout: brief.layout };
 }
 
 const place = (ctx, r, left, top) => {
@@ -80,6 +84,7 @@ const place = (ctx, r, left, top) => {
 };
 
 async function backgroundInto(ctx, background, area) {
+  if (!background && NO_PICTURE_LAYOUTS.has(ctx.layout)) return; // designed poster: no picture, no placeholder
   const img = background
     ? await sharp(background).resize(area.width, area.height, { fit: "cover", position: "attention" }).toBuffer()
     : await placeholder(ctx, area);
@@ -352,6 +357,179 @@ async function mythFactTable(ctx) {
   }
 }
 
+/** Soft, low-contrast brand shapes behind designed posters (premium feel, no clutter). */
+function softDecor(ctx) {
+  const { W, H, s, c } = ctx;
+  ctx.shapes.push(rect(0, 0, W, H, c.background));
+  ctx.shapes.push(circle(W * 0.92, H * 0.06, 230 * s, mix(c.background, c.highlight, 0.35)));
+  ctx.shapes.push(circle(W * 0.04, H * 0.97, 200 * s, mix(c.background, c.health, 0.35)));
+  ctx.shapes.push(circle(W * 0.82, H * 0.2, 40 * s, mix(c.background, c.highlight, 0.6)));
+}
+
+/** Topic tag + big headline + optional subtitle at the top. Returns the y below it. */
+async function posterHeader(ctx, { centre = false } = {}) {
+  const { W, M, s, c, t, brief } = ctx;
+  let y = M;
+  if (brief.topic) {
+    const tag = await ctx.text("tag", brief.topic, { weight: "SemiBold", size: 26, min: 22, width: W - 2 * M - 40 * s, maxLines: 1, color: c.on(c.highlight) });
+    const th = tag.height + 20 * s;
+    const tx = centre ? (W - tag.width - 40 * s) / 2 : M;
+    ctx.shapes.push(rect(tx, y, tag.width + 40 * s, th, c.highlight, { r: th / 2 }));
+    place(ctx, tag, tx + 20 * s, y + 10 * s);
+    y += th + 26 * s;
+  }
+  const h = await ctx.text("headline", t.headline, { weight: "Bold", size: 64, min: 44, width: W - 2 * M, maxLines: 3, color: c.title, align: centre ? "centre" : "left" });
+  place(ctx, h, centre ? (W - h.width) / 2 : M, y);
+  y += h.height + 22 * s;
+  if (t.subtitle) {
+    const sub = await ctx.text("subtitle", t.subtitle, { weight: "SemiBold", size: 32, min: 26, width: W - 2 * M, maxLines: 2, color: c.text, align: centre ? "centre" : "left" });
+    place(ctx, sub, centre ? (W - sub.width) / 2 : M, y);
+    y += sub.height + 22 * s;
+  }
+  return y + 14 * s;
+}
+
+/** Footer + CTA; returns the y above them. */
+async function posterFooter(ctx) {
+  let bottom = (await footer(ctx)) - 26 * ctx.s;
+  if (ctx.t.cta) bottom -= (await ctaPill(ctx, ctx.M, bottom)) + 26 * ctx.s;
+  return bottom;
+}
+
+/** Tips poster / warning signs / condition awareness: 2-column grid of icon cards. */
+async function iconGrid(ctx) {
+  const { W, M, s, c, t, brief, brand } = ctx;
+  softDecor(ctx);
+  const top = await posterHeader(ctx);
+  const bottom = await posterFooter(ctx);
+  const items = t.icon_items ?? [];
+  const cols = items.length <= 3 ? 1 : 2;
+  const rowsN = Math.ceil(items.length / cols);
+  const gap = 22 * s;
+  const cardW = (W - 2 * M - gap * (cols - 1)) / cols;
+  const fill = brief.badge === "warning" ? c.title : brief.badge === "check" ? c.health : c.highlight;
+  const pad = 24 * s;
+  for (let px = cols === 1 ? 46 : 40; ; px -= 2) {
+    const d = Math.round(px * 2.6) * s;
+    const textW = cardW - d - 3 * pad;
+    const cards = [];
+    for (const [i, it] of items.entries()) {
+      const label = await renderText({ text: it.label, fontFile: brand.fontFiles.bold, family: brand.fonts.family, weight: "Bold", sizePx: px * s, minPx: px * s, width: textW, color: c.text, label: `item ${i + 1}` });
+      const detail = it.detail ? await renderText({ text: it.detail, fontFile: brand.fontFiles.regular, family: brand.fonts.family, weight: "Regular", sizePx: (px - 8) * s, minPx: (px - 8) * s, width: textW, color: c.text, label: `detail ${i + 1}` }) : null;
+      cards.push({ it, label, detail, d, h: Math.max(d, label.height + (detail ? detail.height + 8 * s : 0)) + 2 * pad });
+    }
+    const rowH = [];
+    for (let r = 0; r < rowsN; r++) rowH.push(Math.max(...cards.slice(r * cols, r * cols + cols).map((x) => x.h)));
+    const total = rowH.reduce((a, b) => a + b, 0) + gap * (rowsN - 1);
+    if (total <= bottom - top || px - 2 < 22) {
+      if (total > bottom - top) throw new ImageError("TEXT_TOO_LONG", `${items.length} icon cards do not fit — use fewer or shorter points, or a carousel`, { label: "icon_grid", recommend: "carousel" });
+      ctx.report.sizes.items = px;
+      // Let cards grow taller to use spare space (airy, poster-like), then centre what remains.
+      const grow = Math.min(70 * s, Math.max(0, (bottom - top - total) / rowsN));
+      for (let r = 0; r < rowsN; r++) rowH[r] += grow;
+      let y = top + Math.max(0, (bottom - top - total - grow * rowsN) / 2);
+      for (let r = 0; r < rowsN; r++) {
+        for (let k = 0; k < cols; k++) {
+          const card = cards[r * cols + k];
+          if (!card) continue;
+          const x = M + k * (cardW + gap);
+          ctx.shapes.push(rect(x, y, cardW, rowH[r], mix(c.background, c.highlight, 0.14), { r: 26 * s }));
+          const d = card.d;
+          const cx = x + pad + d / 2;
+          const cy = y + rowH[r] / 2;
+          ctx.shapes.push(circle(cx, cy, d / 2, fill) + iconSvg(card.it.icon, cx, cy, d * 0.52, c.on(fill), 2));
+          const blockH = card.label.height + (card.detail ? card.detail.height + 8 * s : 0);
+          const ty = cy - blockH / 2;
+          place(ctx, card.label, x + 2 * pad + d, ty);
+          if (card.detail) place(ctx, card.detail, x + 2 * pad + d, ty + card.label.height + 8 * s);
+          for (const [label, text] of [[`item ${r * cols + k + 1}`, card.it.label], [`detail ${r * cols + k + 1}`, card.it.detail]]) {
+            if (!text) continue;
+            ctx.report.blocks.push({ label, text });
+            ctx.report.graphemes += graphemeCount(text);
+          }
+        }
+        y += rowH[r] + gap;
+      }
+      return;
+    }
+  }
+}
+
+/** Data visual: big verified number, label, 10-figure pictogram, source. */
+async function statVisual(ctx) {
+  const { W, M, s, c, t } = ctx;
+  softDecor(ctx);
+  const top = await posterHeader(ctx, { centre: true });
+  const bottom = await posterFooter(ctx);
+  const value = await ctx.text("stat_value", t.stat.value, { weight: "Bold", size: 240, min: 120, width: W - 2 * M, maxLines: 1, color: c.title, align: "centre" });
+  const label = await ctx.text("stat_label", t.stat.label, { weight: "SemiBold", size: 44, min: 30, width: W - 2 * M - 40 * s, maxLines: 3, color: c.text, align: "centre" });
+  const source = await ctx.text("source_note", t.source_note, { weight: "Regular", size: 26, min: 22, width: W - 2 * M, maxLines: 2, color: c.text, align: "centre" });
+  // Pictogram: highlighted share of 10 figures, purely visual (no extra number is printed).
+  const pct = /^[০-৯0-9.,]+\s*%$/.test(t.stat.value) ? Number(t.stat.value.replace(/[০-৯]/g, (x) => "০১২৩৪৫৬৭৮৯".indexOf(x)).replace(/[^0-9.]/g, "")) : null;
+  const icon = 92 * s;
+  const picH = pct == null ? 0 : icon + 44 * s;
+  const total = value.height + 26 * s + picH + label.height + 30 * s + source.height;
+  if (total > bottom - top) throw new ImageError("TEXT_TOO_LONG", "Statistic does not fit", { label: "stat", recommend: "shorten" });
+  let y = top + (bottom - top - total) / 2;
+  place(ctx, value, (W - value.width) / 2, y);
+  y += value.height + 26 * s;
+  if (pct != null) {
+    const n = Math.max(1, Math.min(10, Math.round(pct / 10)));
+    const step = (W - 2 * M) / 10;
+    for (let i = 0; i < 10; i++) ctx.shapes.push(iconSvg("mother", M + step * (i + 0.5), y + icon / 2, icon, i < n ? c.title : mix(c.background, c.text, 0.3), 2.6));
+    y += picH;
+  }
+  place(ctx, label, (W - label.width) / 2, y);
+  y += label.height + 30 * s;
+  place(ctx, source, (W - source.width) / 2, y);
+}
+
+/** Trimester / stage timeline: 2-4 columns, each with a coloured title and short points. */
+async function stageColumns(ctx) {
+  const { W, M, s, c, t, brand } = ctx;
+  softDecor(ctx);
+  const top = await posterHeader(ctx, { centre: true });
+  const bottom = await posterFooter(ctx);
+  const stages = t.stages ?? [];
+  const gap = 18 * s;
+  const colW = (W - 2 * M - gap * (stages.length - 1)) / stages.length;
+  const fills = [c.highlight, c.health, c.title, c.highlight];
+  const pad = 20 * s;
+  for (let px = 36; ; px -= 2) {
+    const cols = [];
+    for (const [i, st] of stages.entries()) {
+      const title = await renderText({ text: st.title, fontFile: brand.fontFiles.bold, family: brand.fonts.family, weight: "Bold", sizePx: (px + 4) * s, minPx: (px + 4) * s, width: colW - 2 * pad, color: c.on(fills[i]), align: "centre", label: `stage ${i + 1}` });
+      const points = [];
+      for (const [j, pt] of st.points.entries()) points.push(await renderText({ text: pt, fontFile: brand.fontFiles.semibold, family: brand.fonts.family, weight: "SemiBold", sizePx: px * s, minPx: px * s, width: colW - 2 * pad - 22 * s, color: c.text, label: `stage ${i + 1} point ${j + 1}` }));
+      const body = points.reduce((a, p) => a + p.height, 0) + 16 * s * Math.max(0, points.length - 1);
+      cols.push({ st, title, points, h: title.height + 2 * pad + 24 * s + body + pad });
+    }
+    const h = Math.max(...cols.map((x) => x.h));
+    if (h <= bottom - top || px - 2 < 20) {
+      if (h > bottom - top) throw new ImageError("TEXT_TOO_LONG", "Stage texts do not fit — shorten the points or use a carousel", { label: "stage_columns", recommend: "carousel" });
+      ctx.report.sizes.items = px;
+      const y0 = top + (bottom - top - h) / 2;
+      for (const [i, col] of cols.entries()) {
+        const x = M + i * (colW + gap);
+        const headH = col.title.height + 2 * pad;
+        ctx.shapes.push(rect(x, y0, colW, h, mix(c.background, fills[i], 0.16), { r: 26 * s }));
+        ctx.shapes.push(rect(x, y0, colW, headH, fills[i], { r: 26 * s }), rect(x, y0 + headH - 26 * s, colW, 26 * s, fills[i]));
+        place(ctx, col.title, x + (colW - col.title.width) / 2, y0 + pad);
+        let y = y0 + headH + 24 * s;
+        for (const [j, p] of col.points.entries()) {
+          ctx.shapes.push(circle(x + pad + 6 * s, y + 16 * s, 6 * s, fills[i] === c.highlight ? c.title : fills[i]));
+          place(ctx, p, x + pad + 22 * s, y);
+          y += p.height + 16 * s;
+          ctx.report.blocks.push({ label: `stage ${i + 1} point ${j + 1}`, text: col.st.points[j] });
+          ctx.report.graphemes += graphemeCount(col.st.points[j]);
+        }
+        ctx.report.blocks.push({ label: `stage ${i + 1}`, text: col.st.title });
+      }
+      return;
+    }
+  }
+}
+
 async function twoColumn(ctx) {
   const { W, H, M, s, c, t, brief } = ctx;
   ctx.shapes.push(rect(M / 2, M / 2, W - M, H - M, c.background, { r: 32 * s, opacity: 0.94 }));
@@ -526,6 +704,9 @@ const LAYOUTS = {
   timeline: (ctx) => listLayout(ctx, { timeline: true }),
   myth_fact: mythFact,
   myth_fact_table: mythFactTable,
+  icon_grid: iconGrid,
+  stat_visual: statVisual,
+  stage_columns: stageColumns,
   two_column: twoColumn,
   question,
   cta_poster: ctaPoster,

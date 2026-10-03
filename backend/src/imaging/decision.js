@@ -1,7 +1,8 @@
 import crypto from "node:crypto";
 import { CATEGORIES, getCategory } from "./categories.js";
 import { DEFAULT_ASPECT, outputSize, generationSize } from "./formats.js";
-import { imageArea, negativeSpaceHint } from "./overlay/layouts.js";
+import { imageArea, negativeSpaceHint, NO_PICTURE_LAYOUTS } from "./overlay/layouts.js";
+import { guessIcon, ICONS } from "./overlay/icons.js";
 import { contactLines } from "./brands.js";
 import { graphemeCount } from "./overlay/text.js";
 import { FIXED_LABELS } from "./safety.js";
@@ -88,6 +89,9 @@ const GOAL_LABEL = {
   appointments: "invite_appointment_enquiries",
 };
 
+/** Emoji need a colour-emoji font the server may not have (they would show as □), so images never draw them. */
+export const stripEmoji = (s = "") => s.replace(/[\p{Extended_Pictographic}\uFE0F\u200D]/gu, "").replace(/\s+/g, " ").trim();
+
 const MYTH_PREFIX = /^\s*(মিথ|myth)\s*[:：-]\s*/i;
 
 /**
@@ -103,16 +107,22 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
   const aspect = opts.aspect || post.aspect_ratio || (brand.preferred_formats?.[0] ?? DEFAULT_ASPECT[platform] ?? "4:5");
   const out = outputSize(platform, aspect);
 
-  // Long lists do not belong on one image → carousel (keeping the category's picture).
+  // Designed infographic layouts (icons + text, no AI picture) when the post has the content for them.
   let layout = cat.layout;
-  if (cat.text.items_max && post.key_points.length > cat.text.items_max && cat.carousel_capable && opts.autoCarousel !== false) {
-    flags.push({ code: "converted_to_carousel", message: `${post.key_points.length} points are too many for one ${cat.label} image (max ${cat.text.items_max}) — producing a carousel instead.` });
+  const points = post.items.length ? post.items : post.key_points.map((label) => ({ label, detail: "" }));
+  if (cat.designed_layout === "icon_grid" && points.length >= 2) layout = "icon_grid";
+  if (cat.designed_layout === "stage_columns" && post.stages.length >= 2) layout = "stage_columns";
+  if (cat.designed_layout === "stat_visual") layout = "stat_visual";
+  // Long lists do not belong on one image → carousel (keeping the category's picture).
+  const maxItems = layout === "icon_grid" ? 8 : cat.text.items_max;
+  if (maxItems && points.length > maxItems && cat.carousel_capable && opts.autoCarousel !== false) {
+    flags.push({ code: "converted_to_carousel", message: `${points.length} points are too many for one ${cat.label} image (max ${maxItems}) — producing a carousel instead.` });
     layout = "carousel";
   }
 
   // ── on-image text (only from the approved post, brand file or fixed neutral labels) ──
   const text = {
-    headline: post.hook,
+    headline: stripEmoji(post.hook),
     subtitle: post.subtitle || "",
     cta: post.cta || "",
     attribution: brand.person?.attribution_bn || brand.brand_name,
@@ -121,6 +131,10 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
   };
   const origins = { headline: "content", subtitle: "content", cta: "content", attribution: "brand", items: "content", contact: "brand" };
 
+  if (layout === "icon_grid") {
+    text.icon_items = points.map((p) => ({ icon: ICONS[p.icon] ? p.icon : guessIcon(p.label), label: p.label, detail: p.detail ?? "" }));
+  }
+  if (layout === "stage_columns") text.stages = post.stages.slice(0, 4);
   if (layout === "list" || layout === "timeline") {
     text.items = post.key_points.slice(0, cat.text.items_max);
     if (cat.badge === "warning") (text.badge = "সতর্কতা"), (origins.badge = "fixed");
@@ -181,7 +195,8 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
   // ── picture ──
   // Brand default look: Dr. Halima uses warm infographic illustrations instead of photos (unless a concept asks otherwise).
   const mode = opts.conceptMode || (cat.visual.mode === "photo" && brand.image_style === "illustration" && !usePhoto ? "illustration" : cat.visual.mode);
-  const peopleInScene = mode !== "graphic" && !/no people|no person|no face/.test(cat.visual.subject);
+  const noPicture = NO_PICTURE_LAYOUTS.has(layout);
+  const peopleInScene = !noPicture && mode !== "graphic" && !/no people|no person|no face/.test(cat.visual.subject);
   const area = imageArea(layout, out.width, out.height);
   const wardrobe = peopleInScene ? pick(brand.visual_context?.wardrobe, `${post.post_id}:${cat.id}`, opts.variant ?? 0) : "";
   const settingKey = cat.visual.setting;
@@ -228,7 +243,8 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
     aspect_ratio: aspect,
     output: out,
     image_area: { width: area.width, height: area.height },
-    generation_size: usePhoto ? null : generationSize(area.width / area.height, { arbitrarySizes: opts.arbitrarySizes ?? true }),
+    no_ai_picture: noPicture,
+    generation_size: usePhoto || noPicture ? null : generationSize(area.width / area.height, { arbitrarySizes: opts.arbitrarySizes ?? true }),
     text_mode: opts.textMode ?? "overlay",
     text,
     text_origins: origins,
@@ -269,6 +285,9 @@ function graphicalElements(layout, text) {
     list: ["picture at the top", "rounded text panel", text.badge ? `badge "${text.badge}"` : null, "numbered/icon list", "attribution line"],
     timeline: ["picture at the top", "rounded text panel", "vertical timeline with numbered dots", "attribution line"],
     myth_fact: ["picture at the top", "MYTH card (deep rose ✕)", "FACT card (sage ✓)", "attribution line"],
+    icon_grid: ["soft brand shapes", "topic tag", "big headline", "2-column grid of icon cards (Lucide icons)", "CTA", "attribution"],
+    stat_visual: ["soft brand shapes", "big verified number", "10-figure pictogram", "source note", "attribution"],
+    stage_columns: ["soft brand shapes", "big headline", "2-4 stage columns with coloured titles and points", "attribution"],
     myth_fact_table: ["picture band at the top", "MYTH | FACT column headers", "one row per myth with ✕ → ✓", "attribution line"],
     two_column: ["soft background", "two titled columns with icons", "attribution line"],
     question: ["dark gradient", "large question headline", "accent ? badge", "attribution line"],
@@ -347,6 +366,9 @@ export function briefTextBlocks(brief) {
     add("stat label", t.stat.label, "content");
   }
   add("source note", t.source_note?.replace(/^সূত্র:\s*/, ""), "content");
+  (t.icon_items ?? []).forEach((it, i) => (add(`item ${i + 1}`, it.label, "content"), add(`detail ${i + 1}`, it.detail, "content")));
+  (t.stages ?? []).forEach((st, i) => (add(`stage ${i + 1}`, st.title, "content"), st.points.forEach((pt, j) => add(`stage ${i + 1} point ${j + 1}`, pt, "content"))));
+  if (["icon_grid", "stat_visual", "stage_columns"].includes(brief.layout)) add("topic tag", brief.topic, "content");
   (t.contact ?? []).forEach((x, i) => add(`contact ${i + 1}`, x.replace(/^[^:]+:\s*/, ""), "brand"));
   (t.slides ?? []).forEach((sl, i) => {
     add(`slide ${i + 2} title`, sl.title, "content");

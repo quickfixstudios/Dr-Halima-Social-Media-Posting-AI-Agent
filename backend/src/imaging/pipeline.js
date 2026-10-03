@@ -216,7 +216,7 @@ export async function createImageJob({ businessId, post: raw, options = {}, deps
       business: brand.id,
       blocked: copyBlocking.length > 0 || !viable.length,
       content_safety: copyIssues,
-      estimated_generations: viable.reduce((n, p) => n + (p.brief.use_real_photo ? 0 : 1), 0),
+      estimated_generations: viable.reduce((n, p) => n + (p.brief.generation_size ? 1 : 0), 0),
       expected_output_dir: path.join(d.cfg.assetsDir, brand.asset_folder, now.toFormat("yyyy"), now.toFormat("LL"), post.post_id),
       concepts: [],
     };
@@ -344,6 +344,8 @@ async function produceCandidate(ctx, meta, cand, { kind, reuseGeneration = false
       log.step("Using the approved real photograph (no AI face)");
     }
     photo = fs.readFileSync(store.absolute(meta.post_id, cand.generations.at(-1).file));
+  } else if (!brief.generation_size) {
+    log.step("Designed infographic (icons + Bangla text) — no AI picture needed, no cost");
   } else if (reuseGeneration && cand.generations.length) {
     background = fs.readFileSync(store.absolute(meta.post_id, cand.generations.at(-1).file));
   } else {

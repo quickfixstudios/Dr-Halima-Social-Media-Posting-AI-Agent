@@ -147,6 +147,31 @@ Facebook post id.
 
 ---
 
+## 3a. Designed infographics (no AI picture, no cost)
+
+![Tips poster, warning signs, statistic and trimester designs](docs/images/infographic-examples.jpg)
+
+Four layouts are complete designs made only from **icons + Bangla text**: no AI picture, so they cost nothing and
+can't contain AI mistakes. Icons come from [Lucide](https://lucide.dev) (free, ISC licence); only a curated, medically
+neutral set is allowed (`backend/src/imaging/overlay/icons.js`, no pills, syringes or anatomy).
+
+| Layout | Used for | Post fields |
+|---|---|---|
+| `icon_grid` | tips poster, warning signs, checklist, nutrition, condition awareness (PCOS, endometriosis…) | `items: [{ "icon", "label", "detail" }]` (2–8; icons guessed from the words if missing) |
+| `stat_visual` | statistics | one `verified_statistics` entry → big number, 10-figure pictogram, source |
+| `stage_columns` | trimesters / stages | `stages: [{ "title", "points": [...] }]` (2–4) |
+| `myth_fact_table` | 2–4 myths | `myths: [{ "myth", "fact" }]` |
+
+Samples 09–12 in `posts/dr_halima/samples/` use them: `npm run image -- --post sample-09 --dry-run` gives you the
+finished poster for free. Emoji in a hook stay in the caption but are left off images (servers often lack emoji fonts).
+
+`npm run content` now also picks a `visual_format` (tips_poster, warning_grid, condition_awareness, stat_visual,
+stage_columns, myth_table, carousel, story_picture) and fills these fields, guided by three finished examples
+("few-shot" examples in `prompts/infographic_examples.md`). If any on-image word is not in the caption, the draft
+gets a warning.
+
+---
+
 ## 3b. The content system: 7 content types (live Make + `npm run content`)
 
 Both the live Make scenario and the backend use **one shared prompt**, `prompts/facebook_post.system.md`

@@ -104,7 +104,7 @@ function showDry(r) {
   for (const [i, c] of r.concepts.entries()) {
     console.log(`\nConcept ${i + 1}: ${c.label}${c.concept_mode && c.concept_mode !== "photo" ? ` (${c.concept_mode})` : ""}  [rank ${c.rank_score}]`);
     console.log(`  Why: ${c.reasons.join(", ") || "default"}`);
-    console.log(`  Layout: ${c.layout} · Final size: ${c.output_size.width}×${c.output_size.height} · AI picture size: ${c.generation_size ?? "(real photo, no AI)"}`);
+    console.log(`  Layout: ${c.layout} · Final size: ${c.output_size.width}×${c.output_size.height} · AI picture size: ${c.generation_size ?? (c.layout && ["icon_grid", "stat_visual", "stage_columns"].includes(c.layout) ? "none — designed infographic, no cost" : "none — real photo")}`);
     console.log(`  Text on image:\n    ${c.overlay_text.join("\n    ")}`);
     if (c.flags.length) console.log(`  Notes:\n    ${c.flags.map((f) => f.message).join("\n    ")}`);
     if (c.halts.length) console.log(`  BLOCKED:\n    ${c.halts.map((h) => h.message).join("\n    ")}`);

@@ -150,7 +150,7 @@ test("unsupported image type is rejected", () => {
 });
 
 test("too many points become a carousel instead of an overloaded image", () => {
-  const post = normalizePost({ ...sample(1), key_points: ["এক", "দুই", "তিন", "চার", "পাঁচ", "ছয়", "সাত"] });
+  const post = normalizePost({ ...sample(1), key_points: ["এক", "দুই", "তিন", "চার", "পাঁচ", "ছয়", "সাত", "আট", "নয়"] });
   const brief = buildBrief(post, brand, "warning_signs");
   assert.equal(brief.layout, "carousel");
   assert.ok(brief.flags.some((f) => f.code === "converted_to_carousel"));
@@ -183,18 +183,23 @@ test("prompts change with the post (wardrobe/setting rotate, subject follows the
 });
 
 // ── Bangla overlay ──
-test("Bangla overlay renders at the exact Facebook size", async () => {
+test("Bangla overlay renders at the exact Facebook size (list layout and designed icon grid)", async () => {
   const post = normalizePost(sample(1));
-  const brief = buildBrief(post, brand, "warning_signs");
-  const bg = await sharp({ create: { width: 1536, height: 800, channels: 3, background: "#ccc" } }).png().toBuffer();
-  const { buffer, report } = await composeImage({ layout: brief.layout, background: bg, brief, brand, ...brief.output });
+  const list = buildBrief({ ...post, key_points: post.key_points }, brand, "educational_infographic", {});
+  assert.equal(list.layout, "icon_grid", "points + infographic style → designed icon grid");
+  assert.equal(list.generation_size, null, "designed infographics need no AI picture");
+  const { buffer, report } = await composeImage({ layout: list.layout, background: null, brief: list, brand, ...list.output });
   const meta = await sharp(buffer).metadata();
   assert.equal(meta.width, 1080);
   assert.equal(meta.height, 1350);
   assert.equal(meta.format, "jpeg");
-  assert.ok(report.sizes.headline >= 40);
-  assert.equal(report.blocks.filter((b) => b.label === "items").length, 5);
-  assert.ok(report.blocks.some((b) => b.text === "গর্ভাবস্থায় এই ৫টি লক্ষণ অবহেলা করবেন না"));
+  assert.ok(report.sizes.headline >= 44);
+  assert.equal(report.blocks.filter((b) => b.label.startsWith("item ")).length, 5);
+  const photoList = buildBrief(normalizePost(sample(2)), brand, "pain_solution");
+  const bg = await sharp({ create: { width: 1232, height: 1536, channels: 3, background: "#ccc" } }).png().toBuffer();
+  const hook = await composeImage({ layout: photoList.layout, background: bg, brief: photoList, brand, ...photoList.output });
+  assert.equal((await sharp(hook.buffer).metadata()).height, 1350);
+  assert.ok(hook.report.blocks.some((b) => b.text === "তীব্র মাসিকের ব্যথা সবসময় স্বাভাবিক নয়"));
 });
 
 test("long headlines shrink to fit; impossible ones raise TEXT_TOO_LONG instead of cropping", async () => {
@@ -246,10 +251,10 @@ test("several creative directions can be previewed and ranked", async () => {
 // ── real run (fake OpenAI) ──
 test("real run: generate → overlay → review pending, with files, ledger and request id", async () => {
   const d = deps();
-  const r = await createImageJob({ post: sample(1), deps: d });
+  const r = await createImageJob({ post: sample(2), deps: d });
   assert.equal(r.status, "IMAGE_REVIEW_PENDING");
   assert.equal(d.client.calls.length, 1);
-  assert.equal(d.client.calls[0].params.size, "1536x800");
+  assert.equal(d.client.calls[0].params.size, "1232x1536");
   assert.ok(fs.existsSync(r.candidates[0].final_files[0]));
   const meta = JSON.parse(fs.readFileSync(path.join(r.folder, "metadata.json"), "utf8"));
   assert.equal(meta.candidates[0].generations[0].request_id, "req_1");
@@ -258,7 +263,7 @@ test("real run: generate → overlay → review pending, with files, ledger and 
   const ledger = fs.readFileSync(path.join(d.cfg.assetsDir, "_ledger.jsonl"), "utf8").trim().split("\n");
   assert.equal(ledger.length, 1);
   assert.equal(JSON.parse(ledger[0]).cost_usd, null); // no pricing configured → unknown, never guessed
-  await assert.rejects(createImageJob({ post: sample(1), deps: d }), { code: "ALREADY_EXISTS" });
+  await assert.rejects(createImageJob({ post: sample(2), deps: d }), { code: "ALREADY_EXISTS" });
 });
 
 test("no image returned → NO_IMAGE_RETURNED and status FAILED", async () => {
@@ -365,10 +370,10 @@ test("cost limits stop spending", async () => {
   assert.deepEqual(estimateCost(JSON.parse(fs.readFileSync(priced, "utf8")), { model: "gpt-image-2.5-sunburst", usage: { input_tokens: 1000, output_tokens: 1000, input_tokens_details: { text_tokens: 1000, image_tokens: 0 } } }), { usd: 0.045, basis: "API-reported token usage × configured token prices" });
   const d2 = deps({ cfg: { pricingFile: priced, limits: { maxGenerationsPerPost: 6, maxRegenerations: 3, dailyGenerationLimit: 25, dailyBudgetUsd: 0.1 } } });
   await createImageJob({ post: sample(2), deps: d2 }); // 120×5 + 4000×40 per 1M = $0.1606 → budget now exceeded
-  await assert.rejects(createImageJob({ post: sample(1), deps: d2 }), { code: "BUDGET_EXCEEDED" });
+  await assert.rejects(createImageJob({ post: sample(4), deps: d2 }), { code: "BUDGET_EXCEEDED" });
   const d3 = deps({ cfg: { limits: { maxGenerationsPerPost: 6, maxRegenerations: 3, dailyGenerationLimit: 1 } } });
   await createImageJob({ post: sample(2), deps: d3 });
-  await assert.rejects(createImageJob({ post: sample(1), deps: d3 }), { code: "BUDGET_DAILY_LIMIT" });
+  await assert.rejects(createImageJob({ post: sample(4), deps: d3 }), { code: "BUDGET_DAILY_LIMIT" });
 });
 
 // ── review actions ──
@@ -484,11 +489,13 @@ test("content generator: verified facts only, pure-Bangla check, drafts flow int
   const fake = (json) => async (req) => {
     assert.match(req.instructions, /pure Bangla/);
     assert.match(req.instructions, /\[anaemia_pregnancy\]/);
+    assert.match(req.instructions, /FEW-SHOT EXAMPLES/);
+    assert.match(req.instructions, /icon" must be one of: calendar/);
     return { json };
   };
   const stat = await generatePost({
     type: "data_statistics",
-    call: fake({ content_type: "data_statistics", topic: "রক্তস্বল্পতা", hook: "ক্লান্তি মানেই কাজের চাপ নয়", caption: `ক্লান্ত লাগছে?\n\nবিশ্বজুড়ে প্রায় ৩৭% গর্ভবতী নারী রক্তস্বল্পতায় ভোগেন।\nসূত্র: বিশ্ব স্বাস্থ্য সংস্থা\n\n📌 পোস্টটি সেভ করে রাখুন\n${D}`, hashtags: "", overlay_main: "ক্লান্তি মানেই কাজের চাপ নয়", overlay_sub: "", key_points: [], myths: [], fact_id: "anaemia_pregnancy", image_prompt: "x" }),
+    call: fake({ content_type: "data_statistics", topic: "রক্তস্বল্পতা", hook: "ক্লান্তি মানেই কাজের চাপ নয়", visual_format: "stat_visual", items: [], stages: [], caption: `ক্লান্ত লাগছে?\n\nবিশ্বজুড়ে প্রায় ৩৭% গর্ভবতী নারী রক্তস্বল্পতায় ভোগেন।\nসূত্র: বিশ্ব স্বাস্থ্য সংস্থা\n\n📌 পোস্টটি সেভ করে রাখুন\n${D}`, hashtags: "", overlay_main: "ক্লান্তি মানেই কাজের চাপ নয়", overlay_sub: "", key_points: [], myths: [], fact_id: "anaemia_pregnancy", image_prompt: "x" }),
   });
   assert.equal(stat.content_type, "statistic");
   assert.equal(stat.cta, "পোস্টটি সেভ করে রাখুন");
@@ -508,9 +515,22 @@ test("content generator: verified facts only, pure-Bangla check, drafts flow int
   assert.ok(latin.generator.warnings.some((w) => /pure Bangla/.test(w)));
 });
 
+test("generator infographic formats map to designed layouts", () => {
+  const D = "এই পোস্টটি শুধুমাত্র শিক্ষামূলক উদ্দেশ্যে।";
+  const raw = { content_type: "pain_solution", visual_format: "tips_poster", topic: "যত্ন", hook: "সহজ অভ্যাস", caption: `✅ পানি পান করুন\n✅ ঘুমান\n${D}`, hashtags: "", overlay_main: "সহজ অভ্যাস", overlay_sub: "", items: [{ icon: "water", label: "পানি পান করুন", detail: "" }, { icon: "sleep", label: "ঘুমান", detail: "" }], stages: [], key_points: [], myths: [], fact_id: "", image_prompt: "" };
+  const tips = toDraftPost(raw, { postId: "g1", business: "dr_halima" });
+  assert.equal(tips.content_type, "tips_poster");
+  assert.deepEqual(tips.generator.warnings, []);
+  const brief = buildBrief(normalizePost({ ...tips, content_status: "approved" }), brand, rankCategories(normalizePost({ ...tips, content_status: "approved" }), brand)[0].id);
+  assert.equal(brief.layout, "icon_grid");
+  assert.equal(brief.text.icon_items[1].icon, "sleep");
+  const drift = toDraftPost({ ...raw, items: [{ icon: "water", label: "দিনে দশ গ্লাস পানি", detail: "" }] }, { postId: "g2", business: "dr_halima" });
+  assert.ok(drift.generator.warnings.some((w) => /not found word-for-word/.test(w)));
+});
+
 test("live Make scenario uses the same prompt as prompts/facebook_post.system.md", () => {
   const live = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "make/daily-plan.scenario.json"), "utf8")).blueprint.flow.find((m) => m.id === 2).mapper.messages[0].content;
-  const shared = systemPrompt().split("VERIFIED FACTS")[0];
+  const shared = systemPrompt({ infographic: false }).split("VERIFIED FACTS")[0];
   assert.ok(live.startsWith(shared), "live system prompt drifted from prompts/facebook_post.system.md");
   for (const f of loadFacts()) assert.ok(live.includes(f.fact_bn), f.id);
 });

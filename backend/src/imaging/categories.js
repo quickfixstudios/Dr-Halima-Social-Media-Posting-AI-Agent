@@ -63,6 +63,7 @@ export const CATEGORIES = [
   },
   {
     id: "educational_infographic",
+    designed_layout: "icon_grid",
     label: "Educational infographic",
     layout: "list",
     triggers: {
@@ -123,6 +124,7 @@ export const CATEGORIES = [
   },
   {
     id: "statistics",
+    designed_layout: "stat_visual",
     label: "Statistics / data visual",
     layout: "stat",
     triggers: { content_types: ["statistic", "statistics", "data"], keywords: ["শতাংশ", "%", "প্রতি", "জন নারী", "statistic", "percent", "in every"], goals: ["awareness"] },
@@ -182,6 +184,7 @@ export const CATEGORIES = [
   },
   {
     id: "warning_signs",
+    designed_layout: "icon_grid",
     label: "Warning-sign post",
     layout: "list",
     badge: "warning",
@@ -204,6 +207,7 @@ export const CATEGORIES = [
   },
   {
     id: "checklist",
+    designed_layout: "icon_grid",
     label: "Checklist",
     layout: "list",
     badge: "check",
@@ -256,6 +260,7 @@ export const CATEGORIES = [
   },
   {
     id: "pregnancy_timeline",
+    designed_layout: "stage_columns",
     label: "Pregnancy timeline",
     layout: "timeline",
     triggers: { content_types: ["timeline", "pregnancy_timeline"], keywords: ["ত্রৈমাসিক", "সপ্তাহ", "মাসে", "trimester", "week by week", "timeline"], goals: ["education"] },
@@ -273,6 +278,7 @@ export const CATEGORIES = [
   },
   {
     id: "menstrual_education",
+    designed_layout: "icon_grid",
     label: "Menstrual-cycle education",
     layout: "list",
     triggers: { content_types: ["menstrual", "period"], keywords: ["মাসিক", "পিরিয়ড", "ঋতুস্রাব", "চক্র", "period", "menstrual", "cycle"], goals: ["education"] },
@@ -307,6 +313,7 @@ export const CATEGORIES = [
   },
   {
     id: "pcos_awareness",
+    designed_layout: "icon_grid",
     label: "PCOS awareness",
     layout: "hook_band",
     triggers: { content_types: ["pcos"], keywords: ["পিসিওএস", "পলিসিস্টিক", "pcos", "polycystic", "অনিয়মিত মাসিক"], goals: ["awareness", "education"] },
@@ -324,6 +331,7 @@ export const CATEGORIES = [
   },
   {
     id: "pregnancy_nutrition",
+    designed_layout: "icon_grid",
     label: "Pregnancy nutrition",
     layout: "list",
     badge: "check",
@@ -391,6 +399,47 @@ export const CATEGORIES = [
     text: { headline_max: 55, subtitle_max: 60, items_max: 0 },
     requires: [],
     carousel_capable: false,
+  },
+  {
+    id: "pregnancy_tips_poster",
+    label: "Pregnancy tips poster",
+    layout: "list",
+    designed_layout: "icon_grid",
+    badge: "check",
+    triggers: { content_types: ["tips", "pregnancy_tips", "tips_poster", "poster"], keywords: ["যত্ন", "টিপস", "পরামর্শ", "সুস্থ গর্ভাবস্থা", "tips", "care"], goals: ["save", "education"] },
+    visual: {
+      mode: "photo",
+      subject: "a happy, healthy pregnant Bangladeshi woman relaxing at home",
+      emotion: "calm, cared for, confident",
+      setting: "home",
+      composition: "wide landscape frame, subject slightly off-centre",
+      camera: "eye-level medium-wide shot",
+    },
+    text: { headline_max: 50, items_max: 6, item_max: 40 },
+    requires: [],
+    carousel_capable: true,
+  },
+  {
+    id: "condition_awareness",
+    label: "Condition awareness (PCOS, pre-eclampsia, endometriosis…)",
+    layout: "hook_band",
+    designed_layout: "icon_grid",
+    triggers: {
+      content_types: ["condition", "condition_awareness", "awareness_condition", "preeclampsia"],
+      keywords: ["প্রি-এক্লাম্পসিয়া", "এন্ডোমেট্রিওসিস", "থাইরয়েড", "ডায়াবেটিস", "রোগ", "condition", "preeclampsia", "endometriosis"],
+      goals: ["awareness", "education"],
+    },
+    visual: {
+      mode: "photo",
+      subject: "a thoughtful Bangladeshi woman learning about her health",
+      emotion: "informed, calm, empowered",
+      setting: "home",
+      composition: "subject in the upper two-thirds, calm lower area",
+      camera: "eye-level medium shot",
+    },
+    text: { headline_max: 55, subtitle_max: 70, items_max: 6, item_max: 40 },
+    requires: [],
+    carousel_capable: true,
   },
 ];
 
