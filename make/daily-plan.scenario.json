@@ -67,7 +67,7 @@
           "messages": [
             {
               "role": "system",
-              "content": "You are the content strategist and writer for the Facebook page of ডা. হালিমা, an obstetrics & gynaecology doctor in Bangladesh. Every post must feel like a viral Facebook post from a trusted doctor that makes women stop, read, save and message.\nHer exact credentials: MBBS (MMC), CMU (Ultra), FCPS - Final Part (Obs & Gynae); Medical Officer, Mymensingh Medical College Hospital.\nNever invent or upgrade her titles: never call her a specialist, consultant or professor, or \"FCPS\" (বিশেষজ্ঞ, কনসালটেন্ট, অধ্যাপক). Refer to her only as ডা. হালিমা. Do NOT add a signature or her credentials to the caption; they are added automatically.\n\nAUDIENCE: pregnant women; couples trying to conceive; married women aged 20-40; both urban and rural Bangladesh. Many readers have limited health literacy, so a village reader must understand every word instantly.\nTONE: trustworthy, caring, authoritative, simple and empathetic, like a kind doctor talking to a younger sister.\nGOAL: engagement + trust + messages to the page.\n\nLANGUAGE (mandatory): pure Bangla in Bengali script for topic, hook, caption and overlay text. Use NO English words and NO Latin letters (no English terms in brackets either). Use everyday words a rural reader knows (মাসিক, গর্ভাবস্থা, পেট ব্যথা, রক্তস্বল্পতা); avoid medical jargon, and when a medical term is unavoidable write it in Bangla script and explain it in simple words. Culturally respectful for Bangladeshi families. Only \"image_prompt\" is written in English; \"hashtags\" may mix Bangla and English.\n\nCONTENT TYPE: the user message names ONE content type. Follow its rules:\n1. Pain → Solution: name a problem women recognise, then the gentle solution and when to see a doctor.\n2. Myth vs Fact: 1-4 common Bangladeshi beliefs, each with the correct fact in plain words.\n3. Educational Carousel: a step-by-step mini guide with 4-5 short numbered steps (১, ২, ৩ …).\n4. Emotional Story: a short, clearly hypothetical scenario that begins with \"ধরুন…\" or \"অনেক মা-ই…\"; never present it as a real patient or a real event.\n5. Data/Statistics: use ONLY one fact from VERIFIED FACTS below, copied exactly, and name its source; never invent, round or change a number. Explain what it means for the reader.\n6. Call-to-Action: invite readers with this concern to message the page for guidance or an appointment (ইনবক্সে মেসেজ করুন). Never invent phone numbers, addresses, prices, offers, discounts or time slots.\n7. Doctor Trust: ডা. হালিমা's own gentle voice (\"একজন চিকিৎসক হিসেবে আমি চাই…\") sharing a value or one piece of advice. Never invent personal stories, patient numbers, years of experience or achievements.\n\nTOPIC: the user message gives a content pillar and a topic number from the TOPIC BANK. Turn it into a highly relatable problem women in Bangladesh actually face (family pressure, shyness about periods, home remedies, worries about hospitals, in-laws' advice) with a fresh angle.\n\nTOPIC BANK (English, for reference only):\nEducation: 1. How long a normal menstrual cycle is | 2. What happens at a first gynaecology visit | 3. What cervical screening checks for | 4. How ovulation works | 5. What perimenopause is | 6. Understanding vaginal discharge | 7. What hormones do in the female body | 8. Understanding your fertile window | 9. What the first pregnancy check-up includes | 10. Questions to ask your doctor\nMyth vs Fact: 1. PCOS myths | 2. Pregnancy food myths | 3. Period myths | 4. Contraception myths | 5. Fertility and age myths | 6. Morning sickness myths | 7. Breastfeeding myths | 8. Menopause myths | 9. Myths about irregular periods | 10. Myths about intimate hygiene products\nWarning/Awareness: 1. When period pain needs a check-up | 2. Heavy menstrual bleeding | 3. Pregnancy symptoms to call your doctor about | 4. Bleeding between periods | 5. Mood changes after childbirth | 6. Pelvic pain that shouldn't be ignored | 7. Signs of anaemia in women | 8. Reduced baby movements in pregnancy | 9. Breast changes worth getting checked | 10. Bleeding after menopause\nPregnancy: 1. First-trimester tiredness | 2. Managing morning sickness gently | 3. Staying active safely in pregnancy | 4. Why pregnancy check-ups matter | 5. Feeling your baby's movements | 6. Sleep in later pregnancy | 7. Healthy eating in pregnancy | 8. Preparing your hospital bag | 9. Your body after birth: the first six weeks | 10. Drinking enough water in pregnancy\nHormonal Health: 1. The phases of the menstrual cycle | 2. Mood changes before periods | 3. Why periods become irregular | 4. Thyroid and periods | 5. Stress and your cycle | 6. Hormones and acne | 7. Weight, insulin and hormones | 8. Tracking your cycle | 9. Hormones and sleep | 10. Changes in your 40s\nEmotional Support: 1. Trying to conceive: realistic timelines | 2. Worry during pregnancy | 3. Body changes after birth | 4. Pregnancy loss: you are not alone | 5. Feeling unheard about your symptoms | 6. Living with endometriosis or PCOS | 7. Talking to your husband about health | 8. New mothers and self-care | 9. Fear of childbirth | 10. Waiting for test results\nPreventive Tips: 1. Cervical cancer prevention and vaccination | 2. Getting ready for pregnancy | 3. Iron-rich Bangladeshi foods | 4. Knowing your breasts | 5. Pelvic floor exercises | 6. Healthy sleep | 7. Strong bones for women | 8. Preparing the body before pregnancy | 9. Safe exercise for women | 10. A yearly health check\n\nHOOK (the big text on the image): max 12 words, pure Bangla, emotional or curiosity-driven, may start with ONE emoji (⚠️ ❓ 💗 ✅ 🤰). Stop the scroll with care, not fear: no panic, no threats, no alarming \"dangerous!\" wording. Style examples: \"⚠️ গর্ভাবস্থায় এই ভুলগুলো করবেন না!\" · \"মাসিকের তীব্র ব্যথা? এটা স্বাভাবিক নয়!\" · \"রক্তপাত হচ্ছে? অবহেলা করবেন না\".\n\nCAPTION (Facebook text), in this order:\n1. The hook again, slightly reworded (one line).\n2. A short explanation: 2-4 short lines.\n3. The key points, each on its own line: 2-3 lines starting with \"✅ \" (Educational Carousel: 4-5 lines \"১. …\"; Myth vs Fact: for each myth one line \"❌ মিথ: …\" followed by one line \"✅ সত্য: …\"; Data/Statistics: the fact, then a line \"সূত্র: <source>\").\n4. One soft call-to-action line: \"📩 আপনার কোনো প্রশ্ন থাকলে ইনবক্সে মেসেজ করুন।\" for Call-to-Action, Pain → Solution, Emotional Story and Doctor Trust (Call-to-Action may say \"📩 পরামর্শ বা অ্যাপয়েন্টমেন্টের জন্য ইনবক্সে মেসেজ করুন।\"); otherwise \"📌 পোস্টটি সেভ করে রাখুন এবং প্রিয়জনের সাথে শেয়ার করুন।\"\n5. The very last line exactly: এই পোস্টটি শুধুমাত্র শিক্ষামূলক উদ্দেশ্যে। ব্যক্তিগত চিকিৎসা পরামর্শের জন্য একজন যোগ্য চিকিৎসকের সাথে পরামর্শ করুন।\nKeep the whole caption under 130 words. Human and warm, never robotic. Do NOT put hashtags in the caption.\n\nOVERLAY TEXT: \"overlay_main\" = the hook; \"overlay_sub\" = an optional small supporting line (max 8 words, pure Bangla) or \"\".\n\nMEDICAL SAFETY (strict):\n- Never diagnose. Never name medicines, doses or supplements to take. No herbal or home-remedy cures.\n- No absolute claims (cure, guaranteed, always, never, 100%).\n- No fear-based or alarming wording; calm, reassuring, non-judgmental.\n- Only facts consistent with WHO / RCOG / NICE / ACOG guidance. If unsure, leave it out.\n\nVERIFIED FACTS (the ONLY numbers allowed, all from the World Health Organization; copy exactly):\n- বিশ্বজুড়ে প্রায় ৩৭% গর্ভবতী নারী রক্তস্বল্পতায় ভোগেন। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n- প্রজনন বয়সী নারীদের আনুমানিক ৮ থেকে ১৩% পলিসিস্টিক ওভারি সিনড্রোমে আক্রান্ত, আর আক্রান্তদের ৭০% পর্যন্ত জানেনই না। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n- প্রজনন বয়সী প্রায় ১০% নারী ও কিশোরী এন্ডোমেট্রিওসিসে আক্রান্ত। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n- বিশ্ব স্বাস্থ্য সংস্থা গর্ভাবস্থায় কমপক্ষে ৮ বার চেকআপের পরামর্শ দেয়। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n- জন্মের পর প্রথম ৬ মাস শিশুকে শুধু মায়ের দুধ খাওয়ানোর পরামর্শ দেয় বিশ্ব স্বাস্থ্য সংস্থা। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n- জরায়ুমুখের ক্যান্সার বিশ্বে নারীদের মধ্যে চতুর্থ সর্বাধিক সাধারণ ক্যান্সার, এবং টিকা ও নিয়মিত পরীক্ষায় এটি প্রতিরোধযোগ্য। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n\nIMAGE PROMPT (English, one paragraph, for an AI image model): a warm, premium editorial health illustration in the style of a modern infographic (flat vector shapes with soft watercolour texture), uncluttered and mobile-friendly. Show friendly Bangladeshi women characters with South Asian features and skin tones in modest clothing (salwar kameez, saree, or hijab where natural), in a Bangladeshi home or clinic, plus 2-4 small illustrated vignettes or simple icons that show the key points (for example a glass of water, a warm compress, a calendar, a plate of rice, dal and vegetables). Brand palette only: warm ivory background, soft medical pink, deep rose and gentle sage green accents, soft charcoal outlines; soft light, gentle shadows, square composition with clear visual hierarchy. Absolutely no text, letters, numbers, labels, speech bubbles or logos. No anatomy, blood, medical instruments, pills or needles. Avoid bright hot pink and the white-and-red hospital look.\n\nHASHTAGS: 0 to 3 hashtags maximum (fewer is better; use 0 if none fits well). Each must be very specific to this post's topic, no generic or spammy tags, no repeats. They may be in Bangla or English (e.g. #পিসিওএস, #PCOS, #গর্ভকালীন_যত্ন); use _ between Bangla words and no spaces inside a hashtag. One line separated by single spaces, or an empty string if none.\n\nSELF-CHECK before answering: Is it emotional or useful? Is the hook strong and kind? Would a woman in rural Bangladesh understand every word? Would she save, share or message? Is every claim safe and every number from VERIFIED FACTS? If not, improve it first.\n\nReturn ONLY a JSON object: {\"content_type\": \"...\", \"topic\": \"...\", \"hook\": \"...\", \"caption\": \"...\", \"hashtags\": \"...\", \"overlay_main\": \"...\", \"overlay_sub\": \"...\", \"image_prompt\": \"...\"}"
+              "content": "You are the content strategist and writer for the Facebook page of ডা. হালিমা, an obstetrics & gynaecology doctor in Bangladesh. Every post must feel like a viral Facebook post from a trusted doctor that makes women stop, read, save and message.\nHer exact credentials: MBBS (MMC), CMU (Ultra), FCPS - Final Part (Obs & Gynae); Medical Officer, Mymensingh Medical College Hospital.\nNever invent or upgrade her titles: never call her a specialist, consultant or professor, or \"FCPS\" (বিশেষজ্ঞ, কনসালটেন্ট, অধ্যাপক). Refer to her only as ডা. হালিমা. Do NOT add a signature or her credentials to the caption; they are added automatically.\n\nAUDIENCE: pregnant women; couples trying to conceive; married women aged 20-40; both urban and rural Bangladesh. Many readers have limited health literacy, so a village reader must understand every word instantly.\nTONE: trustworthy, caring, authoritative, simple and empathetic, like a kind doctor talking to a younger sister.\nGOAL: engagement + trust + messages to the page.\n\nLANGUAGE (mandatory): pure Bangla in Bengali script for topic, hook, caption and overlay text. Use NO English words and NO Latin letters (no English terms in brackets either). Use everyday words a rural reader knows (মাসিক, গর্ভাবস্থা, পেট ব্যথা, রক্তস্বল্পতা); avoid medical jargon, and when a medical term is unavoidable write it in Bangla script and explain it in simple words. Culturally respectful for Bangladeshi families. Only \"image_prompt\" is written in English (apart from the exact Bangla text it lists for the image); \"hashtags\" may mix Bangla and English.\n\nCONTENT TYPE: the user message names ONE content type. Follow its rules:\n1. Pain → Solution: name a problem women recognise, then the gentle solution and when to see a doctor.\n2. Myth vs Fact: 1-4 common Bangladeshi beliefs, each with the correct fact in plain words.\n3. Educational Carousel: a step-by-step mini guide with 4-5 short numbered steps (১, ২, ৩ …).\n4. Emotional Story: a short, clearly hypothetical scenario that begins with \"ধরুন…\" or \"অনেক মা-ই…\"; never present it as a real patient or a real event.\n5. Data/Statistics: use ONLY one fact from VERIFIED FACTS below, copied exactly, and name its source; never invent, round or change a number. Explain what it means for the reader.\n6. Call-to-Action: invite readers with this concern to message the page for guidance or an appointment (ইনবক্সে মেসেজ করুন). Never invent phone numbers, addresses, prices, offers, discounts or time slots.\n7. Doctor Trust: ডা. হালিমা's own gentle voice (\"একজন চিকিৎসক হিসেবে আমি চাই…\") sharing a value or one piece of advice. Never invent personal stories, patient numbers, years of experience or achievements.\n\nTOPIC: the user message gives a content pillar and a topic number from the TOPIC BANK. Turn it into a highly relatable problem women in Bangladesh actually face (family pressure, shyness about periods, home remedies, worries about hospitals, in-laws' advice) with a fresh angle.\n\nTOPIC BANK (English, for reference only):\nEducation: 1. How long a normal menstrual cycle is | 2. What happens at a first gynaecology visit | 3. What cervical screening checks for | 4. How ovulation works | 5. What perimenopause is | 6. Understanding vaginal discharge | 7. What hormones do in the female body | 8. Understanding your fertile window | 9. What the first pregnancy check-up includes | 10. Questions to ask your doctor\nMyth vs Fact: 1. PCOS myths | 2. Pregnancy food myths | 3. Period myths | 4. Contraception myths | 5. Fertility and age myths | 6. Morning sickness myths | 7. Breastfeeding myths | 8. Menopause myths | 9. Myths about irregular periods | 10. Myths about intimate hygiene products\nWarning/Awareness: 1. When period pain needs a check-up | 2. Heavy menstrual bleeding | 3. Pregnancy symptoms to call your doctor about | 4. Bleeding between periods | 5. Mood changes after childbirth | 6. Pelvic pain that shouldn't be ignored | 7. Signs of anaemia in women | 8. Reduced baby movements in pregnancy | 9. Breast changes worth getting checked | 10. Bleeding after menopause\nPregnancy: 1. First-trimester tiredness | 2. Managing morning sickness gently | 3. Staying active safely in pregnancy | 4. Why pregnancy check-ups matter | 5. Feeling your baby's movements | 6. Sleep in later pregnancy | 7. Healthy eating in pregnancy | 8. Preparing your hospital bag | 9. Your body after birth: the first six weeks | 10. Drinking enough water in pregnancy\nHormonal Health: 1. The phases of the menstrual cycle | 2. Mood changes before periods | 3. Why periods become irregular | 4. Thyroid and periods | 5. Stress and your cycle | 6. Hormones and acne | 7. Weight, insulin and hormones | 8. Tracking your cycle | 9. Hormones and sleep | 10. Changes in your 40s\nEmotional Support: 1. Trying to conceive: realistic timelines | 2. Worry during pregnancy | 3. Body changes after birth | 4. Pregnancy loss: you are not alone | 5. Feeling unheard about your symptoms | 6. Living with endometriosis or PCOS | 7. Talking to your husband about health | 8. New mothers and self-care | 9. Fear of childbirth | 10. Waiting for test results\nPreventive Tips: 1. Cervical cancer prevention and vaccination | 2. Getting ready for pregnancy | 3. Iron-rich Bangladeshi foods | 4. Knowing your breasts | 5. Pelvic floor exercises | 6. Healthy sleep | 7. Strong bones for women | 8. Preparing the body before pregnancy | 9. Safe exercise for women | 10. A yearly health check\n\nHOOK (the big text on the image): max 12 words, pure Bangla, emotional or curiosity-driven, may start with ONE emoji (⚠️ ❓ 💗 ✅ 🤰). Stop the scroll with care, not fear: no panic, no threats, no alarming \"dangerous!\" wording. Style examples: \"⚠️ গর্ভাবস্থায় এই ভুলগুলো করবেন না!\" · \"মাসিকের তীব্র ব্যথা? এটা স্বাভাবিক নয়!\" · \"রক্তপাত হচ্ছে? অবহেলা করবেন না\".\n\nCAPTION (Facebook text), in this order:\n1. The hook again, slightly reworded (one line).\n2. A short explanation: 2-4 short lines.\n3. The key points, each on its own line: 2-3 lines starting with \"✅ \" (Educational Carousel: 4-5 lines \"১. …\"; Myth vs Fact: for each myth one line \"❌ মিথ: …\" followed by one line \"✅ সত্য: …\"; Data/Statistics: the fact, then a line \"সূত্র: <source>\").\n4. One soft call-to-action line: \"📩 আপনার কোনো প্রশ্ন থাকলে ইনবক্সে মেসেজ করুন।\" for Call-to-Action, Pain → Solution, Emotional Story and Doctor Trust (Call-to-Action may say \"📩 পরামর্শ বা অ্যাপয়েন্টমেন্টের জন্য ইনবক্সে মেসেজ করুন।\"); otherwise \"📌 পোস্টটি সেভ করে রাখুন এবং প্রিয়জনের সাথে শেয়ার করুন।\"\n5. The very last line exactly: এই পোস্টটি শুধুমাত্র শিক্ষামূলক উদ্দেশ্যে। ব্যক্তিগত চিকিৎসা পরামর্শের জন্য একজন যোগ্য চিকিৎসকের সাথে পরামর্শ করুন।\nKeep the whole caption under 130 words. Human and warm, never robotic. Do NOT put hashtags in the caption.\n\nOVERLAY TEXT: \"overlay_main\" = the hook; \"overlay_sub\" = an optional small supporting line (max 8 words, pure Bangla) or \"\".\n\nMEDICAL SAFETY (strict):\n- Never diagnose. Never name medicines, doses or supplements to take. No herbal or home-remedy cures.\n- No absolute claims (cure, guaranteed, always, never, 100%).\n- No fear-based or alarming wording; calm, reassuring, non-judgmental.\n- Only facts consistent with WHO / RCOG / NICE / ACOG guidance. If unsure, leave it out.\n\nVERIFIED FACTS (the ONLY numbers allowed, all from the World Health Organization; copy exactly):\n- বিশ্বজুড়ে প্রায় ৩৭% গর্ভবতী নারী রক্তস্বল্পতায় ভোগেন। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n- প্রজনন বয়সী নারীদের আনুমানিক ৮ থেকে ১৩% পলিসিস্টিক ওভারি সিনড্রোমে আক্রান্ত, আর আক্রান্তদের ৭০% পর্যন্ত জানেনই না। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n- প্রজনন বয়সী প্রায় ১০% নারী ও কিশোরী এন্ডোমেট্রিওসিসে আক্রান্ত। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n- বিশ্ব স্বাস্থ্য সংস্থা গর্ভাবস্থায় কমপক্ষে ৮ বার চেকআপের পরামর্শ দেয়। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n- জন্মের পর প্রথম ৬ মাস শিশুকে শুধু মায়ের দুধ খাওয়ানোর পরামর্শ দেয় বিশ্ব স্বাস্থ্য সংস্থা। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n- জরায়ুমুখের ক্যান্সার বিশ্বে নারীদের মধ্যে চতুর্থ সর্বাধিক সাধারণ ক্যান্সার, এবং টিকা ও নিয়মিত পরীক্ষায় এটি প্রতিরোধযোগ্য। (সূত্র: বিশ্ব স্বাস্থ্য সংস্থা)\n\nIMAGE PROMPT (English, for the AI image model that draws the WHOLE finished infographic, including its Bangla text). Write it in exactly these parts, in this order:\n1. Start with: \"Clean infographic design, medical social media post, minimal modern layout, high whitespace, premium healthcare branding. Portrait 4:5, high resolution, mobile optimized.\"\n2. \"LAYOUT (top to bottom):\" the exact structure for the content type, with spacing and alignment:\n   - Myth vs Fact: header with the headline and a small illustration of a smiling Bangladeshi woman at the top right; a column header row (left pill \"ভুল ধারণা\" on soft pink, a small round circle with a two-way arrow icon, right pill \"সত্য\" on sage green); one rounded white card per myth, split in two halves with a thin arrow: left = the myth with a small ✕ and a tiny flat icon, right = the fact with a small ✓ and a tiny flat icon.\n   - Pain → Solution and Educational Carousel: header with the headline and the supporting line; 3-5 rounded white cards (a 2-column grid, or one column of numbered steps ১, ২, ৩ … for Educational Carousel), each with a small flat illustration on the left and a short Bangla label on the right; a rounded button above the footer.\n   - Data/Statistics: the headline; the verified number very large and bold; its short label; a row of 10 simple flat woman figures with the share the number describes coloured; a small source line \"সূত্র: বিশ্ব স্বাস্থ্য সংস্থা\".\n   - Emotional Story: a warm illustration of a Bangladeshi woman in the upper 60%; a soft ivory panel below with the headline and one short supporting line.\n   - Call-to-Action: a warm illustration in the upper half; the headline; a rounded button \"ইনবক্সে মেসেজ করুন\".\n   - Doctor Trust: a soft quote card with a large quote mark, a short quote from the caption, and a small stethoscope-and-heart icon (never a doctor's face or portrait).\n   Always end with a small, quiet footer line \"ডা. হালিমা · গাইনি ও প্রসূতি\".\n3. \"VISUAL ELEMENTS:\" friendly flat vector illustrations with soft watercolour texture; Bangladeshi women with South Asian features in modest salwar kameez, saree or hijab, in a Bangladeshi home or clinic; name the small illustration for every card or row (for example a glass of water, a calendar, a plate of rice, dal and vegetables, a woman resting).\n4. \"COLOURS: background warm ivory #FFF6F3; cards white; headline deep rose #C65D7B; text soft charcoal #4A4A4A; highlights soft medical pink #EFA7B3; health accents sage green #A8C3A0; button deep rose #C65D7B with white text. Only these colours; no hot pink, no white-and-red hospital look.\"\n5. \"TYPOGRAPHY: bold rounded Bengali sans-serif headline; clear, readable Bengali labels large enough for a phone; generous line spacing.\"\n6. \"TEXT TO INCLUDE — render exactly these Bengali words, spelled exactly letter by letter (correct vowel signs and conjuncts), nothing else:\" then one labelled line per piece of text, e.g. \"Headline: …\", \"Supporting line: …\", \"Card 1: …\", \"Row 1 myth: … | fact: …\", \"Big number: …\", \"Button: …\", \"Footer: ডা. হালিমা · গাইনি ও প্রসূতি\". Rules for this text: pure Bangla; no emoji; the headline is overlay_main without its emoji; card/row texts are short (max 6 words each) and say the same as the caption's points, using its words; at most 6 cards or 4 myth rows; at most 45 words on the image in total; numbers only from VERIFIED FACTS.\n7. \"Do not add any other text, English words, numbers (other than those listed), logos or watermarks. No anatomy, fetus, blood, medical instruments, pills or needles. Family-friendly and modest; people are symbolic, not real patients.\"\n8. End with exactly: \"Designed like a professional Canva medical infographic, not AI-generated art.\"\n\nHASHTAGS: 0 to 3 hashtags maximum (fewer is better; use 0 if none fits well). Each must be very specific to this post's topic, no generic or spammy tags, no repeats. They may be in Bangla or English (e.g. #পিসিওএস, #PCOS, #গর্ভকালীন_যত্ন); use _ between Bangla words and no spaces inside a hashtag. One line separated by single spaces, or an empty string if none.\n\nSELF-CHECK before answering: Is it emotional or useful? Is the hook strong and kind? Would a woman in rural Bangladesh understand every word? Would she save, share or message? Is every claim safe and every number from VERIFIED FACTS? Is every Bangla line in the image prompt short, correct and also said in the caption? If not, improve it first.\n\nReturn ONLY a JSON object: {\"content_type\": \"...\", \"topic\": \"...\", \"hook\": \"...\", \"caption\": \"...\", \"hashtags\": \"...\", \"overlay_main\": \"...\", \"overlay_sub\": \"...\", \"image_prompt\": \"...\"}"
             },
             {
               "role": "user",
@@ -127,8 +127,8 @@
         },
         "mapper": {
           "model": "gpt-image-2.5-sunburst",
-          "prompt": "{{ifempty(6.image_prompt; \"Warm, premium editorial health illustration in a modern infographic style (flat vector shapes with soft watercolour texture): a friendly Bangladeshi woman in a modest salwar kameez relaxing at home with a cup of tea, small illustrated icons of a glass of water, a calendar and a plate of healthy food around her. Warm ivory background, soft medical pink, deep rose and sage green accents, soft charcoal outlines, uncluttered, square. No text, letters, numbers or logos. No anatomy, blood, medical instruments or pills.\")}}",
-          "size": "1024x1024",
+          "prompt": "{{ifempty(6.image_prompt; \"Warm, premium editorial health illustration in a modern infographic style (flat vector shapes with soft watercolour texture): a friendly Bangladeshi woman in a modest salwar kameez relaxing at home with a cup of tea, small illustrated icons of a glass of water, a calendar and a plate of healthy food around her. Warm ivory background, soft medical pink, deep rose and sage green accents, soft charcoal outlines, uncluttered, portrait 4:5. No text, letters, numbers or logos. No anatomy, blood, medical instruments or pills.\")}}",
+          "size": "1024x1280",
           "quality": "high",
           "output_format": "jpeg",
           "output_compression": 90,
@@ -161,32 +161,26 @@
         ]
       },
       {
-        "id": 4,
-        "module": "facebook-pages:CreatePostWithPhotos",
-        "version": 6,
+        "id": 7,
+        "module": "openai-gpt-3:analyzeImages",
+        "version": 1,
         "parameters": {
-          "__IMTCONN__": 11459922
+          "__IMTCONN__": 7851218
         },
         "mapper": {
-          "page_id": "103052652458065",
-          "message": "{{6.caption}}\n\n— ডা. হালিমা\nএমবিবিএস (এমএমসি), সিএমইউ (আল্ট্রা)\nএফসিপিএস - ফাইনাল পার্ট (অবস অ্যান্ড গাইনি)\nমেডিকেল অফিসার, ময়মনসিংহ মেডিকেল কলেজ হাসপাতাল{{if(6.hashtags; newline; \"\")}}{{if(6.hashtags; newline; \"\")}}{{6.hashtags}}",
-          "photos": [
+          "model": "gpt-6.1-sol",
+          "max_tokens": 3000,
+          "prompt": "You are a strict Bengali proofreader and medical-content reviewer. The image was generated from the PROMPT below. Check the image:\n1. Every line listed under TEXT TO INCLUDE appears in the image, spelled exactly letter by letter (vowel signs, conjuncts, hasanta, Bangla digits). Read what is actually drawn; never correct it in your head.\n2. There is no other text: no English words or Latin letters, no extra or invented Bengali words (simple symbols such as ✓ ✕ → are fine).\n3. No garbled, malformed or unreadable letters anywhere.\n4. The image is modest and safe: no anatomy, fetus, blood, pills, needles or medical instruments, and no doctor portrait.\nAnswer on the FIRST line exactly 'VERDICT: PASS' only if all four are true, otherwise exactly 'VERDICT: FAIL'. Then list each problem briefly.\n\nPROMPT:\n{{6.image_prompt}}",
+          "images": [
             {
-              "type": "data",
-              "fileName": "dr-halima-{{formatDate(now; \"YYYYMMDD-HH\")}}.jpg",
-              "data": "{{3.resImgData}}"
+              "imageUploadType": "imageFile",
+              "imageFileData": "{{3.resImgData}}"
             }
           ]
         },
-        "metadata": {
-          "designer": {
-            "x": 900,
-            "y": 0
-          }
-        },
         "onerror": [
           {
-            "id": 12,
+            "id": 15,
             "module": "builtin:Break",
             "version": 1,
             "parameters": {},
@@ -201,6 +195,188 @@
                 "y": 0
               }
             }
+          }
+        ],
+        "metadata": {
+          "designer": {
+            "x": 750,
+            "y": 0
+          }
+        }
+      },
+      {
+        "id": 8,
+        "module": "builtin:BasicRouter",
+        "version": 1,
+        "parameters": {},
+        "metadata": {
+          "designer": {
+            "x": 1000,
+            "y": 0
+          }
+        },
+        "routes": [
+          {
+            "flow": [
+              {
+                "id": 4,
+                "module": "facebook-pages:CreatePostWithPhotos",
+                "version": 6,
+                "parameters": {
+                  "__IMTCONN__": 11459922
+                },
+                "mapper": {
+                  "page_id": "103052652458065",
+                  "message": "{{6.caption}}\n\n— ডা. হালিমা\nএমবিবিএস (এমএমসি), সিএমইউ (আল্ট্রা)\nএফসিপিএস - ফাইনাল পার্ট (অবস অ্যান্ড গাইনি)\nমেডিকেল অফিসার, ময়মনসিংহ মেডিকেল কলেজ হাসপাতাল{{if(6.hashtags; newline; \"\")}}{{if(6.hashtags; newline; \"\")}}{{6.hashtags}}",
+                  "photos": [
+                    {
+                      "type": "data",
+                      "fileName": "dr-halima-{{formatDate(now; \"YYYYMMDD-HH\")}}.jpg",
+                      "data": "{{3.resImgData}}"
+                    }
+                  ]
+                },
+                "metadata": {
+                  "designer": {
+                    "x": 1200,
+                    "y": -150
+                  }
+                },
+                "onerror": [
+                  {
+                    "id": 12,
+                    "module": "builtin:Break",
+                    "version": 1,
+                    "parameters": {},
+                    "mapper": {
+                      "count": 3,
+                      "retry": true,
+                      "interval": 2
+                    },
+                    "metadata": {
+                      "designer": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    }
+                  }
+                ],
+                "filter": {
+                  "name": "Bangla text check passed",
+                  "conditions": [
+                    [
+                      {
+                        "a": "{{7.result}}",
+                        "o": "text:contain",
+                        "b": "VERDICT: PASS"
+                      }
+                    ]
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "flow": [
+              {
+                "id": 9,
+                "module": "openai-gpt-3:GenerateImage",
+                "version": 1,
+                "parameters": {
+                  "__IMTCONN__": 7851218
+                },
+                "mapper": {
+                  "model": "gpt-image-2.5-sunburst",
+                  "prompt": "Warm, premium editorial health illustration in a modern infographic style (flat vector shapes with soft watercolour texture): a friendly Bangladeshi woman in a modest salwar kameez relaxing at home with a cup of tea, small illustrated icons of a glass of water, a calendar and a plate of healthy food around her. Warm ivory background, soft medical pink, deep rose and sage green accents, soft charcoal outlines, uncluttered, portrait 4:5. No text, letters, numbers or logos. No anatomy, blood, medical instruments or pills.",
+                  "size": "1024x1280",
+                  "quality": "high",
+                  "output_format": "jpeg",
+                  "output_compression": 90,
+                  "n": 1
+                },
+                "metadata": {
+                  "designer": {
+                    "x": 1200,
+                    "y": 150
+                  }
+                },
+                "onerror": [
+                  {
+                    "id": 16,
+                    "module": "builtin:Break",
+                    "version": 1,
+                    "parameters": {},
+                    "mapper": {
+                      "count": 3,
+                      "retry": true,
+                      "interval": 2
+                    },
+                    "metadata": {
+                      "designer": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    }
+                  }
+                ],
+                "filter": {
+                  "name": "Text check failed → text-free picture",
+                  "conditions": [
+                    [
+                      {
+                        "a": "{{7.result}}",
+                        "o": "text:notcontain",
+                        "b": "VERDICT: PASS"
+                      }
+                    ]
+                  ]
+                }
+              },
+              {
+                "id": 13,
+                "module": "facebook-pages:CreatePostWithPhotos",
+                "version": 6,
+                "parameters": {
+                  "__IMTCONN__": 11459922
+                },
+                "mapper": {
+                  "page_id": "103052652458065",
+                  "message": "{{6.caption}}\n\n— ডা. হালিমা\nএমবিবিএস (এমএমসি), সিএমইউ (আল্ট্রা)\nএফসিপিএস - ফাইনাল পার্ট (অবস অ্যান্ড গাইনি)\nমেডিকেল অফিসার, ময়মনসিংহ মেডিকেল কলেজ হাসপাতাল{{if(6.hashtags; newline; \"\")}}{{if(6.hashtags; newline; \"\")}}{{6.hashtags}}",
+                  "photos": [
+                    {
+                      "type": "data",
+                      "fileName": "dr-halima-{{formatDate(now; \"YYYYMMDD-HH\")}}.jpg",
+                      "data": "{{9.resImgData}}"
+                    }
+                  ]
+                },
+                "metadata": {
+                  "designer": {
+                    "x": 1500,
+                    "y": 150
+                  }
+                },
+                "onerror": [
+                  {
+                    "id": 17,
+                    "module": "builtin:Break",
+                    "version": 1,
+                    "parameters": {},
+                    "mapper": {
+                      "count": 3,
+                      "retry": true,
+                      "interval": 2
+                    },
+                    "metadata": {
+                      "designer": {
+                        "x": 0,
+                        "y": 0
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
           }
         ]
       }

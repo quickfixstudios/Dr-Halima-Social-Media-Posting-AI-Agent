@@ -269,9 +269,34 @@ The lists live in `brands/dr_halima.json` → `visual_context`.
 
 ---
 
-## 6. How the Bangla text is placed correctly (Pipeline A — the default)
+## 6. Who draws the Bangla text
 
-AI image models often misspell Bangla. So:
+### 6.1 The AI draws the whole infographic (default, `IMAGE_TEXT_MODE=model`)
+
+GPT Image draws the finished design — layout, illustrations **and** the Bangla text — like a Canva infographic
+(reference style: tips posters, early-signs grids, myth-vs-fact tables, trimester guides).
+
+1. **Layout-first prompt** (`backend/src/imaging/infographicPrompt.js`): style keywords ("clean infographic design,
+   medical social media post, minimal modern layout, high whitespace, premium healthcare branding") → the exact layout
+   for the post's format (card grid, myth table, trimester cards, big number + figures, poster) → one small
+   illustration per card → the brand colours as hex codes → typography → **TEXT TO INCLUDE**: every Bangla line,
+   labelled ("Headline: …", "Card 1 label: …") → safety rules → "Designed like a professional Canva medical
+   infographic, not AI-generated art."
+2. The picture is made at the **final post size** (e.g. 4:5), so nothing is cropped.
+3. **Bangla text check** (`textCheck.js`): a vision model transcribes every word *as drawn* (told not to fix
+   spelling) and each requested line is compared letter by letter. A wrong vowel sign or conjunct fails the line.
+4. If a line is wrong, the image is **regenerated** (up to `IMAGE_TEXT_CHECK_RETRIES`, default 2 extra images) and
+   the best attempt is kept. Anything still wrong is listed in the review screen ("Not found as written on the
+   image"), and the checklist shows `bangla_text_correct: false`.
+5. A person still approves every image — the reader model can misread a letter too.
+6. Carousels and real photos keep our own renderer (6.2): one AI picture cannot hold every slide, and a real
+   photo must not be redrawn.
+
+**Tested 3 Oct 2026** (`gpt-image-2.5-sunburst`, brand palette): an early-signs grid (9 lines), a 5-row myth table
+(13 lines, conjuncts like চিকিৎসকের, নির্ধারিত, দ্বিগুণ) and a trimester guide with Bangla digits (12 lines) — every
+line was read back letter-perfect, layout rated 9/10.
+
+### 6.2 Our renderer draws the text (`IMAGE_TEXT_MODE=overlay`)
 
 1. The AI is told: **"Do NOT render any text"**, and to leave calm, empty space where our text goes.
 2. Our renderer draws the text with **sharp**, which uses **Pango + HarfBuzz**, the same text-shaping engines web
@@ -281,12 +306,11 @@ AI image models often misspell Bangla. So:
 4. Each text box has a target size and a **minimum readable size** (designed for 1080 px wide phones). Text that's
    too long shrinks step by step. If it still doesn't fit, the system **stops with `TEXT_TOO_LONG`** and recommends
    shortening or a carousel. It never crops text and never makes it unreadably small.
-5. This fit test runs on a **grey placeholder before paying** for the AI picture.
+5. This fit test runs on a **grey placeholder before paying** for the AI picture (in both modes, so over-long text
+   is caught early).
 6. Optional: `IMAGE_TEXT_SHORTEN_WITH_LLM=true` lets the text model shorten a too-long headline. The result is marked
    *"derived"* in review so a person confirms it adds nothing new.
-
-**Pipeline B (experimental):** `IMAGE_TEXT_MODE=model` (or `--text-mode model`) asks the AI to draw the text itself.
-Every image is then flagged "proofread every Bangla letter". Don't use it for production.
+7. Designed layouts (icon grid, statistic, trimester columns) need no AI picture at all in this mode — free.
 
 ---
 
@@ -565,7 +589,10 @@ Until you do, costs show as **"unknown"** (never guessed) and only the count lim
 | `IMAGE_MODEL_ARBITRARY_SIZES` | `true` for gpt-image-2 family sizes; `false` for older models |
 | `IMAGE_QUALITY`, `IMAGE_TIMEOUT_MS`, `IMAGE_RETRIES` | Image request settings |
 | `IMAGE_GENERATION_DRY_RUN` | Global free preview mode |
-| `IMAGE_TEXT_MODE` | `overlay` (default) or `model` (experimental) |
+| `IMAGE_TEXT_MODE` | `model` (default: the AI draws the whole infographic, text read back and checked) or `overlay` (our renderer writes the Bangla) |
+| `IMAGE_TEXT_CHECK` | `true` (default) = read AI-drawn Bangla back and compare it letter by letter |
+| `IMAGE_TEXT_CHECK_RETRIES` | extra generations while a Bangla line is wrong (default 2) |
+| `IMAGE_TEXT_CHECK_THRESHOLD` | how close a line must be to count as correct (default 0.97; 1 = identical) |
 | `IMAGE_TEXT_SHORTEN_WITH_LLM` | Allow automatic shortening of long headlines |
 | `IMAGE_DEFAULT_BUSINESS` | Business used when `--business` is not given |
 | `MAX_IMAGE_GENERATIONS_PER_POST`, `MAX_REGENERATIONS`, `DAILY_IMAGE_GENERATION_LIMIT`, `DAILY_IMAGE_BUDGET`, `MONTHLY_IMAGE_BUDGET` | Cost controls |

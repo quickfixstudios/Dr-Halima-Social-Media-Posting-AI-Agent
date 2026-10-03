@@ -195,9 +195,17 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
   // ── picture ──
   // Brand default look: Dr. Halima uses warm infographic illustrations instead of photos (unless a concept asks otherwise).
   const mode = opts.conceptMode || (cat.visual.mode === "photo" && brand.image_style === "illustration" && !usePhoto ? "illustration" : cat.visual.mode);
-  const noPicture = NO_PICTURE_LAYOUTS.has(layout);
-  const peopleInScene = !noPicture && mode !== "graphic" && !/no people|no person|no face/.test(cat.visual.subject);
-  const area = imageArea(layout, out.width, out.height);
+  // Text mode "model": the image model draws the whole infographic, text included (carousels and real photos
+  // stay on our own Bangla overlay — one AI picture cannot hold every slide, and a real photo must not be redrawn).
+  let textMode = opts.textMode ?? "overlay";
+  if (textMode === "model" && (layout === "carousel" || usePhoto)) {
+    textMode = "overlay";
+    flags.push({ code: "overlay_kept", message: `${usePhoto ? "Real photo" : "Carousel"} — the Bangla text is drawn by our renderer, not by the AI.` });
+  }
+  const aiDrawsAll = textMode === "model";
+  const noPicture = !aiDrawsAll && NO_PICTURE_LAYOUTS.has(layout);
+  const peopleInScene = (aiDrawsAll || !noPicture) && mode !== "graphic" && !/no people|no person|no face/.test(cat.visual.subject);
+  const area = aiDrawsAll ? { width: out.width, height: out.height } : imageArea(layout, out.width, out.height);
   const wardrobe = peopleInScene ? pick(brand.visual_context?.wardrobe, `${post.post_id}:${cat.id}`, opts.variant ?? 0) : "";
   const settingKey = cat.visual.setting;
   const environment = settingKey === "none" ? "abstract background" : brand.visual_context?.settings?.[settingKey] || pick(Object.values(brand.visual_context?.settings ?? {}), post.post_id, opts.variant ?? 0);
@@ -245,13 +253,13 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
     image_area: { width: area.width, height: area.height },
     no_ai_picture: noPicture,
     generation_size: usePhoto || noPicture ? null : generationSize(area.width / area.height, { arbitrarySizes: opts.arbitrarySizes ?? true }),
-    text_mode: opts.textMode ?? "overlay",
+    text_mode: textMode,
     text,
     text_origins: origins,
     text_density: textChars > 160 ? "high" : textChars > 80 ? "medium" : "low",
     label_symbolic: peopleInScene && mode === "photo" && brand.medical, // drawings are obviously not real patients
     badge: cat.badge ?? null,
-    negative_constraints: negativeConstraints(cat, brand, { peopleInScene, textMode: opts.textMode ?? "overlay" }),
+    negative_constraints: negativeConstraints(cat, brand, { peopleInScene, textMode }),
     medical_safety: brand.medical ? MEDICAL_SAFETY : [],
     flags,
     halts,
@@ -332,6 +340,7 @@ export const BASE_NEGATIVES = [
 function negativeConstraints(cat, brand, { peopleInScene, textMode }) {
   const list = [...BASE_NEGATIVES, ...(cat.avoid ?? []), ...(brand.disallowed_styles ?? [])];
   if (textMode === "overlay") list.unshift("any text, letters, numbers, captions, signage, labels or UI on screens");
+  else list.unshift("any text other than the exact Bengali lines listed", "English words", "misspelled or invented Bengali letters");
   if (!peopleInScene) list.push("people or faces");
   return [...new Set(list)];
 }

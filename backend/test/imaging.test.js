@@ -57,7 +57,9 @@ let n = 0;
 /** Fresh assets folder + config per test so tests never share state. */
 function deps(extra = {}) {
   const assetsDir = path.join(tmp, `run-${++n}`);
-  return { cfg: { assetsDir, pricingFile: path.join(tmp, "none.json"), ...(extra.cfg ?? {}) }, client: extra.client ?? fakeClient(), sleep: async () => {}, ...extra, ...(extra.cfg && { cfg: { assetsDir, pricingFile: path.join(tmp, "none.json"), ...extra.cfg } }) };
+  // Pipeline tests default to the overlay mode; AI-drawn ("model") tests set textMode themselves.
+  const base = { assetsDir, pricingFile: path.join(tmp, "none.json"), textMode: "overlay" };
+  return { client: extra.client ?? fakeClient(), sleep: async () => {}, ...extra, cfg: { ...base, ...(extra.cfg ?? {}) } };
 }
 
 // ── business profile ──
@@ -169,8 +171,10 @@ test("prompt has every section, Bangladeshi context, negative constraints and no
   assert.match(prompt, /extra fingers/);
   assert.match(prompt, /Dhaka/);
   const modelMode = buildImagePrompt(buildBrief(normalizePost(sample(2)), brand, "pain_solution", { textMode: "model" }), brand);
-  assert.match(modelMode, /Render this text exactly/);
-  assert.match(modelMode, /তীব্র মাসিকের ব্যথা/);
+  assert.match(modelMode, /^TEXT TO INCLUDE/m);
+  assert.match(modelMode, /Headline: তীব্র মাসিকের ব্যথা/);
+  assert.match(modelMode, /Designed like a professional Canva medical infographic, not AI-generated art\.$/);
+  assert.doesNotMatch(modelMode, /Do NOT render any text/);
 });
 
 test("prompts change with the post (wardrobe/setting rotate, subject follows the category)", () => {
@@ -533,4 +537,72 @@ test("live Make scenario uses the same prompt as prompts/facebook_post.system.md
   const shared = systemPrompt({ infographic: false }).split("VERIFIED FACTS")[0];
   assert.ok(live.startsWith(shared), "live system prompt drifted from prompts/facebook_post.system.md");
   for (const f of loadFacts()) assert.ok(live.includes(f.fact_bn), f.id);
+  // Everything after the facts (image prompt rules, hashtags, self-check) must match too.
+  const after = fs.readFileSync(path.join(REPO_ROOT, "prompts/facebook_post.system.md"), "utf8").split("{{VERIFIED_FACTS}}")[1].trim();
+  assert.ok(live.includes(after), "live image/hashtag rules drifted from prompts/facebook_post.system.md");
+});
+
+// ── AI-drawn infographics (text mode "model") ──
+import { compareText, normalize, bestSimilarity } from "../src/imaging/textCheck.js";
+import { infographicTextLines } from "../src/imaging/infographicPrompt.js";
+
+test("text check: exact Bangla passes, a wrong vowel sign or a missing line fails", () => {
+  assert.equal(normalize("খেয়াল"), normalize("খেয়াল")); // precomposed য় == য + nukta
+  assert.equal(bestSimilarity("ঘন ঘন প্রস্রাব", "৪. ঘন ঘন প্রস্রাব"), 1);
+  const expected = [{ role: "Headline", text: "গর্ভধারণের প্রাথমিক লক্ষণ" }, { role: "Card 1 label", text: "ক্লান্তি" }];
+  assert.equal(compareText(expected, { lines: ["গর্ভধারণের প্রাথমিক লক্ষণ", "ক্লান্তি"], garbled: [] }).ok, true);
+  const typo = compareText(expected, { lines: ["গর্ভধারণের প্রাথমিক লক্ষন", "ক্লান্তি"], garbled: [] }); // ণ → ন
+  assert.equal(typo.ok, false);
+  assert.deepEqual(typo.wrong.map((w) => w.role), ["Headline"]);
+  assert.equal(compareText(expected, { lines: ["গর্ভধারণের প্রাথমিক লক্ষণ"], garbled: [] }).wrong[0].role, "Card 1 label");
+  assert.equal(compareText(expected, { lines: ["গর্ভধারণের প্রাথমিক লক্ষণ", "ক্লান্তি"], garbled: ["কলািন"] }).ok, false);
+});
+
+test("model mode: designed layouts become one full-size AI infographic with the exact Bangla lines", () => {
+  const post = normalizePost(JSON.parse(fs.readFileSync(path.join(SAMPLES, "sample-09-pregnancy-tips-poster.json"), "utf8")));
+  const brief = buildBrief(post, brand, "pregnancy_tips_poster", { textMode: "model" });
+  assert.equal(brief.layout, "icon_grid");
+  assert.equal(brief.no_ai_picture, false);
+  assert.deepEqual(brief.image_area, { width: brief.output.width, height: brief.output.height });
+  assert.ok(brief.generation_size);
+  const prompt = buildImagePrompt(brief, brand);
+  assert.match(prompt, /^Clean infographic design, medical social media post, minimal modern layout, high whitespace, premium healthcare branding/);
+  assert.match(prompt, /rounded white cards/);
+  for (const line of infographicTextLines(brief)) assert.ok(prompt.includes(`${line.role}: ${line.text}`), line.role);
+  assert.match(prompt, /#C65D7B/); // brand colours, not the generic pink/purple
+  assert.doesNotMatch(prompt, /“vs”/);
+  // Carousels keep our own renderer (one AI picture cannot hold every slide).
+  const carousel = buildBrief(normalizePost(sample(2)), brand, "educational_carousel", { textMode: "model" });
+  assert.equal(carousel.text_mode, "overlay");
+});
+
+test("model mode: misspelled Bangla is regenerated, the best attempt kept, and the reviewer told", async () => {
+  const post = JSON.parse(fs.readFileSync(path.join(SAMPLES, "sample-09-pregnancy-tips-poster.json"), "utf8"));
+  // 1st image: one wrong line; 2nd: still wrong; 3rd: perfect.
+  const results = [0.8, 0.9, 1];
+  const calls = [];
+  const textCheck = async (_buf, expected) => {
+    calls.push(expected.length);
+    const s = results.shift();
+    return { ok: s === 1, score: s, lines: [], wrong: s === 1 ? [] : [{ role: "Headline", text: expected[0].text, similarity: s }], garbled: [], transcript: [] };
+  };
+  const d = deps({ cfg: { textMode: "model" }, textCheck });
+  const r = await createImageJob({ post, deps: d });
+  assert.equal(r.status, "IMAGE_REVIEW_PENDING");
+  assert.equal(d.client.calls.length, 3);
+  assert.equal(calls.length, 3);
+  const meta = JSON.parse(fs.readFileSync(path.join(r.folder, "metadata.json"), "utf8"));
+  const c = meta.candidates[0];
+  assert.equal(c.generations.at(-1).text_check.ok, true);
+  assert.equal(c.finals[0].from_generation, c.generations.at(-1).id);
+  assert.equal(c.finals[0].checklist.bangla_text_correct, true);
+  assert.deepEqual(c.generations.map((g) => g.kind), ["generate", "text_retry", "text_retry"]);
+
+  // Never fixed → the best attempt is kept and the wrong line is listed for the reviewer.
+  const d2 = deps({ cfg: { textMode: "model", textCheck: { enabled: true, retries: 1, threshold: 0.97 } }, textCheck: async (_b, e) => ({ ok: false, score: 0.5, lines: [], wrong: [{ role: "Headline", text: e[0].text, similarity: 0.5 }], garbled: [], transcript: [] }) });
+  const r2 = await createImageJob({ post, deps: d2 });
+  assert.equal(d2.client.calls.length, 2);
+  const c2 = JSON.parse(fs.readFileSync(path.join(r2.folder, "metadata.json"), "utf8")).candidates[0];
+  assert.equal(c2.finals[0].checklist.status, "needs_attention");
+  assert.ok(c2.finals[0].overlay_issues.some((i) => i.rule === "model_text_mismatch" && i.label === "Headline"));
 });

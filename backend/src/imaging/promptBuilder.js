@@ -5,14 +5,17 @@
  * why the picture looks the way it does — and a regeneration only changes the sections it needs to.
  */
 
+import { buildInfographicPrompt } from "./infographicPrompt.js";
+
 // Extra instructions added by regeneration reasons (see regenerate.js). Keyed by section.
 export function buildImagePrompt(brief, brand, { adjustments = [], promptOverride = "" } = {}) {
+  // The AI draws the whole infographic (text included): a layout-first, Canva-style prompt.
+  if (brief.text_mode === "model") return buildInfographicPrompt(brief, brand, { adjustments, promptOverride });
   const adj = (section) => adjustments.filter((a) => a.section === section).map((a) => a.text);
   const people = brief.people_count > 0;
-  const overlay = brief.text_mode !== "model";
 
   const sections = [
-    ["PURPOSE", `${overlay ? "Background image" : "Complete social-media graphic"} for a ${brand.category || "business"} Facebook page (${brand.brand_name}) whose audience is ${brand.audience || "the local community"}. Visual type: ${brief.visual_type_label}. Goal: ${brief.goal.replace(/_/g, " ")}.`],
+    ["PURPOSE", `Background image for a ${brand.category || "business"} Facebook page (${brand.brand_name}) whose audience is ${brand.audience || "the local community"}. Visual type: ${brief.visual_type_label}. Goal: ${brief.goal.replace(/_/g, " ")}.`],
     ["SUBJECT", [brief.subject, ...adj("SUBJECT")].join(". ")],
     ["CONTEXT", `The image illustrates this approved post without adding any claim of its own. Topic: "${brief.topic}". Hook: "${brief.hook}".`],
     ["EMOTION", [brief.emotional_tone, people && brief.facial_expression ? `natural, believable facial expression: ${brief.facial_expression}` : "", ...adj("EMOTION")].filter(Boolean).join("; ")],
@@ -31,9 +34,7 @@ export function buildImagePrompt(brief, brand, { adjustments = [], promptOverrid
     ["COLOR DIRECTION", brief.color_direction],
     [
       "EMPTY SPACE FOR TEXT",
-      overlay
-        ? `${brief.composition.split("; ").slice(1).join("; ")}. Do NOT render any text — Bengali typography is added afterwards by our own renderer.`
-        : `Render this text exactly, large and legible:\n${modelText(brief)}`,
+      `${brief.composition.split("; ").slice(1).join("; ")}. Do NOT render any text — Bengali typography is added afterwards by our own renderer.`,
     ],
     ["MEDICAL ACCURACY REQUIREMENTS", brief.medical_safety.length ? brief.medical_safety.join(". ") + "." : "Not a medical brand — keep claims out of the image."],
     ["CONTENT SAFETY", "Family-friendly, modest, respectful and dignified; suitable for a conservative Bangladeshi audience; people are symbolic models, not real patients."],
@@ -46,11 +47,6 @@ export function buildImagePrompt(brief, brand, { adjustments = [], promptOverrid
     prompt = `${promptOverride.trim()}\n\n${sections.filter(([k]) => ["MEDICAL ACCURACY REQUIREMENTS", "CONTENT SAFETY", "WHAT TO AVOID", "EMPTY SPACE FOR TEXT", "ASPECT RATIO"].includes(k)).map(([k, v]) => `${k}: ${v}`).join("\n")}`;
   }
   return prompt;
-}
-
-function modelText(brief) {
-  const t = brief.text;
-  return [t.headline, t.subtitle, ...(t.items ?? []).map((x, i) => `${i + 1}. ${x}`), t.cta].filter(Boolean).join("\n");
 }
 
 function ratioWords({ width, height }) {

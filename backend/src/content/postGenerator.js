@@ -53,7 +53,7 @@ export function outputFormat(facts = loadFacts()) {
     schema: {
       type: "object",
       additionalProperties: false,
-      required: ["content_type", "visual_format", "topic", "hook", "caption", "hashtags", "overlay_main", "overlay_sub", "items", "stages", "key_points", "myths", "fact_id", "image_prompt"],
+      required: ["content_type", "visual_format", "topic", "hook", "caption", "hashtags", "overlay_main", "overlay_sub", "items", "stages", "key_points", "myths", "fact_id", "image_prompt", "alt_text", "file_name_suggestion", "confidence"],
       properties: {
         content_type: { type: "string", enum: Object.keys(CONTENT_TYPES) },
         visual_format: { type: "string", enum: Object.keys(VISUAL_FORMATS) },
@@ -69,6 +69,9 @@ export function outputFormat(facts = loadFacts()) {
         myths: { type: "array", items: { type: "object", additionalProperties: false, required: ["myth", "fact"], properties: { myth: str, fact: str } }, description: "Myth vs Fact only (1-4 pairs, as in the caption); otherwise []" },
         fact_id: { type: "string", enum: ["", ...facts.map((f) => f.id)], description: "Data/Statistics only: the id of the VERIFIED FACT used; otherwise empty" },
         image_prompt: str,
+        alt_text: { type: "string", description: "One short Bangla sentence describing the image for screen readers" },
+        file_name_suggestion: { type: "string", description: "Lower-case ASCII file name, e.g. drhalima_myths_pregnancy_food.jpg" },
+        confidence: { type: "number", description: "0-1: how sure you are the post follows every rule and the image will look like a clean professional infographic" },
       },
     },
   };
@@ -110,8 +113,10 @@ export function toDraftPost(out, { postId, business, facts = loadFacts(), now = 
     stages: (out.stages ?? []).slice(0, 4).map((st) => ({ title: st.title, points: st.points.slice(0, 4) })),
     myths: out.content_type === "myth_vs_fact" ? out.myths.slice(0, 4) : [],
     verified_statistics: fact ? [{ value: fact.value, label: fact.label_bn, source: fact.source_bn, source_url: fact.source_url }] : [],
+    alt_text: out.alt_text ?? "",
+    file_name_suggestion: (out.file_name_suggestion ?? "").toLowerCase().replace(/[^a-z0-9_.-]/g, "_"),
     content_status: "draft",
-    generator: { content_type_label: type.label, visual_format: out.visual_format ?? "", created_at: now.toISO(), model: imagingConfig().textModel, image_prompt_suggestion: out.image_prompt, warnings },
+    generator: { content_type_label: type.label, visual_format: out.visual_format ?? "", created_at: now.toISO(), model: imagingConfig().textModel, image_prompt_suggestion: out.image_prompt, confidence: out.confidence ?? null, warnings },
   };
 }
 

@@ -15,7 +15,9 @@ src/
     pipeline.js          createImageJob() / runAction() — orchestration + review actions
     decision.js          content → visual type (scored, explained) → Image Creative Brief
     categories.js        the visual styles (add new ones here)
-    promptBuilder.js     brief → 16-section image prompt
+    promptBuilder.js     brief → 16-section image prompt (picture only, text drawn by us)
+    infographicPrompt.js brief → Canva-style prompt for a whole AI-drawn infographic with exact Bangla lines
+    textCheck.js         reads AI-drawn Bangla back (vision model) and compares it letter by letter
     overlay/             Bangla text rendering (sharp + bundled Hind Siliguri), layouts and icons
     safety.js            medical-content safety (approved text only, no invented numbers/titles)
     generator.js         OpenAI image call (retries, timeout, usage, request id)

@@ -29,7 +29,14 @@ export function imagingConfig(env = process.env) {
     timeoutMs: num(env.IMAGE_TIMEOUT_MS, 180_000),
     retries: num(env.IMAGE_RETRIES, 3),
     dryRun: bool(env.IMAGE_GENERATION_DRY_RUN),
-    textMode: env.IMAGE_TEXT_MODE === "model" ? "model" : "overlay", // "overlay" = Pipeline A (default), "model" = Pipeline B (experimental)
+    // "model" (default) = GPT Image draws the whole infographic incl. Bangla text, read back by textCheck.js;
+    // "overlay" = GPT Image draws only the picture and our renderer writes the Bangla text.
+    textMode: env.IMAGE_TEXT_MODE === "overlay" ? "overlay" : "model",
+    textCheck: {
+      enabled: bool(env.IMAGE_TEXT_CHECK, true),
+      retries: num(env.IMAGE_TEXT_CHECK_RETRIES, 2), // extra generations when a Bangla line is misspelled
+      threshold: num(env.IMAGE_TEXT_CHECK_THRESHOLD, 0.97), // 1 = letter-perfect
+    },
     shortenWithLlm: bool(env.IMAGE_TEXT_SHORTEN_WITH_LLM),
     defaultBusiness: env.IMAGE_DEFAULT_BUSINESS || "dr_halima",
     brandsDir: env.BRANDS_DIR || path.join(REPO_ROOT, "brands"),

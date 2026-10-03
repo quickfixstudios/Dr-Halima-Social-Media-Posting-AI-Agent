@@ -21,6 +21,8 @@ import { shortenText } from "./shorten.js";
 import { buildMakePayload, prepareImages, sendToMake } from "./make.js";
 import { ImageError, classifyError } from "./errors.js";
 import { createImageLog } from "./log.js";
+import { checkImageText } from "./textCheck.js";
+import { infographicTextLines } from "./infographicPrompt.js";
 
 /**
  * The image pipeline — one approved post in, reviewed images out.
@@ -42,6 +44,8 @@ function resolveDeps(deps = {}) {
     fetchImpl: deps.fetchImpl ?? fetch,
     upload: deps.upload,
     shorten: deps.shorten ?? shortenText,
+    // Reads AI-drawn Bangla back from the image (tests pass a fake; real runs use the vision model).
+    textCheck: deps.textCheck ?? ((buffer, expected, o) => checkImageText(buffer, expected, { ...o, model: cfg.textModel, ...(deps.client && { client: () => deps.client }) })),
     env: deps.env ?? process.env,
     timezone: config.timezone,
   };
@@ -80,7 +84,7 @@ function applyOverrides(brief, overrides = {}) {
 
 async function renderFinal(brief, brand, background, photo) {
   if (brief.text_mode === "model") {
-    // Pipeline B (experimental): the model drew the text itself — only resize, no overlay.
+    // The AI drew the whole infographic (text included) at the post shape — only resize, no overlay.
     const buf = await sharp(background).resize(brief.output.width, brief.output.height, { fit: "cover" }).jpeg({ quality: 92 }).toBuffer();
     return { buffers: [buf], reports: [{ layout: "model_text", sizes: {}, blocks: [], graphemes: 0 }] };
   }
@@ -349,44 +353,94 @@ async function produceCandidate(ctx, meta, cand, { kind, reuseGeneration = false
   } else if (reuseGeneration && cand.generations.length) {
     background = fs.readFileSync(store.absolute(meta.post_id, cand.generations.at(-1).file));
   } else {
-    for (const w of checkBudget({ ledger, limits: d.cfg.limits, business: brand.id, postId: meta.post_id, kind })) log.warn(w);
-    const prompt = cand.prompts.at(-1);
-    log.step(`Sending request to OpenAI (${d.cfg.imageModel}, ${brief.generation_size}, quality ${d.cfg.quality})`);
-    let gen;
-    try {
-      gen = await generateBackground({
-        prompt: prompt.text,
-        size: brief.generation_size,
-        quality: d.cfg.quality,
-        model: d.cfg.imageModel,
-        timeoutMs: d.cfg.timeoutMs,
-        retries: d.cfg.retries,
-        client: d.client,
-        sleep: d.sleep,
-        onRetry: (err, n) => log.warn(`${classifyError(err).message} — retrying (attempt ${n + 1})`),
-      });
-    } catch (err) {
-      const { code, message } = classifyError(err);
-      ledger.record({ business: brand.id, post_id: meta.post_id, candidate: cand.id, kind, model: d.cfg.imageModel, size: brief.generation_size, quality: d.cfg.quality, status: "failed", error: code, cost_usd: null });
-      throw new ImageError(code, message);
+    // AI-drawn infographics are read back and regenerated (within limits) while a Bangla line is misspelled.
+    const checking = brief.text_mode === "model" && d.cfg.textCheck.enabled;
+    const tries = checking ? 1 + d.cfg.textCheck.retries : 1;
+    let best = null;
+    for (let attempt = 1; attempt <= tries; attempt++) {
+      const g = await generateOnce(ctx, meta, cand, { kind: attempt === 1 ? kind : "text_retry", reason: attempt === 1 ? reason : "Bangla text check failed" });
+      if (checking) {
+        g.record.text_check = await runTextCheck(ctx, brief, g.buffer);
+        if (!best || (g.record.text_check.score ?? 0) > (best.record.text_check.score ?? 0)) best = g;
+        if (g.record.text_check.ok || g.record.text_check.error) break;
+        if (attempt < tries) log.warn(`Bangla text check failed (${g.record.text_check.wrong.map((w) => w.role).join(", ")}) — regenerating (${attempt + 1}/${tries})`);
+      } else best = g;
     }
-    const file = store.writeNew(meta.post_id, "generated", "gen", "png", gen.buffer);
-    const cost = estimateCost(pricing, gen);
-    ledger.record({ business: brand.id, post_id: meta.post_id, candidate: cand.id, kind, model: gen.model, size: gen.size, quality: gen.quality, status: "ok", cost_usd: cost.usd, request_id: gen.requestId, usage: gen.usage });
-    cand.generations.push({ id: `g${cand.generations.length + 1}`, kind, reason, file, model: gen.model, size: gen.size, quality: gen.quality, request_id: gen.requestId, usage: gen.usage, cost_usd: cost.usd, cost_basis: cost.basis, attempts: gen.attempts, prompt_version: prompt.version, created_at: new Date().toISOString() });
-    log.step(`Image saved (${file})${cost.usd != null ? ` — $${cost.usd}` : " — cost unknown"}`);
-    background = gen.buffer;
+    // The best attempt becomes the current generation (finals point at the last one).
+    cand.generations = [...cand.generations.filter((x) => x !== best.record), best.record];
+    background = best.buffer;
   }
   const { buffers, reports } = await renderFinal(brief, brand, background, photo);
   const files = store.writeSeries(meta.post_id, "final", "final", "jpg", buffers);
   const overlayIssues = checkOverlayText(briefTextBlocks(brief), meta.content, brand);
-  if (brief.text_mode === "model") overlayIssues.push({ rule: "model_rendered_text", match: "", blocking: false, note: "Experimental Pipeline B: the AI drew the text itself — proofread every Bangla letter before approving." });
-  const checklist = creativeChecklist({ brief, report: reports, overlayIssues, brand });
-  cand.finals.push({ id: `f${cand.finals.length + 1}`, files, from_generation: cand.generations.at(-1)?.id ?? null, reports, overlay_issues: overlayIssues, checklist, reason, created_at: new Date().toISOString() });
+  const textCheck = brief.text_mode === "model" ? cand.generations.at(-1)?.text_check ?? null : null;
+  if (brief.text_mode === "model") overlayIssues.push(...modelTextIssues(textCheck));
+  const checklist = creativeChecklist({ brief, report: reports, overlayIssues, brand, textCheck });
+  cand.finals.push({ id: `f${cand.finals.length + 1}`, files, from_generation: cand.generations.at(-1)?.id ?? null, reports, overlay_issues: overlayIssues, text_check: textCheck, checklist, reason, created_at: new Date().toISOString() });
   cand.status = "ready";
   delete cand.error;
-  log.step(`${brief.text_mode === "model" ? "Model-drawn text kept (Pipeline B)" : "Bengali overlay applied"} → ${files.join(", ")}`);
+  log.step(`${brief.text_mode === "model" ? "AI-drawn infographic kept" : "Bengali overlay applied"} → ${files.join(", ")}`);
   log.step(`Creative checklist: ${checklist.status}${checklist.failed_major.length ? ` (failed: ${checklist.failed_major.join(", ")})` : ""}`);
+}
+
+/** One paid image generation, saved and recorded in the ledger. */
+async function generateOnce(ctx, meta, cand, { kind, reason }) {
+  const { d, brand, store, log, ledger, pricing } = ctx;
+  const brief = cand.brief;
+  for (const w of checkBudget({ ledger, limits: d.cfg.limits, business: brand.id, postId: meta.post_id, kind })) log.warn(w);
+  const prompt = cand.prompts.at(-1);
+  log.step(`Sending request to OpenAI (${d.cfg.imageModel}, ${brief.generation_size}, quality ${d.cfg.quality})`);
+  let gen;
+  try {
+    gen = await generateBackground({
+      prompt: prompt.text,
+      size: brief.generation_size,
+      quality: d.cfg.quality,
+      model: d.cfg.imageModel,
+      timeoutMs: d.cfg.timeoutMs,
+      retries: d.cfg.retries,
+      client: d.client,
+      sleep: d.sleep,
+      onRetry: (err, n) => log.warn(`${classifyError(err).message} — retrying (attempt ${n + 1})`),
+    });
+  } catch (err) {
+    const { code, message } = classifyError(err);
+    ledger.record({ business: brand.id, post_id: meta.post_id, candidate: cand.id, kind, model: d.cfg.imageModel, size: brief.generation_size, quality: d.cfg.quality, status: "failed", error: code, cost_usd: null });
+    throw new ImageError(code, message);
+  }
+  const file = store.writeNew(meta.post_id, "generated", "gen", "png", gen.buffer);
+  const cost = estimateCost(pricing, gen);
+  ledger.record({ business: brand.id, post_id: meta.post_id, candidate: cand.id, kind, model: gen.model, size: gen.size, quality: gen.quality, status: "ok", cost_usd: cost.usd, request_id: gen.requestId, usage: gen.usage });
+  const record = { id: `g${cand.generations.length + 1}`, kind, reason, file, model: gen.model, size: gen.size, quality: gen.quality, request_id: gen.requestId, usage: gen.usage, cost_usd: cost.usd, cost_basis: cost.basis, attempts: gen.attempts, prompt_version: prompt.version, created_at: new Date().toISOString() };
+  cand.generations.push(record);
+  log.step(`Image saved (${file})${cost.usd != null ? ` — $${cost.usd}` : " — cost unknown"}`);
+  return { buffer: gen.buffer, record };
+}
+
+/** Read the AI-drawn Bangla text back and compare it with what was asked for. Never throws. */
+async function runTextCheck({ d, log }, brief, buffer) {
+  try {
+    const r = await d.textCheck(buffer, infographicTextLines(brief), { threshold: d.cfg.textCheck.threshold });
+    const summary = { ok: r.ok, score: r.score, wrong: r.wrong.map(({ role, text, similarity }) => ({ role, text, similarity })), garbled: r.garbled, transcript: r.transcript };
+    log.step(r.ok ? `Bangla text check passed (score ${r.score})` : `Bangla text check: ${r.wrong.length} line(s) wrong${r.garbled.length ? `, garbled: ${r.garbled.join(", ")}` : ""} (score ${r.score})`);
+    return summary;
+  } catch (err) {
+    const { message } = classifyError(err);
+    log.warn(`Bangla text check could not run (${message}) — proofread by hand`);
+    return { ok: false, score: null, wrong: [], garbled: [], transcript: [], error: message };
+  }
+}
+
+/** Review notes for an AI-drawn infographic. */
+function modelTextIssues(check) {
+  const proofread = { rule: "model_rendered_text", match: "", blocking: false, note: "The AI drew the Bangla text itself — proofread every letter before approving." };
+  if (!check) return [{ ...proofread, note: `${proofread.note} (automatic text check is off)` }];
+  if (check.error) return [{ ...proofread, note: `${proofread.note} (automatic text check failed: ${check.error})` }];
+  return [
+    proofread,
+    ...check.wrong.map((w) => ({ rule: "model_text_mismatch", label: w.role, match: w.text, blocking: false, note: `Not found as written on the image (match ${Math.round(w.similarity * 100)}%) — check the spelling or regenerate.` })),
+    ...check.garbled.map((g) => ({ rule: "model_text_garbled", label: "garbled", match: g, blocking: false, note: "Unreadable or invented Bangla on the image." })),
+  ];
 }
 
 // ─────────────────────────────── review actions ───────────────────────────────

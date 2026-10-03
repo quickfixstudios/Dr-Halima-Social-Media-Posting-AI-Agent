@@ -9,19 +9,23 @@ How it works (one scenario, no storage needed — fits the Make Free plan):
 | 1 | Tools › Set variables | Slot from the Dhaka hour (10→1 … 22→5) and rotation number `n = day_of_year × 5 + slot` |
 | 2 | OpenAI › Generate a completion (`gpt-6.1-sol`) | Writes one **pure-Bangla** post with the shared prompt [`../prompts/facebook_post.system.md`](../prompts/facebook_post.system.md) (+ verified WHO facts). Content type = `(n + floor(n/7)) mod 7` over the 7 types (Pain → Solution, Myth vs Fact, Educational Carousel, Emotional Story, Data/Statistics, Call-to-Action, Doctor Trust); pillar = `n mod 7`, topic = `floor(n/7) mod 10` (Make has no `mod`, so `x − floor(x/7)×7`) |
 | 2b | JSON › Parse JSON (data structure "Dr Halima post") | `content_type`, `topic`, `hook`, `caption`, `hashtags`, `overlay_main/sub`, `image_prompt` |
-| 3 | OpenAI › Generate images (`gpt-image-2.5-sunburst`) | Square warm infographic-style **illustration in the brand palette, with no words** (AI-drawn Bangla is unreliable without review) |
-| 4 | Facebook Pages › Create a Post with Photos | Caption + Bangla signature + 0–3 hashtags |
+| 3 | OpenAI › Generate images (`gpt-image-2.5-sunburst`, 1024×1280) | The **whole infographic incl. Bangla text**, from the post's `image_prompt` (layout for the content type, brand colours, exact Bangla lines under "TEXT TO INCLUDE", footer "ডা. হালিমা · গাইনি ও প্রসূতি") |
+| 4 | OpenAI › Analyze images (`gpt-6.1-sol`) | **Bangla text check**: every requested line spelled exactly, no other/English text, nothing garbled, image safe → `VERDICT: PASS` / `FAIL` |
+| 5 | Router | **PASS** → Facebook post with the infographic · **FAIL** → a text-free brand illustration is generated instead and posted (a misspelled image never goes out) |
+| 6 | Facebook Pages › Create a Post with Photos | Caption + Bangla signature + 0–3 hashtags |
 
-Each of steps 2–4 has a Retry error handler (3 attempts, 2 minutes apart).
+Every OpenAI and Facebook step has a Retry error handler (3 attempts, 2 minutes apart).
 
 **Schedule:** every 3 hours, only between 10:00 and 22:10 (Asia/Dhaka) → 10:00, 13:00, 16:00, 19:00, 22:00.
 (The window must start at exactly 10:00: Make restarts the timer at the window start each day.) The 5 slots always get 5 different pillars on the same day.
 
-**Operations:** ≈ 4 per run × 5 runs ≈ 20/day ≈ 600/month (Free plan: 1,000).
+**Operations:** 6 per run (7 when the text check fails) × 5 runs ≈ 30/day ≈ 900/month (Free plan: 1,000 — close to
+the limit; if Make pauses the scenario at the limit, upgrade to Core or post 4 times a day).
 
 **Not included yet:** real reels (slots 2 and 4 post quick-tip image posts), Instagram, engagement learning.
 
-**Status (2 Oct 2026):** live. Facebook connection "Dr. Halima" (expires 1 Dec 2026 — reauthorize before then). First test post published 23:38 Dhaka; scheduled runs start 3 Oct 2026 at 10:00.
+**Status:** live since 2 Oct 2026. AI-drawn Bangla infographics with the text check start with the 10:00 run on
+4 Oct 2026. Facebook connection "Dr. Halima" expires 1 Dec 2026 — reauthorize before then.
 
 ---
 
