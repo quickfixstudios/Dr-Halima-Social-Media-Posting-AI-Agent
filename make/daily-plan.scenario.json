@@ -3,7 +3,7 @@
     "type": "indefinitely",
     "interval": 10800,
     "between": [
-      "2026-10-03T10:00:00+06:00"
+      "2026-10-03T19:00:00+06:00"
     ],
     "restrict": [
       {
