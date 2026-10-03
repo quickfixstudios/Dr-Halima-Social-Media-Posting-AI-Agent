@@ -17,12 +17,12 @@ const noRetryFor = (err) => !(err instanceof PermanentError || err instanceof Op
  * One structured-output call to the Responses API.
  * @returns {Promise<{ json: object, text: string, response: object }>}
  */
-export async function structuredCall({ instructions, input, format, maxOutputTokens, label }) {
+export async function structuredCall({ instructions, input, format, maxOutputTokens, label, model = config.openai.textModel }) {
   let tokens = maxOutputTokens;
   return withRetry(
     async () => {
       const response = await openai().responses.create({
-        model: config.openai.textModel,
+        model,
         instructions,
         input,
         text: { format },

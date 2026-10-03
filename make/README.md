@@ -22,3 +22,20 @@ Each of steps 2–4 has a Retry error handler (3 attempts, 2 minutes apart).
 **Not included yet:** real reels (slots 2 and 4 post quick-tip image posts), Instagram, engagement learning.
 
 **Status (2 Oct 2026):** live. Facebook connection "Dr. Halima" (expires 1 Dec 2026 — reauthorize before then). First test post published 23:38 Dhaka; scheduled runs start 3 Oct 2026 at 10:00.
+
+---
+
+# Publisher scenario (not created yet) — "Dr Halima – Publish approved image posts"
+
+`publish-approved.blueprint.json` is an importable Make blueprint, checked with Make's own validator. It receives
+posts approved in the image review screen (see [../IMAGE_AUTOMATION.md](../IMAGE_AUTOMATION.md) §9):
+
+| Step | Module | What it does |
+|---|---|---|
+| 1 | Webhooks › Custom webhook | Receives the approved post payload from the backend |
+| 2 | Router | Route A: images sent as links (Cloudinary, any number of photos) · Route B: one image sent inline (base64) |
+| 3 | Facebook Pages › Create a Post with Photos | Posts caption + photo(s); `publish_at` → Facebook "Publish date" (native scheduling 10 min–30 days ahead, else immediate) |
+| 4 | Webhooks › Webhook response | Replies `{ "fb_post_id": … }` so the post is marked PUBLISHED |
+
+Import it via *Create a new scenario → ⋯ → Import Blueprint*, add a webhook on step 1, and put its address in
+`backend/.env` as `MAKE_WEBHOOK_URL_DR_HALIMA`. Free plan: this would be the 2nd active scenario.

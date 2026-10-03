@@ -56,8 +56,14 @@ export function scanCopy(post, brand) {
     const m = text.match(re);
     if (m) issues.push({ rule: id, match: m[0], blocking: true });
   }
+  // Titles may only be blocked when the sentence is about the person herself ("আমি… হিসেবে", her name, "as a…"),
+  // so ordinary advice such as "একজন বিশেষজ্ঞ চিকিৎসকের পরামর্শ নিন" (see a specialist) stays allowed.
+  const names = [brand.person?.display_name_bn, brand.person?.display_name_en, brand.brand_name].filter(Boolean).map((x) => x.toLowerCase());
+  const selfRef = (sentence) => /আমি|আমার|হিসেবে|হিসাবে|\bas an?\b|\bi am\b|\bi'm\b/i.test(sentence) || names.some((n) => sentence.includes(n));
+  const sentences = text.toLowerCase().split(/[।.!?\n]+/);
   for (const title of brand.person?.forbidden_titles ?? []) {
-    if (title && text.toLowerCase().includes(title.toLowerCase())) {
+    const t = title?.toLowerCase();
+    if (t && sentences.some((sen) => sen.includes(t) && selfRef(sen))) {
       issues.push({ rule: "title_upgrade", match: title, blocking: true, note: `"${title}" overstates ${brand.person.display_name_en || brand.brand_name}'s credentials (${brand.person.role_bn || "see brand file"}). Rephrase, e.g. "একজন চিকিৎসক হিসেবে".` });
     }
   }

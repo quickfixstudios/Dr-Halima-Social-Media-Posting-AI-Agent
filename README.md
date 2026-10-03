@@ -19,6 +19,8 @@ with an engagement-driven learning loop. 5 posts/day (2 reels + 3 image/carousel
 | 7 | Data structures (Content JSON, Performance JSON, Sheets + SQL schema) | [docs/07-data-structures.md](docs/07-data-structures.md) · [schemas/](schemas) · [sheets/](sheets) |
 | — | Error handling, alerts, runbook, deployment checklist | [docs/08-error-handling-and-operations.md](docs/08-error-handling-and-operations.md) |
 | — | Node.js orchestration backend (optional Mode B) | [backend/](backend) |
+| — | **AI image pipeline** (Bangla text overlay, human review, Make hand-off) — beginner guide | [IMAGE_AUTOMATION.md](IMAGE_AUTOMATION.md) · [brands/](brands) · [posts/](posts) |
+| — | **Live Make.com scenario** (what actually posts today) + publisher blueprint | [make/](make) |
 
 ## Two ways to run it
 

@@ -1,6 +1,7 @@
 import { structuredCall } from "../openai/content.js";
 import { graphemeCount } from "./overlay/text.js";
 import { ImageError } from "./errors.js";
+import { imagingConfig } from "../config.js";
 
 /**
  * Optional (IMAGE_TEXT_SHORTEN_WITH_LLM=true): ask the text model to shorten a Bangla line that does not fit.
@@ -23,6 +24,7 @@ export async function shortenText(text, maxGraphemes, { call = structuredCall } 
     input: [{ role: "user", content: `Shorten to at most ${maxGraphemes} visible characters:\n${text}` }],
     format: FORMAT,
     maxOutputTokens: 400,
+    model: imagingConfig().textModel,
   });
   const out = String(json.text ?? "").trim();
   if (!out || graphemeCount(out) > maxGraphemes * 1.1) throw new ImageError("TEXT_TOO_LONG", `Could not shorten "${text}" enough`);

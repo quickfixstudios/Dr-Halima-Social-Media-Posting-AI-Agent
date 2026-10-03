@@ -50,7 +50,8 @@ export const config = {
 export function imagingConfig(env = process.env) {
   return {
     textModel: env.OPENAI_TEXT_MODEL || env.TEXT_MODEL || "gpt-6.1-sol",
-    imageModel: env.OPENAI_IMAGE_MODEL || env.IMAGE_MODEL || "gpt-image-2.5-sunburst",
+    // Deliberately NOT falling back to the old IMAGE_MODEL (that one belongs to the legacy image step).
+    imageModel: env.OPENAI_IMAGE_MODEL || "gpt-image-2.5-sunburst",
     // Newer GPT image models accept any WIDTHxHEIGHT divisible by 16; older ones only the 3 standard sizes.
     arbitrarySizes: bool(env.IMAGE_MODEL_ARBITRARY_SIZES, true),
     quality: env.IMAGE_QUALITY || "high",

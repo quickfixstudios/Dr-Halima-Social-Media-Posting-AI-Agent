@@ -6,7 +6,8 @@ Google Sheets stays the system of record, and Make still schedules and publishes
 
 ```
 src/
-  server.js            HTTP API (bearer auth): /healthz, /v1/daily-run, /v1/generate, /v1/images, /v1/compliance, /v1/sync, /v1/insights
+  server.js            HTTP API (bearer auth): /healthz, /v1/daily-run, /v1/generate, /v1/images, /v1/compliance, /v1/sync, /v1/insights,
+                       /v1/image-jobs (POST create · GET list), /v1/image-jobs/action
   pipeline.js          dailyRun(): sync → insights → plan → generate → validate → comply → images → Sheets → alerts
   openai/client.js     shared OpenAI client (SDK retries off; retry.js owns policy)
   openai/content.js    Responses API structured calls, batch generation + revision round, compliance review
@@ -21,8 +22,22 @@ src/
   prompts.js           loads ../prompts/* and renders the user prompt
   schedule.js          slot → scheduled_at (+06:00)
   retry.js · alerts.js · logger.js · config.js
-test/                  node:test unit tests (no network)
+  imaging/             reviewed AI image pipeline (see ../IMAGE_AUTOMATION.md):
+    pipeline.js          createImageJob() / runAction() — orchestration + review actions
+    decision.js          content → visual type (scored, explained) → Image Creative Brief
+    categories.js        the 20 visual styles (add new ones here)
+    promptBuilder.js     brief → 16-section image prompt
+    overlay/             Bangla text rendering (sharp + bundled Hind Siliguri) and 10 layout templates
+    safety.js            medical-content safety (approved text only, no invented numbers/titles)
+    generator.js         OpenAI image call (retries, timeout, usage, request id)
+    budget.js · assets.js · workflow.js · creativeReview.js · regenerate.js · make.js · shorten.js
+    cli.js               npm run image -- …        reviewServer.js   npm run review (localhost:8091)
+config/image-pricing.json  image prices for cost tracking (fill in from OpenAI's pricing page)
+test/                  node:test unit tests (no network; OpenAI is faked)
 ```
+
+Image pipeline quick start: `npm run image -- --post sample-02 --dry-run`, then `npm run image -- --post sample-02`
+and `npm run review`. Full beginner guide: [../IMAGE_AUTOMATION.md](../IMAGE_AUTOMATION.md).
 
 ## Run
 

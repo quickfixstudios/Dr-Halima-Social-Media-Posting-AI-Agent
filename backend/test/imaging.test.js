@@ -162,6 +162,16 @@ test("long headlines shrink to fit; impossible ones raise TEXT_TOO_LONG instead 
   assert.equal(r.estimated_generations, 0);
 });
 
+test("optional LLM shortening: too-long headline is shortened and marked for human check", async () => {
+  const long = "তীব্র মাসিকের ব্যথা সবসময় স্বাভাবিক নয় ".repeat(8).trim();
+  const d = deps({ cfg: { shortenWithLlm: true }, shorten: async () => "তীব্র মাসিকের ব্যথা সবসময় স্বাভাবিক নয়" });
+  const r = await createImageJob({ post: { ...sample(2), hook: long }, deps: d });
+  assert.equal(r.status, "IMAGE_REVIEW_PENDING");
+  const meta = JSON.parse(fs.readFileSync(path.join(r.folder, "metadata.json"), "utf8"));
+  assert.equal(meta.candidates[0].brief.text_origins.headline, "derived");
+  assert.ok(meta.candidates[0].brief.flags.some((f) => f.code === "text_shortened"));
+});
+
 // ── content validation ──
 test("empty caption and unapproved content are refused", async () => {
   assert.throws(() => normalizePost({ ...sample(1), caption: "   " }), { code: "EMPTY_CAPTION" });
@@ -281,6 +291,7 @@ test("medical safety: upgraded titles, risky claims, unsourced numbers and unsaf
   const p5 = normalizePost(sample(5));
   assert.ok(scanCopy(p5, brand).some((i) => i.rule === "title_upgrade" && i.blocking));
   assert.deepEqual(scanCopy(normalizePost(sample(6)), brand), []);
+  assert.deepEqual(scanCopy(normalizePost({ ...sample(2), caption: "ব্যথা বাড়লে একজন বিশেষজ্ঞ চিকিৎসকের পরামর্শ নিন।" }), brand), [], "advising to see a specialist is fine");
   assert.ok(scanCopy(normalizePost({ ...sample(2), caption: "এই চিকিৎসায় ১০০% সেরে যাবে" }), brand).some((i) => i.rule === "absolute_claim_bn"));
   const issues = checkOverlayText([{ label: "headline", text: "৯০% নারী আক্রান্ত", origin: "derived" }], normalizePost(sample(2)), brand);
   assert.ok(issues.some((i) => i.rule === "unsourced_number" && i.blocking));
