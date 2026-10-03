@@ -1,6 +1,7 @@
 import sharp from "sharp";
 import { renderText, graphemeCount, toBanglaDigits } from "./text.js";
 import { ImageError } from "../errors.js";
+import { mix } from "../brands.js";
 
 /**
  * Text layout templates ("Pipeline A": the AI draws the picture, we draw every letter).
@@ -9,10 +10,11 @@ import { ImageError } from "../errors.js";
  * same template works for 4:5, 1:1, 9:16 and 1.91:1. All text is placed inside safe margins; if a text
  * block cannot fit at its minimum readable size the template throws TEXT_TOO_LONG instead of cropping.
  *
- * Semantic colours (myth = red, fact/do = green, warning = amber) are fixed for clarity; everything
- * else comes from the brand file.
+ * Colours come only from the brand's colour ROLES (brands/<id>.json → colors / cta_colors):
+ *   background · title (headings) · text (body) · text_light · highlight · health · overlay · cta.<kind>
+ * Soft tints are mixed from those roles; no other hue is ever introduced ("avoid too many colours").
+ * Text on any filled shape uses c.on(fill), which picks the more readable of the brand's text colours.
  */
-const SEMANTIC = { myth: "#C0392B", mythBg: "#FBEAEA", fact: "#1E8449", factBg: "#E6F4EC", warn: "#B9770E", warnBg: "#FDF2E0" };
 
 // Fraction of the canvas height covered by the AI picture for each layout (the rest is a text panel).
 const IMAGE_FRACTION = { list: 0.42, myth_fact: 0.36, cta_poster: 0.45, doctor_quote: 0.52, timeline: 0.36 };
@@ -59,7 +61,7 @@ function makeContext({ brand, brief, width, height }) {
   const c = brand.colorsResolved;
   const fonts = { Regular: brand.fontFiles.regular, SemiBold: brand.fontFiles.semibold, Bold: brand.fontFiles.bold };
   const report = { sizes: {}, blocks: [], graphemes: 0 };
-  const text = async (label, value, { weight = "Bold", size: baseSize, min: baseMin, width: w, maxHeight, maxLines, color = c.text_dark, align = "left" }) => {
+  const text = async (label, value, { weight = "Bold", size: baseSize, min: baseMin, width: w, maxHeight, maxLines, color = c.text, align = "left" }) => {
     const scale = label === "headline" ? (brief.headline_scale ?? 1) : 1; // "needs stronger hook" makes the headline bigger
     const size = baseSize * scale;
     const min = baseMin == null ? undefined : baseMin * scale;
@@ -110,7 +112,7 @@ async function symbolicLabel(ctx) {
 }
 
 /** Bottom attribution line ("ডা. হালিমা · গাইনি ও প্রসূতি") + optional logo. Returns the y where it starts. */
-async function footer(ctx, { color = ctx.c.text_dark, onDark = false } = {}) {
+async function footer(ctx, { color = ctx.c.text, onDark = false } = {}) {
   const logoW = await logo(ctx, { right: ctx.M, bottom: ctx.M * 0.75, maxH: 56 * ctx.s });
   const label = ctx.t.attribution || ctx.brand.brand_name;
   const r = await ctx.text("attribution", label, { weight: "SemiBold", size: 26, min: 22, width: ctx.W - 2 * ctx.M - logoW - 20 * ctx.s, maxLines: 1, color: onDark ? ctx.c.text_light : color });
@@ -119,9 +121,24 @@ async function footer(ctx, { color = ctx.c.text_dark, onDark = false } = {}) {
   return top;
 }
 
+/** Dark band behind text on photos: brand charcoal warmed with 30% of the heading colour (no new hue). */
+const warmOverlay = (c) => mix(c.overlay, c.title, 0.3);
+
+/** CTA as a rounded button in the colour of its kind (appointment / save / health tip). Returns its height. */
+async function ctaPill(ctx, x, bottom, { full = false } = {}) {
+  const { W, M, s, c, t, brief } = ctx;
+  const fill = c.cta[brief.cta_kind] ?? c.cta.default;
+  const r = await ctx.text("cta", t.cta, { weight: full ? "Bold" : "SemiBold", size: full ? 34 : 30, min: 24, width: W - 2 * M - 60 * s, maxLines: 1, color: c.on(fill), align: full ? "centre" : "left" });
+  const ph = r.height + (full ? 40 : 34) * s;
+  const pw = full ? W - 2 * M : r.width + 56 * s;
+  ctx.shapes.push(rect(x, bottom - ph, pw, ph, fill, { r: ph / 2 }));
+  place(ctx, r, full ? x + (pw - r.width) / 2 : x + 28 * s, bottom - ph + (ph - r.height) / 2);
+  return ph;
+}
+
 function panel(ctx, top) {
   const r = 40 * ctx.s;
-  ctx.shapes.push(rect(0, top, ctx.W, ctx.H - top + r, ctx.c.panel, { r }));
+  ctx.shapes.push(rect(0, top, ctx.W, ctx.H - top + r, ctx.c.background, { r }));
 }
 
 /** Render list rows at a common size, shrinking all rows together until they fit `available`. */
@@ -131,7 +148,7 @@ async function fitRows(ctx, items, { label, size, min, width, available, rowMin,
     let total = 0;
     try {
       for (const [i, item] of items.entries()) {
-        const r = await renderText({ text: item, fontFile: ctx.brand.fontFiles.semibold, family: ctx.brand.fonts.family, weight: "SemiBold", sizePx: px * ctx.s, minPx: px * ctx.s, width, color: ctx.c.text_dark, label: `${label} ${i + 1}` });
+        const r = await renderText({ text: item, fontFile: ctx.brand.fontFiles.semibold, family: ctx.brand.fonts.family, weight: "SemiBold", sizePx: px * ctx.s, minPx: px * ctx.s, width, color: ctx.c.text, label: `${label} ${i + 1}` });
         rows.push(r);
         total += Math.max(r.height, rowMin) + (i ? gap : 0);
       }
@@ -157,17 +174,10 @@ async function fitRows(ctx, items, { label, size, min, width, available, rowMin,
 
 async function hookBand(ctx, { tag } = {}) {
   const { W, H, M, s, c, t } = ctx;
-  ctx.shapes.push(`<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.text_dark}" stop-opacity="0"/><stop offset="1" stop-color="${c.text_dark}" stop-opacity="0.92"/></linearGradient></defs>`);
+  ctx.shapes.push(`<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${warmOverlay(c)}" stop-opacity="0"/><stop offset="1" stop-color="${warmOverlay(c)}" stop-opacity="0.92"/></linearGradient></defs>`);
   ctx.shapes.push(`<rect x="0" y="${H * 0.36}" width="${W}" height="${H * 0.64}" fill="url(#g)"/>`);
   let bottom = (await footer(ctx, { onDark: true })) - 30 * s;
-  if (t.cta) {
-    const r = await ctx.text("cta", t.cta, { weight: "SemiBold", size: 30, min: 24, width: W - 2 * M - 60 * s, maxLines: 1, color: c.text_light });
-    const pw = r.width + 56 * s;
-    const ph = r.height + 34 * s;
-    ctx.shapes.push(rect(M, bottom - ph, pw, ph, c.accent, { r: ph / 2 }));
-    place(ctx, r, M + 28 * s, bottom - ph + 17 * s);
-    bottom -= ph + 34 * s;
-  }
+  if (t.cta) bottom -= (await ctaPill(ctx, M, bottom)) + 34 * s;
   if (tag) {
     const r = await ctx.text("tag", tag, { weight: "SemiBold", size: 26, min: 22, width: W - 2 * M, maxLines: 1, color: c.text_light });
     place(ctx, r, M, bottom - r.height);
@@ -192,22 +202,19 @@ async function listLayout(ctx, { timeline = false } = {}) {
   let y = top + 48 * s;
   if (t.badge) {
     const warn = brief.badge === "warning";
-    const r = await ctx.text("badge", t.badge, { weight: "Bold", size: 26, min: 22, width: W / 2, maxLines: 1, color: "#FFFFFF" });
+    const fill = warn ? c.title : c.health;
+    const r = await ctx.text("badge", t.badge, { weight: "Bold", size: 26, min: 22, width: W / 2, maxLines: 1, color: c.on(fill) });
     const ph = r.height + 22 * s;
-    ctx.shapes.push(rect(M, y, r.width + 44 * s, ph, warn ? SEMANTIC.warn : c.accent, { r: ph / 2 }));
+    ctx.shapes.push(rect(M, y, r.width + 44 * s, ph, fill, { r: ph / 2 }));
     place(ctx, r, M + 22 * s, y + 11 * s);
     y += ph + 22 * s;
   }
-  const h = await ctx.text("headline", t.headline, { weight: "Bold", size: 54, min: 40, width: W - 2 * M, maxLines: 3, color: c.text_dark });
+  const h = await ctx.text("headline", t.headline, { weight: "Bold", size: 54, min: 40, width: W - 2 * M, maxLines: 3, color: c.title });
   place(ctx, h, M, y);
   y += h.height + 34 * s;
 
   let bottom = (await footer(ctx)) - 26 * s;
-  if (t.cta) {
-    const r = await ctx.text("cta", t.cta, { weight: "SemiBold", size: 30, min: 24, width: W - 2 * M, maxLines: 1, color: c.accent });
-    place(ctx, r, M, bottom - r.height);
-    bottom -= r.height + 26 * s;
-  }
+  if (t.cta) bottom -= (await ctaPill(ctx, M, bottom)) + 26 * s;
   if (!t.items?.length) return;
   const d = 52 * s;
   const gap = 24 * s;
@@ -216,17 +223,17 @@ async function listLayout(ctx, { timeline = false } = {}) {
   if (timeline && rows.length > 1) {
     let last = y;
     for (const [i, r] of rows.entries()) if (i < rows.length - 1) last += Math.max(r.height, d) + gap;
-    ctx.shapes.push(`<line x1="${M + d / 2}" y1="${y + d / 2}" x2="${M + d / 2}" y2="${last + d / 2}" stroke="${c.accent}" stroke-width="${4 * s}" stroke-opacity="0.5"/>`);
+    ctx.shapes.push(`<line x1="${M + d / 2}" y1="${y + d / 2}" x2="${M + d / 2}" y2="${last + d / 2}" stroke="${c.highlight}" stroke-width="${4 * s}"/>`);
   }
   for (const [i, r] of rows.entries()) {
     const rowH = Math.max(r.height, d);
     const cx = M + d / 2;
     const cy = y + d / 2;
-    if (brief.badge === "check") ctx.shapes.push(circle(cx, cy, d / 2, SEMANTIC.fact) + checkIcon(cx, cy, d / 2));
-    else if (brief.badge === "warning") ctx.shapes.push(circle(cx, cy, d / 2, SEMANTIC.warn) + bangIcon(cx, cy, d / 2));
+    if (brief.badge === "check") ctx.shapes.push(circle(cx, cy, d / 2, c.health) + checkIcon(cx, cy, d / 2, c.on(c.health)));
+    else if (brief.badge === "warning") ctx.shapes.push(circle(cx, cy, d / 2, c.title) + bangIcon(cx, cy, d / 2, c.on(c.title)));
     else {
-      ctx.shapes.push(circle(cx, cy, d / 2, c.accent));
-      const n = await renderText({ text: toBanglaDigits(i + 1), fontFile: ctx.brand.fontFiles.bold, family: ctx.brand.fonts.family, sizePx: 28 * s, width: d, color: "#FFFFFF", align: "centre" });
+      ctx.shapes.push(circle(cx, cy, d / 2, c.highlight));
+      const n = await renderText({ text: toBanglaDigits(i + 1), fontFile: ctx.brand.fontFiles.bold, family: ctx.brand.fonts.family, sizePx: 28 * s, width: d, color: c.on(c.highlight), align: "centre" });
       place(ctx, n, cx - n.width / 2, cy - n.height / 2);
     }
     place(ctx, r, textX, y + Math.max(0, (d - r.height) / 2 - 4 * s));
@@ -239,28 +246,25 @@ async function mythFact(ctx) {
   const top = imageArea("myth_fact", W, H).height - 40 * s;
   panel(ctx, top);
   let y = top + 44 * s;
-  const h = await ctx.text("headline", t.headline, { weight: "Bold", size: 50, min: 38, width: W - 2 * M, maxLines: 2, color: c.text_dark });
+  const h = await ctx.text("headline", t.headline, { weight: "Bold", size: 50, min: 38, width: W - 2 * M, maxLines: 2, color: c.title });
   place(ctx, h, M, y);
   y += h.height + 30 * s;
   let bottom = (await footer(ctx)) - 30 * s;
-  if (t.cta) {
-    const r = await ctx.text("cta", t.cta, { weight: "SemiBold", size: 30, min: 24, width: W - 2 * M, maxLines: 1, color: c.accent });
-    place(ctx, r, M, bottom - r.height);
-    bottom -= r.height + 26 * s;
-  }
+  if (t.cta) bottom -= (await ctaPill(ctx, M, bottom)) + 26 * s;
   const pad = 30 * s;
   const icon = 56 * s;
   const textW = W - 2 * M - 3 * pad - icon;
   const cards = [
-    { kind: "myth", label: t.myth_label, body: t.myth, color: SEMANTIC.myth, bg: SEMANTIC.mythBg },
-    { kind: "fact", label: t.fact_label, body: t.fact, color: SEMANTIC.fact, bg: SEMANTIC.factBg },
+    // Myth = deep rose on a soft-pink tint; fact = sage (health content) on a sage tint.
+    { kind: "myth", label: t.myth_label, body: t.myth, color: c.title, labelColor: c.title, bg: mix(c.background, c.highlight, 0.28) },
+    { kind: "fact", label: t.fact_label, body: t.fact, color: c.health, labelColor: mix(c.health, c.text, 0.55), bg: mix(c.background, c.health, 0.3) },
   ];
   const gap = 24 * s;
   for (let px = 40; ; px -= 2) {
     const rendered = [];
     for (const card of cards) {
-      const label = await renderText({ text: card.label, fontFile: ctx.brand.fontFiles.bold, family: ctx.brand.fonts.family, sizePx: 30 * s, width: textW, color: card.color });
-      const body = await renderText({ text: card.body, fontFile: ctx.brand.fontFiles.semibold, family: ctx.brand.fonts.family, weight: "SemiBold", sizePx: px * s, minPx: px * s, width: textW, color: c.text_dark, label: card.kind });
+      const label = await renderText({ text: card.label, fontFile: ctx.brand.fontFiles.bold, family: ctx.brand.fonts.family, sizePx: 30 * s, width: textW, color: card.labelColor });
+      const body = await renderText({ text: card.body, fontFile: ctx.brand.fontFiles.semibold, family: ctx.brand.fonts.family, weight: "SemiBold", sizePx: px * s, minPx: px * s, width: textW, color: c.text, label: card.kind });
       rendered.push({ card, label, body, h: 2 * pad + Math.max(icon, label.height + 12 * s + body.height) });
     }
     const total = rendered[0].h + gap + rendered[1].h;
@@ -272,7 +276,7 @@ async function mythFact(ctx) {
         ctx.shapes.push(rect(M, y, W - 2 * M, r.h, r.card.bg, { r: 24 * s }));
         const cx = M + pad + icon / 2;
         const cy = y + pad + icon / 2;
-        ctx.shapes.push(circle(cx, cy, icon / 2, r.card.color) + (r.card.kind === "myth" ? crossIcon(cx, cy, icon / 2) : checkIcon(cx, cy, icon / 2)));
+        ctx.shapes.push(circle(cx, cy, icon / 2, r.card.color) + (r.card.kind === "myth" ? crossIcon(cx, cy, icon / 2, c.on(r.card.color)) : checkIcon(cx, cy, icon / 2, c.on(r.card.color))));
         place(ctx, r.label, M + 2 * pad + icon, y + pad);
         place(ctx, r.body, M + 2 * pad + icon, y + pad + r.label.height + 12 * s);
         ctx.report.blocks.push({ label: r.card.kind, text: r.card.body }, { label: `${r.card.kind}_label`, text: r.card.label });
@@ -286,9 +290,9 @@ async function mythFact(ctx) {
 
 async function twoColumn(ctx) {
   const { W, H, M, s, c, t, brief } = ctx;
-  ctx.shapes.push(rect(M / 2, M / 2, W - M, H - M, c.panel, { r: 32 * s, opacity: 0.94 }));
+  ctx.shapes.push(rect(M / 2, M / 2, W - M, H - M, c.background, { r: 32 * s, opacity: 0.94 }));
   let y = M * 1.4;
-  const h = await ctx.text("headline", t.headline, { weight: "Bold", size: 52, min: 38, width: W - 3 * M, maxLines: 3, color: c.text_dark, align: "centre" });
+  const h = await ctx.text("headline", t.headline, { weight: "Bold", size: 52, min: 38, width: W - 3 * M, maxLines: 3, color: c.title, align: "centre" });
   place(ctx, h, (W - h.width) / 2, y);
   y += h.height + 40 * s;
   const bottom = (await footer(ctx)) - 30 * s;
@@ -296,12 +300,12 @@ async function twoColumn(ctx) {
   const colW = (W - 2 * M - gap) / 2;
   const isDoDont = brief.visual_type === "do_dont";
   const cols = [
-    { ...t.columns.left, color: isDoDont ? SEMANTIC.fact : c.accent, icon: isDoDont ? "check" : "dot" },
-    { ...t.columns.right, color: isDoDont ? SEMANTIC.myth : c.primary, icon: isDoDont ? "cross" : "dot" },
+    { ...t.columns.left, color: isDoDont ? c.health : c.highlight, icon: isDoDont ? "check" : "dot" },
+    { ...t.columns.right, color: isDoDont ? c.title : c.health, icon: isDoDont ? "cross" : "dot" },
   ];
   for (const [i, col] of cols.entries()) {
     const x = M + i * (colW + gap);
-    const head = await ctx.text(`column_${i + 1}_title`, col.title, { weight: "Bold", size: 30, min: 24, width: colW - 40 * s, maxLines: 1, color: "#FFFFFF", align: "centre" });
+    const head = await ctx.text(`column_${i + 1}_title`, col.title, { weight: "Bold", size: 30, min: 24, width: colW - 40 * s, maxLines: 1, color: c.on(col.color), align: "centre" });
     const ph = head.height + 30 * s;
     ctx.shapes.push(rect(x, y, colW, ph, col.color, { r: 18 * s }));
     place(ctx, head, x + (colW - head.width) / 2, y + 15 * s);
@@ -311,7 +315,7 @@ async function twoColumn(ctx) {
     for (const r of rows) {
       const ix = x + icon / 2;
       const iy = cy + icon / 2 + 2 * s;
-      ctx.shapes.push(col.icon === "check" ? circle(ix, iy, icon / 2, col.color) + checkIcon(ix, iy, icon / 2) : col.icon === "cross" ? circle(ix, iy, icon / 2, col.color) + crossIcon(ix, iy, icon / 2) : circle(ix, iy, icon / 4, col.color));
+      ctx.shapes.push(col.icon === "check" ? circle(ix, iy, icon / 2, col.color) + checkIcon(ix, iy, icon / 2, c.on(col.color)) : col.icon === "cross" ? circle(ix, iy, icon / 2, col.color) + crossIcon(ix, iy, icon / 2, c.on(col.color)) : circle(ix, iy, icon / 4, col.color));
       place(ctx, r, x + icon + 18 * s, cy);
       cy += Math.max(r.height, icon) + 20 * s;
     }
@@ -320,17 +324,10 @@ async function twoColumn(ctx) {
 
 async function question(ctx) {
   const { W, H, M, s, c, t } = ctx;
-  ctx.shapes.push(`<defs><linearGradient id="q" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c.text_dark}" stop-opacity="0"/><stop offset="1" stop-color="${c.text_dark}" stop-opacity="0.9"/></linearGradient></defs>`);
+  ctx.shapes.push(`<defs><linearGradient id="q" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${warmOverlay(c)}" stop-opacity="0"/><stop offset="1" stop-color="${warmOverlay(c)}" stop-opacity="0.9"/></linearGradient></defs>`);
   ctx.shapes.push(`<rect x="0" y="${H * 0.3}" width="${W}" height="${H * 0.7}" fill="url(#q)"/>`);
   let bottom = (await footer(ctx, { onDark: true })) - 34 * s;
-  if (t.cta) {
-    const r = await ctx.text("cta", t.cta, { weight: "SemiBold", size: 30, min: 24, width: W - 2 * M - 60 * s, maxLines: 1, color: c.text_light });
-    const pw = r.width + 56 * s;
-    const ph = r.height + 34 * s;
-    ctx.shapes.push(rect(M, bottom - ph, pw, ph, c.accent, { r: ph / 2 }));
-    place(ctx, r, M + 28 * s, bottom - ph + 17 * s);
-    bottom -= ph + 30 * s;
-  }
+  if (t.cta) bottom -= (await ctaPill(ctx, M, bottom)) + 30 * s;
   if (t.subtitle) {
     const r = await ctx.text("subtitle", t.subtitle, { weight: "SemiBold", size: 36, min: 28, width: W - 2 * M, maxLines: 3, color: c.text_light });
     place(ctx, r, M, bottom - r.height);
@@ -340,8 +337,8 @@ async function question(ctx) {
   place(ctx, h, M, bottom - h.height);
   const d = 92 * s;
   const qy = bottom - h.height - 30 * s - d;
-  ctx.shapes.push(circle(M + d / 2, qy + d / 2, d / 2, c.accent));
-  const q = await renderText({ text: "?", fontFile: ctx.brand.fontFiles.bold, family: ctx.brand.fonts.family, sizePx: 60 * s, width: d, color: "#FFFFFF", align: "centre" });
+  ctx.shapes.push(circle(M + d / 2, qy + d / 2, d / 2, c.highlight));
+  const q = await renderText({ text: "?", fontFile: ctx.brand.fontFiles.bold, family: ctx.brand.fonts.family, sizePx: 60 * s, width: d, color: c.on(c.highlight), align: "centre" });
   place(ctx, q, M + (d - q.width) / 2, qy + (d - q.height) / 2);
   await symbolicLabel(ctx);
 }
@@ -351,26 +348,23 @@ async function ctaPoster(ctx) {
   const top = imageArea("cta_poster", W, H).height - 40 * s;
   panel(ctx, top);
   let y = top + 46 * s;
-  const h = await ctx.text("headline", t.headline, { weight: "Bold", size: 56, min: 42, width: W - 2 * M, maxLines: 3, color: c.text_dark });
+  const h = await ctx.text("headline", t.headline, { weight: "Bold", size: 56, min: 42, width: W - 2 * M, maxLines: 3, color: c.title });
   place(ctx, h, M, y);
   y += h.height + 22 * s;
   if (t.subtitle) {
-    const r = await ctx.text("subtitle", t.subtitle, { weight: "SemiBold", size: 34, min: 26, width: W - 2 * M, maxLines: 2, color: c.primary });
+    const r = await ctx.text("subtitle", t.subtitle, { weight: "SemiBold", size: 34, min: 26, width: W - 2 * M, maxLines: 2, color: c.text });
     place(ctx, r, M, y);
     y += r.height + 26 * s;
   }
   for (const [i, line] of (t.contact ?? []).entries()) {
-    const r = await ctx.text(`contact_${i + 1}`, line, { weight: "SemiBold", size: 30, min: 24, width: W - 2 * M - 30 * s, maxLines: 2, color: c.text_dark });
-    ctx.shapes.push(circle(M + 8 * s, y + 18 * s, 7 * s, c.accent));
+    const r = await ctx.text(`contact_${i + 1}`, line, { weight: "SemiBold", size: 30, min: 24, width: W - 2 * M - 30 * s, maxLines: 2, color: c.text });
+    ctx.shapes.push(circle(M + 8 * s, y + 18 * s, 7 * s, c.highlight));
     place(ctx, r, M + 30 * s, y);
     y += r.height + 16 * s;
   }
   const bottom = (await footer(ctx)) - 26 * s;
-  const btn = await ctx.text("cta", t.cta, { weight: "Bold", size: 34, min: 26, width: W - 2 * M - 60 * s, maxLines: 1, color: "#FFFFFF", align: "centre" });
-  const bh = btn.height + 40 * s;
+  const bh = await ctaPill(ctx, M, bottom, { full: true });
   if (bottom - bh < y) throw new ImageError("TEXT_TOO_LONG", "Appointment poster text does not fit", { label: "cta_poster", recommend: "shorten" });
-  ctx.shapes.push(rect(M, bottom - bh, W - 2 * M, bh, c.accent, { r: bh / 2 }));
-  place(ctx, btn, (W - btn.width) / 2, bottom - bh + 20 * s);
 }
 
 async function doctorQuote(ctx) {
@@ -381,17 +375,17 @@ async function doctorQuote(ctx) {
   const markH = 56 * s;
   const regionTop = top + 44 * s;
   const regionBottom = H - M * 0.75;
-  const nameR = await ctx.text("name", brand.person.display_name_bn || brand.brand_name, { weight: "Bold", size: 34, min: 28, width: W - 2 * M - logoW, maxLines: 1, color: c.text_dark });
-  const cred = brand.person.credentials_bn ? await ctx.text("credentials", brand.person.credentials_bn, { weight: "Regular", size: 24, min: 20, width: W - 2 * M - logoW, maxLines: 2, color: c.primary }) : null;
+  const nameR = await ctx.text("name", brand.person.display_name_bn || brand.brand_name, { weight: "Bold", size: 34, min: 28, width: W - 2 * M - logoW, maxLines: 1, color: c.title });
+  const cred = brand.person.credentials_bn ? await ctx.text("credentials", brand.person.credentials_bn, { weight: "Regular", size: 24, min: 20, width: W - 2 * M - logoW, maxLines: 2, color: c.text }) : null;
   const signH = nameR.height + (cred ? cred.height + 10 * s : 0);
   const fixedH = markH + 28 * s + 40 * s + signH;
-  const q = await ctx.text("headline", t.headline, { weight: "SemiBold", size: 48, min: 32, width: W - 2 * M, maxLines: 6, maxHeight: regionBottom - regionTop - fixedH, color: c.text_dark });
+  const q = await ctx.text("headline", t.headline, { weight: "SemiBold", size: 48, min: 32, width: W - 2 * M, maxLines: 6, maxHeight: regionBottom - regionTop - fixedH, color: c.text });
   let y = regionTop + Math.max(0, (regionBottom - regionTop - (fixedH + q.height)) / 2);
-  ctx.shapes.push(quoteMark(M, y, markH, c.accent));
+  ctx.shapes.push(quoteMark(M, y, markH, c.highlight));
   y += markH + 28 * s;
   place(ctx, q, M, y);
   y += q.height + 40 * s;
-  ctx.shapes.push(rect(M, y - 20 * s, 80 * s, 5 * s, c.accent, { r: 2 * s }));
+  ctx.shapes.push(rect(M, y - 20 * s, 80 * s, 5 * s, c.highlight, { r: 2 * s }));
   place(ctx, nameR, M, y);
   if (cred) place(ctx, cred, M, y + nameR.height + 10 * s);
 }
@@ -401,17 +395,17 @@ async function stat(ctx) {
   const cardW = W - 2 * M;
   const inner = cardW - 2 * M;
   const parts = [];
-  parts.push(["headline", await ctx.text("headline", t.headline, { weight: "Bold", size: 44, min: 34, width: inner, maxLines: 3, color: c.text_dark, align: "centre" })]);
-  parts.push(["stat_value", await ctx.text("stat_value", t.stat.value, { weight: "Bold", size: 150, min: 90, width: inner, maxLines: 1, color: c.accent, align: "centre" })]);
-  parts.push(["stat_label", await ctx.text("stat_label", t.stat.label, { weight: "SemiBold", size: 38, min: 28, width: inner, maxLines: 3, color: c.text_dark, align: "centre" })]);
-  parts.push(["source_note", await ctx.text("source_note", t.source_note, { weight: "Regular", size: 24, min: 20, width: inner, maxLines: 2, color: "#5B6770", align: "centre" })]);
+  parts.push(["headline", await ctx.text("headline", t.headline, { weight: "Bold", size: 44, min: 34, width: inner, maxLines: 3, color: c.title, align: "centre" })]);
+  parts.push(["stat_value", await ctx.text("stat_value", t.stat.value, { weight: "Bold", size: 150, min: 90, width: inner, maxLines: 1, color: c.title, align: "centre" })]);
+  parts.push(["stat_label", await ctx.text("stat_label", t.stat.label, { weight: "SemiBold", size: 38, min: 28, width: inner, maxLines: 3, color: c.text, align: "centre" })]);
+  parts.push(["source_note", await ctx.text("source_note", t.source_note, { weight: "Regular", size: 24, min: 20, width: inner, maxLines: 2, color: c.text, align: "centre" })]);
   const gap = 30 * s;
   const cardH = parts.reduce((sum, [, r]) => sum + r.height, 0) + gap * (parts.length - 1) + 2 * M;
   const bottom = (await footer(ctx, { onDark: false })) - 30 * s;
   const cardTop = Math.max(M, (bottom - cardH) / 2);
   if (cardTop + cardH > bottom) throw new ImageError("TEXT_TOO_LONG", "Statistic card does not fit", { label: "stat", recommend: "shorten" });
-  ctx.shapes.push(rect(0, bottom - 10 * s, W, H - bottom + 10 * s, c.panel, { opacity: 0.9 }));
-  ctx.shapes.push(rect(M, cardTop, cardW, cardH, c.panel, { r: 32 * s, opacity: 0.96 }));
+  ctx.shapes.push(rect(0, bottom - 10 * s, W, H - bottom + 10 * s, c.background, { opacity: 0.9 }));
+  ctx.shapes.push(rect(M, cardTop, cardW, cardH, c.background, { r: 32 * s, opacity: 0.96 }));
   let y = cardTop + M;
   for (const [, r] of parts) {
     place(ctx, r, (W - r.width) / 2, y);
@@ -421,21 +415,21 @@ async function stat(ctx) {
 
 async function carouselContent(ctx, slide, index, total) {
   const { W, H, M, s, c, brief } = ctx;
-  ctx.shapes.push(rect(0, 0, W, H, c.secondary));
-  ctx.shapes.push(rect(0, 0, 14 * s, H, c.accent));
-  const counter = await ctx.text("slide_counter", `${toBanglaDigits(index)}/${toBanglaDigits(total)}`, { weight: "SemiBold", size: 28, min: 24, width: 300 * s, maxLines: 1, color: c.primary });
+  ctx.shapes.push(rect(0, 0, W, H, c.background));
+  ctx.shapes.push(rect(0, 0, 14 * s, H, c.highlight));
+  const counter = await ctx.text("slide_counter", `${toBanglaDigits(index)}/${toBanglaDigits(total)}`, { weight: "SemiBold", size: 28, min: 24, width: 300 * s, maxLines: 1, color: c.text });
   place(ctx, counter, W - M - counter.width, M);
-  if (brief.topic) place(ctx, await ctx.text("slide_topic", brief.topic, { weight: "SemiBold", size: 28, min: 22, width: W - 3 * M - counter.width, maxLines: 1, color: c.primary }), M, M);
+  if (brief.topic) place(ctx, await ctx.text("slide_topic", brief.topic, { weight: "SemiBold", size: 28, min: 22, width: W - 3 * M - counter.width, maxLines: 1, color: c.text }), M, M);
   const top = M + counter.height + 60 * s;
   const bottom = (await footer(ctx)) - 40 * s;
   // Big numbered badge (point 1 = slide 2) so a short point still fills the slide with purpose.
   const d = 120 * s;
-  const n = await renderText({ text: toBanglaDigits(index - 1), fontFile: ctx.brand.fontFiles.bold, family: ctx.brand.fonts.family, sizePx: 64 * s, width: d, color: "#FFFFFF", align: "centre" });
-  const title = await ctx.text("slide_title", slide.title, { weight: "Bold", size: slide.body ? 58 : 70, min: 42, width: W - 2 * M, maxLines: 5, maxHeight: (bottom - top) * 0.5, color: c.text_dark });
-  const body = slide.body ? await ctx.text("slide_body", slide.body, { weight: "SemiBold", size: 40, min: 30, width: W - 2 * M, maxHeight: (bottom - top) * 0.4, color: c.text_dark }) : null;
+  const n = await renderText({ text: toBanglaDigits(index - 1), fontFile: ctx.brand.fontFiles.bold, family: ctx.brand.fonts.family, sizePx: 64 * s, width: d, color: c.on(c.highlight), align: "centre" });
+  const title = await ctx.text("slide_title", slide.title, { weight: "Bold", size: slide.body ? 58 : 70, min: 42, width: W - 2 * M, maxLines: 5, maxHeight: (bottom - top) * 0.5, color: c.title });
+  const body = slide.body ? await ctx.text("slide_body", slide.body, { weight: "SemiBold", size: 40, min: 30, width: W - 2 * M, maxHeight: (bottom - top) * 0.4, color: c.text }) : null;
   const blockH = d + 50 * s + title.height + (body ? 40 * s + body.height : 0);
   let y = top + Math.max(0, (bottom - top - blockH) / 2);
-  ctx.shapes.push(circle(M + d / 2, y + d / 2, d / 2, c.accent));
+  ctx.shapes.push(circle(M + d / 2, y + d / 2, d / 2, c.highlight));
   place(ctx, n, M + (d - n.width) / 2, y + (d - n.height) / 2);
   y += d + 50 * s;
   place(ctx, title, M, y);
@@ -444,14 +438,14 @@ async function carouselContent(ctx, slide, index, total) {
 
 async function carouselEnd(ctx, index, total) {
   const { W, H, M, s, c, t, brand } = ctx;
-  ctx.shapes.push(rect(0, 0, W, H, c.primary));
+  ctx.shapes.push(rect(0, 0, W, H, c.title));
   const counter = await ctx.text("slide_counter", `${toBanglaDigits(index)}/${toBanglaDigits(total)}`, { weight: "SemiBold", size: 28, min: 24, width: 300 * s, maxLines: 1, color: c.text_light });
   place(ctx, counter, M, M);
   const blocks = [];
   blocks.push(await ctx.text("cta", t.cta || t.end_label, { weight: "Bold", size: 56, min: 42, width: W - 2 * M, maxLines: 3, color: c.text_light, align: "centre" }));
   for (const [i, line] of (t.contact ?? []).entries()) blocks.push(await ctx.text(`contact_${i + 1}`, line, { weight: "SemiBold", size: 30, min: 24, width: W - 2 * M, maxLines: 2, color: c.text_light, align: "centre" }));
   if (brand.person.display_name_bn) blocks.push(await ctx.text("name", brand.person.display_name_bn, { weight: "Bold", size: 36, min: 28, width: W - 2 * M, maxLines: 1, color: c.text_light, align: "centre" }));
-  if (brand.person.credentials_bn) blocks.push(await ctx.text("credentials", brand.person.credentials_bn, { weight: "Regular", size: 24, min: 20, width: W - 2 * M, maxLines: 2, color: c.text_light, align: "centre" }));
+  if (brand.person.credentials_bn) blocks.push(await ctx.text("credentials", brand.person.credentials_bn, { weight: "SemiBold", size: 26, min: 22, width: W - 2 * M, maxLines: 2, color: c.text_light, align: "centre" }));
   const gap = 28 * s;
   const total_h = blocks.reduce((a, r) => a + r.height, 0) + gap * (blocks.length - 1);
   let y = (H - total_h) / 2;
@@ -478,7 +472,7 @@ export const LAYOUT_IDS = [...Object.keys(LAYOUTS), "carousel"];
 async function flatten(ctx, format) {
   // Order: background picture → vector shapes (panels, badges, icons) → text and logo on top.
   const composite = [...(ctx.bg ? [ctx.bg] : []), { input: svg(ctx.W, ctx.H, ctx.shapes.join("")), left: 0, top: 0 }, ...ctx.layers];
-  const img = sharp({ create: { width: ctx.W, height: ctx.H, channels: 3, background: ctx.c.panel } }).composite(composite);
+  const img = sharp({ create: { width: ctx.W, height: ctx.H, channels: 3, background: ctx.c.background } }).composite(composite);
   return format === "png" ? img.png().toBuffer() : img.jpeg({ quality: 92, mozjpeg: true }).toBuffer();
 }
 

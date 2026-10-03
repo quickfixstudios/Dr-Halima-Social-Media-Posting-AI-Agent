@@ -216,8 +216,9 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
     lighting: "soft natural daylight, gentle contrast",
     visual_style: mode === "illustration" ? "clean, flat, modern editorial vector illustration with soft shading" : brand.visual_style || "clean modern editorial",
     realism: mode === "photo" ? "photorealistic, natural and unretouched" : mode === "illustration" ? "stylised illustration" : "flat graphic",
-    color_direction: brand.colorsArePlaceholders ? "soft, warm neutrals with calm teal and muted plum accents" : `harmonise with brand colours ${brand.colorsResolved.primary}, ${brand.colorsResolved.accent}, ${brand.colorsResolved.secondary}`,
-    brand_treatment: `${brand.brand_name}: ${brand.tone || "professional"}; brand text, logo and attribution are added afterwards, never by the image model`,
+    color_direction: colorDirection(brand),
+    brand_treatment: `${brand.brand_name}: ${brand.brand_feel || brand.tone || "professional"} Brand text, logo and attribution are added afterwards, never by the image model`,
+    cta_kind: ctaKind(cat, text.cta),
     graphical_elements: graphicalElements(layout, text),
     aspect_ratio: aspect,
     output: out,
@@ -235,6 +236,26 @@ export function buildBrief(post, brand, categoryId, opts = {}) {
     halts,
     requires_verified_statistic: halts.some((h) => h.code === "requires_verified_statistic"),
   };
+}
+
+/**
+ * Which CTA colour a post gets (brand guideline "CTA usage"): booking/contact → appointment,
+ * "save" → save, health-tip styles → health_tip, anything else → the default CTA colour.
+ */
+const HEALTH_TIP_TYPES = new Set(["educational_infographic", "checklist", "pregnancy_nutrition", "menstrual_education", "pregnancy_timeline", "postpartum_education", "newborn_maternal_care", "fertility_education"]);
+export function ctaKind(cat, cta = "") {
+  if (cat.id === "appointment_cta" || /অ্যাপয়েন্টমেন্ট|সিরিয়াল|বুক\s*করুন|ইনবক্স|যোগাযোগ\s*করুন|appointment|book/i.test(cta)) return "appointment";
+  if (/সেভ|save/i.test(cta)) return "save";
+  if (HEALTH_TIP_TYPES.has(cat.id)) return "health_tip";
+  return "default";
+}
+
+/** Palette described in words for the image model (models follow colour names better than hex codes). */
+function colorDirection(brand) {
+  if (brand.colorsArePlaceholders || !brand.palette?.length) return "soft, warm, calm neutral colours; gentle and uncluttered";
+  const names = brand.palette.map((p) => `${p.name.toLowerCase()} (${p.hex})`).join(", ");
+  const avoid = brand.color_avoid?.length ? ` Avoid: ${brand.color_avoid.join("; ")}.` : "";
+  return `soft, harmonious palette drawn from ${names}; mostly warm ivory and gentle pinks with touches of sage green; calm and low-saturation, never neon.${avoid}`;
 }
 
 function graphicalElements(layout, text) {

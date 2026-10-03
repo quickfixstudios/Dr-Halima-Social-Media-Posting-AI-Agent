@@ -8,12 +8,17 @@
   "medical": false,
   "primary_language": "bn",
   "secondary_language": "en",
-  "platforms": ["facebook"],
+  "platforms": [
+    "facebook"
+  ],
   "audience": "",
+  "brand_feel": "",
   "visual_style": "",
   "tone": "",
-  "preferred_formats": ["4:5", "1:1"],
-
+  "preferred_formats": [
+    "4:5",
+    "1:1"
+  ],
   "person": {
     "display_name_bn": "",
     "display_name_en": "",
@@ -24,7 +29,6 @@
     "photo_approved": false,
     "forbidden_titles": []
   },
-
   "caption_signature": [],
   "logo_path": "",
   "contact_details": {
@@ -35,7 +39,23 @@
     "whatsapp": "",
     "messenger": ""
   },
-  "colors": { "primary": "", "secondary": "", "accent": "", "text_dark": "", "text_light": "", "panel": "" },
+  "palette": [],
+  "colors": {
+    "background": "",
+    "title": "",
+    "text": "",
+    "text_light": "",
+    "highlight": "",
+    "health": "",
+    "overlay": ""
+  },
+  "cta_colors": {
+    "appointment": "",
+    "save": "",
+    "health_tip": "",
+    "default": ""
+  },
+  "color_avoid": [],
   "fonts": {
     "family": "Hind Siliguri",
     "regular": "brands/fonts/HindSiliguri-Regular.ttf",
@@ -44,10 +64,19 @@
   },
   "visual_context": {
     "people": "Bangladeshi people with realistic South Asian features and skin tones",
-    "wardrobe": ["smart casual everyday clothing"],
-    "settings": { "studio": "a clean, modern creative studio in Dhaka" }
+    "wardrobe": [
+      "smart casual everyday clothing"
+    ],
+    "settings": {
+      "studio": "a clean, modern creative studio in Dhaka"
+    }
   },
   "disallowed_styles": [],
-  "safety": { "require_content_approval": true, "require_image_approval": true },
-  "make": { "webhook_url_env": "MAKE_WEBHOOK_URL_QUICKFIX_STUDIOS" }
+  "safety": {
+    "require_content_approval": true,
+    "require_image_approval": true
+  },
+  "make": {
+    "webhook_url_env": "MAKE_WEBHOOK_URL_QUICKFIX_STUDIOS"
+  }
 }

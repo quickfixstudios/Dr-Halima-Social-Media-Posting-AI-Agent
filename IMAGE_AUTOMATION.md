@@ -5,8 +5,8 @@ Facebook image (or carousel). A person approves the image, and the system then h
 
 ![Examples of the text layouts (grey placeholder pictures)](docs/images/image-pipeline-examples.jpg)
 
-*The examples above use a plain test picture in place of the AI photo so you can see the text layouts:
-warning list, pain → solution, myth vs fact, and question.*
+*The examples above use a plain test picture in place of the AI photo so you can see the text layouts
+(warning list, pain → solution, myth vs fact, question) in Dr. Halima's brand colours.*
 
 ---
 
@@ -224,6 +224,30 @@ Every image is then flagged "proofread every Bangla letter". Don't use it for pr
 
 ---
 
+## 6b. Brand colours (from `brands/guidelines/dr_halima.pdf`)
+
+The guideline palette is stored in `brands/dr_halima.json` and every colour on an image is one of these
+**roles** — nothing else:
+
+| Role (`colors`) | Colour | Used for |
+|---|---|---|
+| `background` | Warm Ivory #FFF6F3 | panels, slide backgrounds (never pure white) |
+| `title` | Deep Rose #C65D7B | headings, emphasis, warning badges, the last carousel slide |
+| `text` | Soft Charcoal #4A4A4A | body text (never pure black) |
+| `highlight` | Soft Medical Pink #EFA7B3 | number badges, quote mark, accent bars, "?" badge |
+| `health` | Sage Green #A8C3A0 | facts, ✓ checks, "do" items, health-tip badges |
+| `overlay` | Soft Charcoal (warmed with a little Deep Rose) | dark band that keeps text readable over photos |
+
+**CTA buttons** follow the guideline: *Book appointment* → Deep Rose · *Save post* → Soft Pink · *Health tip*
+styles → Sage Green · anything else → Deep Rose. The system decides the kind from the CTA words and the image style.
+
+Safeguards: a colour in the brand file that is **not in the palette is refused** ("avoid too many colours");
+tints are only mixes of palette colours; text on any coloured shape is automatically charcoal or ivory, whichever
+is more readable (all combinations tested to meet contrast rules). The AI picture is asked for a soft palette of
+the same colours and told to avoid bright hot pink, too many colours and the pure-white-and-red hospital look.
+
+---
+
 ## 7. How OpenAI is used
 
 * Official `openai` Node SDK (`backend/src/imaging/generator.js`); key from `OPENAI_API_KEY`, only on your computer
@@ -376,6 +400,7 @@ If a major check fails, the image is marked **needs_attention** for you to fix o
 brands/dr_halima.json            business profile (edit this, not the code)
 brands/quickfix_studios.json     template for your other business
 brands/fonts/                    Bangla font + licence
+brands/guidelines/               brand guidelines (Dr. Halima: colours, CTA usage, things to avoid)
 posts/dr_halima/samples/         8 sample posts (incl. 3 that test the safety stops)
 assets/dr-halima/2026/10/<post>/ source/ (real photos) · generated/ (raw AI pictures) · final/ (with text) · metadata.json
 assets/_ledger.jsonl             every image call: model, usage, request id, cost
@@ -418,8 +443,8 @@ Until you do, costs show as **"unknown"** (never guessed) and only the count lim
 
 ## 16. Use the same system for QuickFix Studios (or any business)
 
-1. Fill in `brands/quickfix_studios.json` (name, audience, style, tone, colours, logo, contacts, signature,
-   `visual_context`). Set `"medical": false` for non-medical businesses (no medical-safety prompt section, no
+1. Fill in `brands/quickfix_studios.json` (name, audience, style, tone, `palette` + colour roles + `cta_colors`,
+   logo, contacts, signature, `visual_context`). Copy the structure from `brands/dr_halima.json`. Set `"medical": false` for non-medical businesses (no medical-safety prompt section, no
    "প্রতীকী ছবি" label).
 2. Put posts in `posts/quickfix_studios/`.
 3. Run with `--business quickfix_studios`, e.g. `npm run image -- --business quickfix_studios --post my-post --dry-run`.
@@ -434,7 +459,7 @@ Until you do, costs show as **"unknown"** (never guessed) and only the count lim
 
 | Item | Where | Why it matters |
 |---|---|---|
-| **Brand colours** (primary, accent, …) | `brands/dr_halima.json → colors` | Neutral placeholder colours are used until set; every image shows a reminder. |
+| ~~Brand colours~~ | ✅ done — from your brand guidelines (§6b) | |
 | **Logo** | put a PNG in `brands/assets/`, set `logo_path` | Drawn in the corner of every image. |
 | **Dr. Halima's approved photo** | put it in `brands/assets/`, set `person.photo_path` and `person.photo_approved: true` | Enables real doctor-trust posts; no AI face is ever used for her. |
 | **Contact details** | `contact_details` (chamber, phone, days, booking link, WhatsApp, Messenger) | Needed for appointment posters; never invented. |

@@ -4,16 +4,42 @@ import { z } from "zod";
 import { REPO_ROOT, imagingConfig } from "../config.js";
 import { ImageError } from "./errors.js";
 
-// Neutral rendering defaults used ONLY while a brand has not chosen its colours. They are not brand colours;
-// every image that uses them gets a "brand colours not configured" warning in its review checklist.
+/**
+ * Colour ROLES used by the image templates (what each colour is for). A brand file fills them from its
+ * guideline palette. Missing roles fall back to these neutral defaults — not brand colours — and every image
+ * that uses them gets a "brand colours not configured" note in its review checklist.
+ */
 export const PLACEHOLDER_COLORS = {
-  primary: "#2F4858",
-  secondary: "#E9EEF1",
-  accent: "#2A7F79",
-  text_dark: "#1E2A32",
-  text_light: "#FFFFFF",
-  panel: "#FFFFFF",
+  background: "#F6F7F7", // panels, slide backgrounds
+  title: "#2F4858", // headings, emphasis
+  text: "#1E2A32", // body text
+  text_light: "#FFFFFF", // text on dark areas / photos
+  highlight: "#2A7F79", // number badges, quote mark, accent bars
+  health: "#5E8C61", // health tips, facts, "do" items, checks
+  overlay: "#1E2A32", // dark gradient that keeps text readable over photos
 };
+export const CTA_KINDS = ["appointment", "save", "health_tip", "default"];
+
+const HEX = /^#[0-9A-Fa-f]{6}$/;
+const hexToRgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+/** WCAG relative luminance (0 = black, 1 = white). */
+export function luminance(hex) {
+  const [r, g, b] = hexToRgb(hex).map((v) => {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+export const contrastRatio = (a, b) => {
+  const [x, y] = [luminance(a), luminance(b)].sort((m, n) => n - m);
+  return (x + 0.05) / (y + 0.05);
+};
+/** Mix a colour with another (0 = first colour, 1 = second) — used for soft tints, never new hues. */
+export function mix(hexA, hexB, amount) {
+  const a = hexToRgb(hexA);
+  const b = hexToRgb(hexB);
+  return `#${a.map((v, i) => Math.round(v + (b[i] - v) * amount).toString(16).padStart(2, "0")).join("")}`.toUpperCase();
+}
 
 const str = z.string().default("");
 const BrandSchema = z.object({
@@ -43,7 +69,11 @@ const BrandSchema = z.object({
   caption_signature: z.array(z.string()).default([]),
   logo_path: str,
   contact_details: z.record(z.string(), z.string()).default({}),
+  palette: z.array(z.object({ name: z.string(), hex: z.string().regex(HEX, "palette hex must look like #A1B2C3"), usage: z.string().default("") })).default([]),
   colors: z.record(z.string(), z.string()).default({}),
+  cta_colors: z.record(z.string(), z.string()).default({}),
+  color_avoid: z.array(z.string()).default([]),
+  brand_feel: str,
   fonts: z.object({ family: z.string(), regular: z.string(), semibold: z.string(), bold: z.string() }),
   visual_context: z
     .object({
@@ -87,8 +117,20 @@ export function loadBrand(businessId, { brandsDir = imagingConfig().brandsDir } 
     if (!fs.existsSync(fontFiles[weight])) throw new ImageError("FONT_MISSING", `Font file not found: ${fontFiles[weight]}`);
   }
 
+  // Colours: every value must be #RRGGBB, and (when a guideline palette exists) come from that palette.
+  const paletteHex = new Set(brand.palette.map((p) => p.hex.toUpperCase()));
+  for (const [group, values] of [["colors", brand.colors], ["cta_colors", brand.cta_colors]]) {
+    for (const [role, hex] of Object.entries(values)) {
+      if (!hex) continue;
+      if (!HEX.test(hex)) throw new ImageError("BRAND_INVALID", `${file}: ${group}.${role} "${hex}" is not a #RRGGBB colour`);
+      if (paletteHex.size && !paletteHex.has(hex.toUpperCase())) throw new ImageError("BRAND_INVALID", `${file}: ${group}.${role} ${hex} is not in the brand palette (guidelines: avoid too many colours)`);
+    }
+  }
   const colorsArePlaceholders = Object.keys(PLACEHOLDER_COLORS).some((k) => !brand.colors[k]);
-  const colorsResolved = Object.fromEntries(Object.entries(PLACEHOLDER_COLORS).map(([k, v]) => [k, brand.colors[k] || v]));
+  const colorsResolved = Object.fromEntries(Object.entries(PLACEHOLDER_COLORS).map(([k, v]) => [k, (brand.colors[k] || v).toUpperCase()]));
+  colorsResolved.cta = Object.fromEntries(CTA_KINDS.map((k) => [k, (brand.cta_colors[k] || brand.cta_colors.default || colorsResolved.title).toUpperCase()]));
+  /** Readable text colour on a filled shape: brand charcoal on light fills, brand ivory on dark ones. */
+  colorsResolved.on = (fill) => (contrastRatio(fill, colorsResolved.text) >= contrastRatio(fill, colorsResolved.text_light) ? colorsResolved.text : colorsResolved.text_light);
   if (colorsArePlaceholders) warnings.push("Brand colours are not configured yet; neutral placeholder colours were used.");
 
   const existing = (p, label) => {

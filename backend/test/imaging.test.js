@@ -5,10 +5,11 @@ import os from "node:os";
 import path from "node:path";
 import sharp from "sharp";
 import { REPO_ROOT } from "../src/config.js";
-import { loadBrand } from "../src/imaging/brands.js";
+import { loadBrand, contrastRatio } from "../src/imaging/brands.js";
 import { normalizePost } from "../src/imaging/content.js";
 import { outputSize, generationSize } from "../src/imaging/formats.js";
-import { rankCategories, buildBrief } from "../src/imaging/decision.js";
+import { rankCategories, buildBrief, ctaKind } from "../src/imaging/decision.js";
+import { getCategory } from "../src/imaging/categories.js";
 import { buildImagePrompt } from "../src/imaging/promptBuilder.js";
 import { composeImage } from "../src/imaging/overlay/layouts.js";
 import { renderText } from "../src/imaging/overlay/text.js";
@@ -60,16 +61,46 @@ function deps(extra = {}) {
 }
 
 // ── business profile ──
-test("business profile loads, resolves fonts and flags placeholder colours", () => {
+test("business profile loads, resolves fonts and the guideline colours", () => {
   assert.equal(brand.id, "dr_halima");
   assert.ok(fs.existsSync(brand.fontFiles.bold));
-  assert.equal(brand.colorsArePlaceholders, true);
-  assert.match(brand.warnings.join(" "), /colours are not configured/);
+  assert.equal(brand.colorsArePlaceholders, false);
+  const c = brand.colorsResolved;
+  assert.equal(c.background, "#FFF6F3"); // Warm Ivory
+  assert.equal(c.title, "#C65D7B"); // Deep Rose
+  assert.equal(c.text, "#4A4A4A"); // Soft Charcoal
+  assert.equal(c.highlight, "#EFA7B3"); // Soft Medical Pink
+  assert.equal(c.health, "#A8C3A0"); // Sage Green
+  assert.deepEqual(c.cta, { appointment: "#C65D7B", save: "#EFA7B3", health_tip: "#A8C3A0", default: "#C65D7B" });
+  assert.equal(loadBrand("quickfix_studios").colorsArePlaceholders, true);
+  assert.match(loadBrand("quickfix_studios").warnings.join(" "), /colours are not configured/);
   assert.throws(() => loadBrand("no_such_business"), { code: "BRAND_NOT_FOUND" });
   const dir = fs.mkdtempSync(path.join(tmp, "brands-"));
   fs.writeFileSync(path.join(dir, "broken.json"), "{ not json");
   assert.throws(() => loadBrand("broken", { brandsDir: dir }), { code: "BRAND_INVALID" });
   assert.throws(() => loadBrand("../etc"), { code: "INVALID_BUSINESS" });
+  const raw = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "brands/dr_halima.json"), "utf8"));
+  fs.writeFileSync(path.join(dir, "dr_halima.json"), JSON.stringify({ ...raw, colors: { ...raw.colors, highlight: "#FF1493" } }));
+  assert.throws(() => loadBrand("dr_halima", { brandsDir: dir }), { code: "BRAND_INVALID", message: /not in the brand palette/ });
+});
+
+test("brand colours stay readable: text on every fill meets contrast (≥3:1 large text)", () => {
+  const c = brand.colorsResolved;
+  for (const fill of [c.background, c.title, c.highlight, c.health, ...Object.values(c.cta)]) assert.ok(contrastRatio(fill, c.on(fill)) >= 3, `text on ${fill}`);
+  assert.ok(contrastRatio(c.background, c.text) >= 4.5, "body text on ivory");
+  assert.ok(contrastRatio(c.background, c.title) >= 3, "deep-rose headings on ivory");
+  assert.equal(c.on(c.highlight), c.text, "charcoal on soft pink");
+  assert.equal(c.on(c.title), c.text_light, "ivory on deep rose");
+});
+
+test("CTA colour follows the brand guideline (appointment / save / health tip)", () => {
+  assert.equal(ctaKind(getCategory("appointment_cta"), "ইনবক্সে যোগাযোগ করুন"), "appointment");
+  assert.equal(ctaKind(getCategory("pain_solution"), "পোস্টটি সেভ করে রাখুন"), "save");
+  assert.equal(ctaKind(getCategory("pregnancy_nutrition"), "আজই শুরু করুন"), "health_tip");
+  assert.equal(ctaKind(getCategory("warning_signs"), "দেরি না করে চিকিৎসকের পরামর্শ নিন"), "default");
+  const brief = buildBrief(normalizePost(sample(2)), brand, "pain_solution");
+  assert.equal(brief.cta_kind, "save");
+  assert.match(buildImagePrompt(brief, brand), /deep rose \(#C65D7B\)[\s\S]*Avoid: bright hot pink/);
 });
 
 // ── formats ──
