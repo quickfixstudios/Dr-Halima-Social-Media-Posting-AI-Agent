@@ -546,6 +546,18 @@ test("live Make scenario uses the same prompt as prompts/facebook_post.system.md
   assert.ok(live.includes(after), "live image/hashtag rules drifted from prompts/facebook_post.system.md");
 });
 
+test("weekly carousel scenario uses prompts/carousel.system.md and posts only when all 6 slides pass", () => {
+  const scenario = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, "make/weekly-carousel.scenario.json"), "utf8"));
+  const flow = scenario.blueprint.flow;
+  const prompt = fs.readFileSync(path.join(REPO_ROOT, "prompts/carousel.system.md"), "utf8").trim();
+  assert.equal(flow.find((m) => m.id === 1).mapper.messages[0].content, prompt, "carousel prompt drifted from prompts/carousel.system.md");
+  assert.match(prompt, /exactly 6/);
+  for (const id of [4, 6]) assert.equal(flow.find((m) => m.id === id).mapper.size, "1024x1280");
+  const post = flow.find((m) => m.module === "facebook-pages:CreatePostWithPhotos");
+  assert.deepEqual(post.filter.conditions[0].map((c) => c.b), ["FAILED", "6"]);
+  assert.deepEqual(scenario.scheduling, { type: "weekly", days: [5], time: "19:00" });
+});
+
 // ── AI-drawn infographics (text mode "model") ──
 import { compareText, normalize, bestSimilarity } from "../src/imaging/textCheck.js";
 import { infographicTextLines } from "../src/imaging/infographicPrompt.js";

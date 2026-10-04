@@ -1,0 +1,362 @@
+{
+  "scheduling": {
+    "type": "weekly",
+    "days": [
+      5
+    ],
+    "time": "19:00"
+  },
+  "blueprint": {
+    "name": "Dr Halima – Weekly carousel (Friday 19:00)",
+    "flow": [
+      {
+        "id": 1,
+        "module": "openai-gpt-3:CreateCompletion",
+        "version": 1,
+        "parameters": {
+          "__IMTCONN__": 7851218
+        },
+        "mapper": {
+          "select": "chat",
+          "model": "gpt-6-luna",
+          "max_tokens": 16000,
+          "response_format": "json_object",
+          "parseJSONResponse": false,
+          "reasoning_effort": "medium",
+          "messages": [
+            {
+              "role": "system",
+              "content": "You create the weekly 6-slide Facebook carousel for ডা. হালিমা, an obstetrics & gynaecology doctor in Bangladesh. One carousel explains one process step by step, so women save and share it.\nHer exact credentials: MBBS (MMC), CMU (Ultra), FCPS - Final Part (Obs & Gynae); Medical Officer, Mymensingh Medical College Hospital.\nNever invent or upgrade her titles: never call her a specialist, consultant or professor, or \"FCPS\" (বিশেষজ্ঞ, কনসালটেন্ট, অধ্যাপক). Refer to her only as ডা. হালিমা. Do NOT add a signature or her credentials to the caption; they are added automatically.\n\nAUDIENCE: Bangladeshi women aged 18-40 (urban, semi-urban and rural), pregnant women and couples trying to conceive. A village reader must understand every word instantly.\nTONE: warm, maternal, emotionally reassuring and premium; like a kind doctor talking to a younger sister.\n\nLANGUAGE: every word on the slides is pure Bangla (no English words, no Latin letters). The caption is Bangla with at most 5 simple English words that Bangladeshi women commonly use (e.g. Pregnancy test, Ultrasound, Check-up), never whole English sentences. Everyday words, no jargon.\n\nTOPIC: the user message gives the topic. Explain it as 4 clear, safe, practical steps in the right order.\n\nSLIDES (exactly 6, in this order):\n1. Hook slide: a headline of 6-10 words (pure Bangla, no emoji) and one short supporting line (max 8 words).\n2-5. One step per slide: the step number as a Bangla digit (১ to ৪), a step title (max 6 words) and one short explanation line (max 8 words).\n6. Call-to-action slide: one line asking to save and share the post, and one line inviting questions by message (ইনবক্সে মেসেজ করুন).\nEvery slide also carries the small brand line \"ডা. হালিমা · গাইনি ও প্রসূতি\" at the bottom. At most 25 words per slide. No numbers other than the step numbers.\n\nIMAGE PROMPT for each slide (English, sent as-is to the image model, which draws the whole slide including its Bangla text), in exactly this form:\n- Start with exactly: \"Premium Facebook carousel slide, one series in identical style: warm ivory background, deep rose headings, soft charcoal text, soft pink and sage green accents, rounded shapes, generous margins, clean and modern, portrait 4:5, mobile-first.\"\n- Then 15-40 words for this slide only. Slide 1: a realistic, softly lit photo of a Bangladeshi woman in modest dress with a natural expression that fits the topic in the upper half, headline below. Slides 2-5: a large deep-rose step number in a soft pink circle, one simple line icon that shows the step, the text in a rounded white card. Slide 6: a soft pink panel with a simple bookmark and chat line icon. Real people are always South Asian / Bangladeshi and modestly dressed; never cartoon people, never a Western stock look.\n- Then exactly: \"Text to render exactly in Bengali, nothing else:\" followed by the labelled lines separated by \" | \", e.g. \"Headline: … | Line: … | Brand line: ডা. হালিমা · গাইনি ও প্রসূতি\" (step slides: \"Step number: ১ | Step: … | Line: … | Brand line: …\").\n- End with exactly: \"No English, no other text, no logos. No anatomy, fetus, blood or medical posters. Modest, premium, not stock or AI-looking.\"\n\nCAPTION (Facebook text), in this order: the hook (one line); 1-2 short lines of explanation; the 4 steps, each on its own line \"১. …\" to \"৪. …\" with the same words as the slides; one line starting with \"👉 \" with one simple, safe thing to do today; one line \"📌 পোস্টটি সেভ করে রাখুন এবং প্রিয়জনের সাথে শেয়ার করুন।\" or \"📩 আপনার কোনো প্রশ্ন থাকলে ইনবক্সে মেসেজ করুন।\"; and as the very last line exactly: এই পোস্টটি শুধুমাত্র শিক্ষামূলক উদ্দেশ্যে। ব্যক্তিগত চিকিৎসা পরামর্শের জন্য একজন যোগ্য চিকিৎসকের সাথে পরামর্শ করুন।\nKeep the caption under 150 words. No hashtags in the caption.\n\nMEDICAL SAFETY (strict): never diagnose; never name medicines, doses, supplements or brands; no herbal or home-remedy cures; no absolute claims; no statistics; calm, never frightening. Only advice consistent with WHO / RCOG / NICE / ACOG guidance; when a step depends on the person, say to ask a doctor.\n\nHASHTAGS: 0 to 3, very specific to the topic, Bangla or English, \"_\" between Bangla words; one line, or an empty string.\n\nSELF-CHECK before answering: Will this make a Bangladeshi woman stop scrolling, trust the doctor and save the post? Are the steps in the right order, safe and easy? Is every slide line short, correct Bangla and also in the caption? Is each image prompt short and in the exact form above? If not, improve it first.\n\nReturn ONLY a JSON object: {\"topic\": \"...\", \"caption\": \"...\", \"hashtags\": \"...\", \"slides\": [{\"image_prompt\": \"...\"}, {\"image_prompt\": \"...\"}, {\"image_prompt\": \"...\"}, {\"image_prompt\": \"...\"}, {\"image_prompt\": \"...\"}, {\"image_prompt\": \"...\"}]}"
+            },
+            {
+              "role": "user",
+              "content": "Today is {{formatDate(now; \"dddd D MMMM YYYY\")}} (Asia/Dhaka).\nTopic: {{get(split(\"What to do after a missed period|How to do a home pregnancy test correctly|Preparing for your first pregnancy check-up|Gentle daily care in the first trimester|Easing morning sickness gently (no medicines)|Packing your hospital bag for delivery|Caring for yourself in the first six weeks after birth|Tracking your menstrual cycle|Getting your body ready before pregnancy|Safe, gentle movement during pregnancy|Checking your breasts at home (breast awareness)|Preparing your questions for a gynae visit\"; \"|\"); parseNumber(formatDate(now; \"w\")) - floor(parseNumber(formatDate(now; \"w\")) / 12) * 12 + 1)}}\n\nWrite the 6-slide carousel following the rules, self-check it, and return the JSON object."
+            }
+          ]
+        },
+        "metadata": {
+          "designer": {
+            "x": 0,
+            "y": 0
+          }
+        },
+        "onerror": [
+          {
+            "id": 11,
+            "module": "builtin:Break",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+              "count": 3,
+              "retry": true,
+              "interval": 2
+            },
+            "metadata": {
+              "designer": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "module": "json:ParseJSON",
+        "version": 1,
+        "parameters": {
+          "type": 521828
+        },
+        "mapper": {
+          "json": "{{1.choices[].message.content}}"
+        },
+        "metadata": {
+          "designer": {
+            "x": 300,
+            "y": 0
+          }
+        }
+      },
+      {
+        "id": 3,
+        "module": "builtin:BasicFeeder",
+        "version": 1,
+        "parameters": {},
+        "mapper": {
+          "array": "{{2.slides}}"
+        },
+        "metadata": {
+          "designer": {
+            "x": 600,
+            "y": 0
+          }
+        }
+      },
+      {
+        "id": 4,
+        "module": "openai-gpt-3:GenerateImage",
+        "version": 1,
+        "parameters": {
+          "__IMTCONN__": 7851218
+        },
+        "mapper": {
+          "model": "gpt-image-2.5-sunburst",
+          "prompt": "{{3.image_prompt}}",
+          "size": "1024x1280",
+          "quality": "high",
+          "output_format": "jpeg",
+          "output_compression": 90,
+          "n": 1
+        },
+        "metadata": {
+          "designer": {
+            "x": 900,
+            "y": 0
+          }
+        },
+        "onerror": [
+          {
+            "id": 12,
+            "module": "builtin:Break",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+              "count": 3,
+              "retry": true,
+              "interval": 2
+            },
+            "metadata": {
+              "designer": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "module": "openai-gpt-3:analyzeImages",
+        "version": 1,
+        "parameters": {
+          "__IMTCONN__": 7851218
+        },
+        "mapper": {
+          "model": "gpt-6-luna",
+          "max_tokens": 3000,
+          "prompt": "You are a strict Bengali proofreader and medical-content reviewer. The image was generated from the PROMPT below. Check the image:\n1. Every line listed after \"Text to render exactly\" (separated by |, labels before the colon are not part of the text) appears in the image, spelled exactly letter by letter (vowel signs, conjuncts, hasanta, Bangla digits). Ignore punctuation (full stops, commas, ·, ?, !), spacing and line breaks: judge the letters only. Read what is actually drawn; never correct it in your head.\n2. There is no other text: no English words or Latin letters, no extra or invented Bengali words, no name on any person's clothing (simple symbols such as ✓ ✕ → are fine).\n3. No garbled, malformed or unreadable letters anywhere.\n4. The image is modest and safe: no anatomy, fetus, blood, exposed belly, pills, needles or medical instruments other than a stethoscope. If a doctor is shown, the small label 'প্রতীকী ছবি' must be visible.\nAnswer on the FIRST line exactly 'VERDICT: PASS' only if all four are true, otherwise exactly 'VERDICT: FAIL'. Then list each problem briefly.\n\nPROMPT:\n{{3.image_prompt}}",
+          "images": [
+            {
+              "imageUploadType": "imageFile",
+              "imageFileData": "{{4.resImgData}}"
+            }
+          ]
+        },
+        "metadata": {
+          "designer": {
+            "x": 1200,
+            "y": 0
+          }
+        },
+        "onerror": [
+          {
+            "id": 13,
+            "module": "builtin:Break",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+              "count": 3,
+              "retry": true,
+              "interval": 2
+            },
+            "metadata": {
+              "designer": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "module": "openai-gpt-3:GenerateImage",
+        "version": 1,
+        "parameters": {
+          "__IMTCONN__": 7851218
+        },
+        "mapper": {
+          "model": "gpt-image-2.5-sunburst",
+          "prompt": "{{3.image_prompt}}",
+          "size": "1024x1280",
+          "quality": "high",
+          "output_format": "jpeg",
+          "output_compression": 90,
+          "n": 1
+        },
+        "metadata": {
+          "designer": {
+            "x": 1500,
+            "y": 0
+          }
+        },
+        "onerror": [
+          {
+            "id": 14,
+            "module": "builtin:Break",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+              "count": 3,
+              "retry": true,
+              "interval": 2
+            },
+            "metadata": {
+              "designer": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "module": "openai-gpt-3:analyzeImages",
+        "version": 1,
+        "parameters": {
+          "__IMTCONN__": 7851218
+        },
+        "mapper": {
+          "model": "gpt-6-luna",
+          "max_tokens": 3000,
+          "prompt": "You are a strict Bengali proofreader and medical-content reviewer. The image was generated from the PROMPT below. Check the image:\n1. Every line listed after \"Text to render exactly\" (separated by |, labels before the colon are not part of the text) appears in the image, spelled exactly letter by letter (vowel signs, conjuncts, hasanta, Bangla digits). Ignore punctuation (full stops, commas, ·, ?, !), spacing and line breaks: judge the letters only. Read what is actually drawn; never correct it in your head.\n2. There is no other text: no English words or Latin letters, no extra or invented Bengali words, no name on any person's clothing (simple symbols such as ✓ ✕ → are fine).\n3. No garbled, malformed or unreadable letters anywhere.\n4. The image is modest and safe: no anatomy, fetus, blood, exposed belly, pills, needles or medical instruments other than a stethoscope. If a doctor is shown, the small label 'প্রতীকী ছবি' must be visible.\nAnswer on the FIRST line exactly 'VERDICT: PASS' only if all four are true, otherwise exactly 'VERDICT: FAIL'. Then list each problem briefly.\n\nPROMPT:\n{{3.image_prompt}}",
+          "images": [
+            {
+              "imageUploadType": "imageFile",
+              "imageFileData": "{{6.resImgData}}"
+            }
+          ]
+        },
+        "metadata": {
+          "designer": {
+            "x": 1800,
+            "y": 0
+          }
+        },
+        "onerror": [
+          {
+            "id": 15,
+            "module": "builtin:Break",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+              "count": 3,
+              "retry": true,
+              "interval": 2
+            },
+            "metadata": {
+              "designer": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "module": "builtin:BasicAggregator",
+        "version": 1,
+        "parameters": {
+          "feeder": 3
+        },
+        "mapper": {
+          "type": "data",
+          "data": "{{if(contains(5.result; \"VERDICT: PASS\"); 4.resImgData; 6.resImgData)}}",
+          "fileName": "slide-{{3.__IMTINDEX__}}{{if(contains(5.result; \"VERDICT: PASS\"); \"\"; if(contains(7.result; \"VERDICT: PASS\"); \"\"; \"-FAILED\"))}}.jpg"
+        },
+        "metadata": {
+          "designer": {
+            "x": 2100,
+            "y": 0
+          }
+        }
+      },
+      {
+        "id": 9,
+        "module": "facebook-pages:CreatePostWithPhotos",
+        "version": 6,
+        "parameters": {
+          "__IMTCONN__": 11459922
+        },
+        "filter": {
+          "name": "All 6 slides passed the Bangla check",
+          "conditions": [
+            [
+              {
+                "a": "{{join(map(8.array; \"fileName\"); \",\")}}",
+                "o": "text:notcontain",
+                "b": "FAILED"
+              },
+              {
+                "a": "{{length(8.array)}}",
+                "o": "number:equal",
+                "b": "6"
+              }
+            ]
+          ]
+        },
+        "mapper": {
+          "page_id": "103052652458065",
+          "message": "{{2.caption}}\n\n— ডা. হালিমা\nএমবিবিএস (এমএমসি), সিএমইউ (আল্ট্রা)\nএফসিপিএস - ফাইনাল পার্ট (অবস অ্যান্ড গাইনি)\nমেডিকেল অফিসার, ময়মনসিংহ মেডিকেল কলেজ হাসপাতাল{{if(2.hashtags; newline; \"\")}}{{if(2.hashtags; newline; \"\")}}{{2.hashtags}}",
+          "photos": "{{8.array}}"
+        },
+        "metadata": {
+          "designer": {
+            "x": 2400,
+            "y": 0
+          }
+        },
+        "onerror": [
+          {
+            "id": 16,
+            "module": "builtin:Break",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+              "count": 3,
+              "retry": true,
+              "interval": 2
+            },
+            "metadata": {
+              "designer": {
+                "x": 0,
+                "y": 0
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "instant": false,
+      "version": 1,
+      "scenario": {
+        "dlq": true,
+        "slots": null,
+        "dataloss": false,
+        "maxErrors": 3,
+        "autoCommit": true,
+        "roundtrips": 1,
+        "sequential": false,
+        "confidential": false,
+        "freshVariables": false,
+        "autoCommitTriggerLast": true
+      },
+      "designer": {
+        "orphans": []
+      }
+    }
+  }
+}

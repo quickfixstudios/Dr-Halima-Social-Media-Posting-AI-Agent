@@ -28,6 +28,24 @@ Every OpenAI and Facebook step has a Retry error handler (3 attempts, 2 minutes 
 
 ---
 
+# Weekly carousel — "Dr Halima – Weekly carousel (Friday 19:00)"
+
+`weekly-carousel.scenario.json` mirrors the second active scenario. Every **Friday at 19:00 (Asia/Dhaka)** it posts one
+extra **6-slide carousel** (slide 1 hook, slides 2–5 one step each, slide 6 save/share/message) on a process topic.
+
+| Step | Module | What it does |
+|---|---|---|
+| 1 | OpenAI › Generate a completion (`gpt-6-luna`) | Writes the carousel with [`../prompts/carousel.system.md`](../prompts/carousel.system.md): caption, hashtags and 6 slide image prompts sharing one style sentence. Topic = ISO week `mod 12` over 12 process topics (missed period, home pregnancy test, first check-up, …) |
+| 2 | JSON › Parse JSON (data structure "Dr Halima carousel") | `topic`, `caption`, `hashtags`, `slides[].image_prompt` |
+| 3 | Flow Control › Iterator | One bundle per slide |
+| 4–7 | OpenAI › Generate images ×2 + Analyze images ×2 | Each slide is drawn twice (fixed 1024×1280) and both drafts are checked with the same Bangla text + safety check as the daily posts |
+| 8 | Array aggregator | Keeps the first draft that passed per slide, in slide order; a slide where both drafts failed is marked `FAILED` |
+| 9 | Facebook Pages › Create a Post with Photos | Posts all 6 images as one multi-photo post — **only if all 6 slides passed**; otherwise nothing is posted that week (a carousel with a missing step is never published) |
+
+**Operations:** about 29 per carousel (6 slides × 4 + 5) ≈ 125/month. Together with the daily posts this stays under 1,000.
+
+---
+
 # Publisher scenario (not created yet) — "Dr Halima – Publish approved image posts"
 
 `publish-approved.blueprint.json` is an importable Make blueprint, checked with Make's own validator. It receives
