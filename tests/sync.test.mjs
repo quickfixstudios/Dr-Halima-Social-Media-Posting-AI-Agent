@@ -31,3 +31,11 @@ test("image size is fixed at 1024x1280 (4:5) in every image module", () => {
     for (const m of images) assert.equal(m.mapper.size, "1024x1280", `${file} module ${m.id}`);
   }
 });
+
+test("every image is drawn from the post's own prompt with its text block, never a textless fallback", () => {
+  for (const file of ["make/daily-plan.scenario.json", "make/weekly-carousel.scenario.json"]) {
+    const images = flat(json(file).blueprint.flow).filter((m) => m.module === "openai-gpt-3:GenerateImage");
+    for (const m of images) assert.match(m.mapper.prompt, /^\{\{\d+\.image_prompt\}\}$/, `${file} module ${m.id}`);
+  }
+  for (const p of ["prompts/facebook_post.system.md", "prompts/carousel.system.md"]) assert.match(read(p), /TEXT TO INCLUDE IN IMAGE:/);
+});
