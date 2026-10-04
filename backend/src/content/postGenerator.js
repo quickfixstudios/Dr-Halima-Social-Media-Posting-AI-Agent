@@ -87,9 +87,12 @@ export function toDraftPost(out, { postId, business, facts = loadFacts(), now = 
   if (!type) throw new Error(`Unknown content type ${out.content_type}`);
   const fact = facts.find((f) => f.id === out.fact_id);
   if (out.content_type === "data_statistics" && !fact) warnings.push("Data/Statistics post without a verified fact — it will be blocked until one is added.");
-  for (const [field, value] of [["hook", out.hook], ["caption", out.caption], ["overlay_main", out.overlay_main]]) {
-    if (LATIN.test(value)) warnings.push(`${field} contains English letters — the brand rule is pure Bangla.`);
+  for (const [field, value] of [["hook", out.hook], ["overlay_main", out.overlay_main]]) {
+    if (LATIN.test(value)) warnings.push(`${field} contains English letters — text on the image must be pure Bangla.`);
   }
+  // The caption may mix in a few common English words (e.g. "Pregnancy test"), never whole English sentences.
+  const englishWords = out.caption.match(/[A-Za-z][A-Za-z'-]*/g) ?? [];
+  if (englishWords.length > 5) warnings.push(`caption has ${englishWords.length} English words — the brand rule allows at most 5 simple ones.`);
   const cta = out.caption.match(CTA_LINE)?.[2]?.trim() ?? "";
   // The infographic format decides the image layout; otherwise the content type does.
   const formatType = VISUAL_FORMATS[out.visual_format];
@@ -133,7 +136,7 @@ export async function generatePost({ type, pillar, topicNumber, business = "dr_h
   const { json } = await call({
     label: "facebook post",
     instructions: systemPrompt({ facts }),
-    input: [{ role: "user", content: `Today is ${now.toFormat("cccc d LLLL yyyy")} (Asia/Dhaka).\nContent type: ${CONTENT_TYPES[t].label}\nContent pillar: ${p}\nTopic number: ${n}\n\nWrite the post in pure Bangla following the content type rules, self-check it, and return the JSON object.` }],
+    input: [{ role: "user", content: `Today is ${now.toFormat("cccc d LLLL yyyy")} (Asia/Dhaka).\nContent type: ${CONTENT_TYPES[t].label}\nContent pillar: ${p}\nTopic number: ${n}\n\nWrite the post following the rules (pure Bangla on the image; the caption may mix in a few simple English words), self-check it, and return the JSON object.` }],
     format: outputFormat(facts),
     maxOutputTokens: 6000,
     model: imagingConfig().textModel,

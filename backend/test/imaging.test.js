@@ -517,6 +517,10 @@ test("content generator: verified facts only, pure-Bangla check, drafts flow int
   assert.equal(buildBrief(normalizePost({ ...myth, content_status: "approved" }), brand, "myth_vs_fact").layout, "myth_fact_table");
   const latin = toDraftPost({ ...myth, content_type: "pain_solution", hook: "Period pain? Eta normal na", overlay_main: "", myths: [], key_points: ["a"] }, { postId: "m2", business: "dr_halima" });
   assert.ok(latin.generator.warnings.some((w) => /pure Bangla/.test(w)));
+  const mixed = { ...myth, content_type: "pain_solution", hook: "মাসিক দেরি হলে কী করবেন", overlay_main: "মাসিক দেরি হলে কী করবেন", myths: [], key_points: ["a"] };
+  assert.deepEqual(toDraftPost({ ...mixed, caption: `Pregnancy test কখন করবেন?\n${D}` }, { postId: "m3", business: "dr_halima" }).generator.warnings, []);
+  const english = toDraftPost({ ...mixed, caption: `Please do a test at home first today\n${D}` }, { postId: "m4", business: "dr_halima" });
+  assert.ok(english.generator.warnings.some((w) => /English words/.test(w)));
 });
 
 test("generator infographic formats map to designed layouts", () => {
