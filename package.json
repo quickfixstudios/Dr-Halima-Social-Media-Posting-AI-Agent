@@ -1,0 +1,8 @@
+{
+  "name": "dr-halima-social-media",
+  "private": true,
+  "description": "Prompts and Make.com scenario copies for Dr. Halima's automated Facebook posts.",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  }
+}

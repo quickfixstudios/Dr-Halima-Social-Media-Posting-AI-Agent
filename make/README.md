@@ -43,20 +43,3 @@ extra **6-slide carousel** (slide 1 hook, slides 2–5 one step each, slide 6 sa
 | 9 | Facebook Pages › Create a Post with Photos | Posts all 6 images as one multi-photo post — **only if all 6 slides passed**; otherwise nothing is posted that week (a carousel with a missing step is never published) |
 
 **Operations:** 29 per carousel (tested: 6 slides × 4 + 5, run time about 5 minutes) ≈ 125/month. First run: Friday 9 Oct 2026, 19:00. Together with the daily posts this stays under 1,000.
-
----
-
-# Publisher scenario (not created yet) — "Dr Halima – Publish approved image posts"
-
-`publish-approved.blueprint.json` is an importable Make blueprint, checked with Make's own validator. It receives
-posts approved in the image review screen (see [../IMAGE_AUTOMATION.md](../IMAGE_AUTOMATION.md) §9):
-
-| Step | Module | What it does |
-|---|---|---|
-| 1 | Webhooks › Custom webhook | Receives the approved post payload from the backend |
-| 2 | Router | Route A: images sent as links (Cloudinary, any number of photos) · Route B: one image sent inline (base64) |
-| 3 | Facebook Pages › Create a Post with Photos | Posts caption + photo(s); `publish_at` → Facebook "Publish date" (native scheduling 10 min–30 days ahead, else immediate) |
-| 4 | Webhooks › Webhook response | Replies `{ "fb_post_id": … }` so the post is marked PUBLISHED |
-
-Import it via *Create a new scenario → ⋯ → Import Blueprint*, add a webhook on step 1, and put its address in
-`backend/.env` as `MAKE_WEBHOOK_URL_DR_HALIMA`. Free plan: this would be the 2nd active scenario.

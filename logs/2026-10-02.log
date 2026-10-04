@@ -1,0 +1,16 @@
+{"ts":"2026-10-02T14:53:06.236Z","level":"info","scope":"pipeline","message":"Imported content","meta":{"date":"2026-10-05","posts":5}}
+{"ts":"2026-10-02T14:53:06.237Z","level":"info","scope":"pipeline","message":"Daily run started","meta":{"date":"2026-10-05","dryRun":true}}
+{"ts":"2026-10-02T14:53:06.256Z","level":"info","scope":"schedulePosts","message":"[dry-run] would schedule","meta":{"postId":"2026-10-05-1","scheduledAt":"2026-10-05T04:00:00.000Z","images":0}}
+{"ts":"2026-10-02T14:53:06.257Z","level":"info","scope":"schedulePosts","message":"Reel held until a video is attached","meta":{"postId":"2026-10-05-2"}}
+{"ts":"2026-10-02T14:53:06.258Z","level":"info","scope":"schedulePosts","message":"[dry-run] would schedule","meta":{"postId":"2026-10-05-3","scheduledAt":"2026-10-05T10:00:00.000Z","images":0}}
+{"ts":"2026-10-02T14:53:06.259Z","level":"info","scope":"schedulePosts","message":"Reel held until a video is attached","meta":{"postId":"2026-10-05-4"}}
+{"ts":"2026-10-02T14:53:06.260Z","level":"info","scope":"schedulePosts","message":"[dry-run] would schedule","meta":{"postId":"2026-10-05-5","scheduledAt":"2026-10-05T16:00:00.000Z","images":0}}
+{"ts":"2026-10-02T14:53:06.261Z","level":"info","scope":"pipeline","message":"Daily run finished","meta":{"date":"2026-10-05","results":[{"id":"2026-10-05-1","slot":"10:00","status":"dry_run"},{"id":"2026-10-05-2","slot":"13:00","status":"awaiting_video"},{"id":"2026-10-05-3","slot":"16:00","status":"dry_run"},{"id":"2026-10-05-4","slot":"19:00","status":"awaiting_video"},{"id":"2026-10-05-5","slot":"22:00","status":"dry_run"}]}}
+{"ts":"2026-10-02T15:15:20.729Z","level":"info","scope":"pipeline","message":"Imported batch","meta":{"date":"2026-10-05","posts":5}}
+{"ts":"2026-10-02T15:15:20.730Z","level":"info","scope":"pipeline","message":"Daily run started","meta":{"date":"2026-10-05","dryRun":true}}
+{"ts":"2026-10-02T15:15:20.754Z","level":"info","scope":"schedulePosts","message":"[dry-run] would schedule","meta":{"postId":"2026-10-05-1","scheduledAt":"2026-10-05T04:00:00.000Z","images":0}}
+{"ts":"2026-10-02T15:15:20.755Z","level":"info","scope":"schedulePosts","message":"Reel held until a video is attached","meta":{"postId":"2026-10-05-2"}}
+{"ts":"2026-10-02T15:15:20.756Z","level":"info","scope":"schedulePosts","message":"[dry-run] would schedule","meta":{"postId":"2026-10-05-3","scheduledAt":"2026-10-05T10:00:00.000Z","images":0}}
+{"ts":"2026-10-02T15:15:20.757Z","level":"info","scope":"schedulePosts","message":"Reel held until a video is attached","meta":{"postId":"2026-10-05-4"}}
+{"ts":"2026-10-02T15:15:20.758Z","level":"info","scope":"schedulePosts","message":"[dry-run] would schedule","meta":{"postId":"2026-10-05-5","scheduledAt":"2026-10-05T16:00:00.000Z","images":0}}
+{"ts":"2026-10-02T15:15:20.760Z","level":"info","scope":"pipeline","message":"Daily run finished","meta":{"date":"2026-10-05","results":[{"id":"2026-10-05-1","slot":"slot1","time":"10:00","status":"dry_run"},{"id":"2026-10-05-2","slot":"slot2","time":"13:00","status":"awaiting_video"},{"id":"2026-10-05-3","slot":"slot3","time":"16:00","status":"dry_run"},{"id":"2026-10-05-4","slot":"slot4","time":"19:00","status":"awaiting_video"},{"id":"2026-10-05-5","slot":"slot5","time":"22:00","status":"dry_run"}]}}

@@ -1,5 +1,5 @@
 {
-  "$comment": "The ONLY numbers 'Data/Statistics' posts may use. Each fact must be checked against its source page before use; add new facts only with a source link. Used by the live Make scenario prompt and backend/src/content/postGenerator.js.",
+  "$comment": "The ONLY numbers posts may use. Each fact must be checked against its source page before use; add new facts only with a source link. They are written into the live Make prompt in place of {{VERIFIED_FACTS}} (one line each: \"- <fact_bn> (সূত্র: <source_bn>)\").",
   "checked": "2026-10-03",
   "facts": [
     {

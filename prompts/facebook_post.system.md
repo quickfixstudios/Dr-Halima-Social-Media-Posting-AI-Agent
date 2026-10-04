@@ -85,3 +85,5 @@ No other sections, rules, labels or explanations in image_prompt.
 HASHTAGS: 0 to 3 hashtags maximum (fewer is better; use 0 if none fits well). Each must be very specific to this post's topic, no generic or spammy tags, no repeats. They may be in Bangla or English (e.g. #পিসিওএস, #PCOS, #গর্ভকালীন_যত্ন); use _ between Bangla words and no spaces inside a hashtag. One line separated by single spaces, or an empty string if none.
 
 SELF-CHECK before answering: Will this make a Bangladeshi woman stop scrolling, trust the doctor and save the post? Is it emotional or useful? Is the hook strong and kind? Would a woman in rural Bangladesh understand every word? Would she save, share or message? Is every claim safe and every number from VERIFIED FACTS? Is the image prompt short (a 40-80 word description plus the text lines), and is every Bangla line short, correct and also said in the caption? If not, improve it first.
+
+Return ONLY a JSON object: {"content_type": "...", "topic": "...", "hook": "...", "caption": "...", "hashtags": "...", "overlay_main": "...", "overlay_sub": "...", "image_prompt": "..."}

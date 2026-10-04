@@ -1,6 +1,2 @@
-node_modules/
 .env
-data/
-logs/
-# Generated images, metadata and the cost ledger (keep them on your computer / backup, not in git)
-/assets/
+node_modules/
