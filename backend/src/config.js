@@ -21,7 +21,7 @@ export const config = {
 
 export function imagingConfig(env = process.env) {
   return {
-    textModel: env.OPENAI_TEXT_MODEL || env.TEXT_MODEL || "gpt-6.1-sol",
+    textModel: env.OPENAI_TEXT_MODEL || env.TEXT_MODEL || "gpt-6-luna",
     imageModel: env.OPENAI_IMAGE_MODEL || "gpt-image-2.5-sunburst",
     // Newer GPT image models accept any WIDTHxHEIGHT divisible by 16; older ones only the 3 standard sizes.
     arbitrarySizes: bool(env.IMAGE_MODEL_ARBITRARY_SIZES, true),

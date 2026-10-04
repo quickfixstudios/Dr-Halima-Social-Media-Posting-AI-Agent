@@ -59,7 +59,7 @@
         },
         "mapper": {
           "select": "chat",
-          "model": "gpt-6.1-sol",
+          "model": "gpt-6-luna",
           "max_tokens": 16000,
           "response_format": "json_object",
           "parseJSONResponse": false,
@@ -168,7 +168,7 @@
           "__IMTCONN__": 7851218
         },
         "mapper": {
-          "model": "gpt-6.1-sol",
+          "model": "gpt-6-luna",
           "max_tokens": 3000,
           "prompt": "You are a strict Bengali proofreader and medical-content reviewer. The image was generated from the PROMPT below. Check the image:\n1. Every line listed under TEXT TO INCLUDE appears in the image, spelled exactly letter by letter (vowel signs, conjuncts, hasanta, Bangla digits). Read what is actually drawn; never correct it in your head.\n2. There is no other text: no English words or Latin letters, no extra or invented Bengali words (simple symbols such as ✓ ✕ → are fine).\n3. No garbled, malformed or unreadable letters anywhere.\n4. The image is modest and safe: no anatomy, fetus, blood, pills, needles or medical instruments, and no doctor portrait.\nAnswer on the FIRST line exactly 'VERDICT: PASS' only if all four are true, otherwise exactly 'VERDICT: FAIL'. Then list each problem briefly.\n\nPROMPT:\n{{6.image_prompt}}",
           "images": [

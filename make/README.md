@@ -7,10 +7,10 @@ How it works (one scenario, no storage needed — fits the Make Free plan):
 | Step | Module | What it does |
 |---|---|---|
 | 1 | Tools › Set variables | Slot from the Dhaka hour (10→1 … 22→5) and rotation number `n = day_of_year × 5 + slot` |
-| 2 | OpenAI › Generate a completion (`gpt-6.1-sol`) | Writes one **pure-Bangla** post with the shared prompt [`../prompts/facebook_post.system.md`](../prompts/facebook_post.system.md) (+ verified WHO facts). Content type = `(n + floor(n/7)) mod 7` over the 7 types (Pain → Solution, Myth vs Fact, Educational Carousel, Emotional Story, Data/Statistics, Call-to-Action, Doctor Trust); pillar = `n mod 7`, topic = `floor(n/7) mod 10` (Make has no `mod`, so `x − floor(x/7)×7`) |
+| 2 | OpenAI › Generate a completion (`gpt-6-luna`) | Writes one **pure-Bangla** post with the shared prompt [`../prompts/facebook_post.system.md`](../prompts/facebook_post.system.md) (+ verified WHO facts). Content type = `(n + floor(n/7)) mod 7` over the 7 types (Pain → Solution, Myth vs Fact, Educational Carousel, Emotional Story, Data/Statistics, Call-to-Action, Doctor Trust); pillar = `n mod 7`, topic = `floor(n/7) mod 10` (Make has no `mod`, so `x − floor(x/7)×7`) |
 | 2b | JSON › Parse JSON (data structure "Dr Halima post") | `content_type`, `topic`, `hook`, `caption`, `hashtags`, `overlay_main/sub`, `image_prompt` |
 | 3 | OpenAI › Generate images (`gpt-image-2.5-sunburst`, 1024×1280) | The **whole infographic incl. Bangla text**, from the post's `image_prompt` (layout for the content type, brand colours, exact Bangla lines under "TEXT TO INCLUDE", footer "ডা. হালিমা · গাইনি ও প্রসূতি") |
-| 4 | OpenAI › Analyze images (`gpt-6.1-sol`) | **Bangla text check**: every requested line spelled exactly, no other/English text, nothing garbled, image safe → `VERDICT: PASS` / `FAIL` |
+| 4 | OpenAI › Analyze images (`gpt-6-luna`) | **Bangla text check**: every requested line spelled exactly, no other/English text, nothing garbled, image safe → `VERDICT: PASS` / `FAIL` |
 | 5 | Router | **PASS** → Facebook post with the infographic · **FAIL** → a text-free brand illustration is generated instead and posted (a misspelled image never goes out) |
 | 6 | Facebook Pages › Create a Post with Photos | Caption + Bangla signature + 0–3 hashtags |
 
