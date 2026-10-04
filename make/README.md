@@ -19,7 +19,7 @@ Every OpenAI and Facebook step has a Retry error handler (3 attempts, 2 minutes 
 **Schedule:** every 6 hours, only between 10:00 and 22:10 (Asia/Dhaka) → 10:00, 16:00, 22:00 (3 posts/day since 4 Oct 2026).
 (The window must start at exactly 10:00: Make restarts the timer at the window start each day.) The 3 daily posts always get 3 different pillars and post types. A suggested post type rotates by `n mod 13` (13 is coprime with the 3 daily slots and the 7 pillars, so every slot and pillar meets every type): Authority 3×, Warning 2×, Relatable Problem 2×, Educational, Myth vs Fact, Pregnancy Tips, Condition Awareness, Timeline, Step-by-step 1× each; the writer may switch to a better-fitting type (also Data or Infographic) and picks the matching writing angle itself. Captions are Bangla with at most 5 simple English words (e.g. Pregnancy test); all text on the image stays pure Bangla.
 
-**Operations:** 6 per run when the first image passes, 8 when the second try or the caption-only post runs → at most 27/day ≈ 810/month, usually 600–700 (Free plan: 1,000). Manual test runs also post to Facebook and count.
+**Operations:** 6 per run when the first image passes, 8 when the second try or the caption-only post runs → at most 24/day ≈ 720/month, usually 600–700 (Free plan: 1,000). Manual test runs also post to Facebook and count.
 
 **Not included yet:** reels, Instagram, engagement learning.
 
