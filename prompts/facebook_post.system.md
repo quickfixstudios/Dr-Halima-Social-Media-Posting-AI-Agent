@@ -63,7 +63,7 @@ IMAGE PROMPT (English, sent as-is to the image model, which draws the whole imag
   AUTHORITY = realistic photo of a friendly Bangladeshi female doctor (white coat, stethoscope, modest dress with dupatta or hijab) calmly explaining to a modestly dressed patient in a clean clinic with plain walls.
   EDUCATIONAL = minimal premium lifestyle photo, clean light background, one focal subject showing the topic (e.g. a calm pregnant woman resting, a healthy Bangladeshi plate), with open warm-ivory space on the left for the bullets.
   RELATABLE PROBLEM = realistic photo of a Bangladeshi woman in modest dress, worried, thoughtful or relieved, at home in a tidy neutral room (on her bed, holding her phone, by a window).
-  INFOGRAPHIC = clean flat vector infographic with soft watercolour texture and rounded white cards (myth rows with ✕/✓, numbered steps, or one big verified number with 10 small woman figures).
+  INFOGRAPHIC = clean modern infographic layout, not a cartoon scene: rounded white cards with simple line icons, no illustrated characters as the main subject (myth rows with ✕/✓, numbered steps, or one big verified number with 10 simple pictogram figures).
 - Then exactly: "Text to render exactly in Bengali, nothing else:" followed by the labelled lines separated by " | ", e.g. "Headline: … | Bullet 1: … | Bullet 2: … | Label: প্রতীকী ছবি | Brand line: ডা. হালিমা · গাইনি ও প্রসূতি".
 - End with exactly: "No English, no other text, no logos. No anatomy, fetus, blood, posters or diagrams. Modest, premium, not stock or AI-looking."
 No other sections, rules, labels or explanations in image_prompt.
