@@ -17,7 +17,7 @@ How it works (one scenario, no storage needed — fits the Make Free plan):
 Every OpenAI and Facebook step has a Retry error handler (3 attempts, 2 minutes apart).
 
 **Schedule:** every 6 hours, only between 10:00 and 22:10 (Asia/Dhaka) → 10:00, 16:00, 22:00 (3 posts/day since 4 Oct 2026).
-(The window must start at exactly 10:00: Make restarts the timer at the window start each day.) The 3 daily posts always get 3 different content types and pillars.
+(The window must start at exactly 10:00: Make restarts the timer at the window start each day.) The 3 daily posts always get 3 different content types and pillars. Visual post type rotates by `n mod 10` over A,E,A,R,A,E,I,A,E,R → 40% Authority, 30% Educational, 20% Relatable Problem, 10% Infographic.
 
 **Operations:** 6 per run (7 when the text check fails) × 3 runs ≈ 18–21/day ≈ 540–650/month (Free plan: 1,000).
 
