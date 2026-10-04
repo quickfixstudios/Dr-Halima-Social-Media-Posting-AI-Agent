@@ -1,9 +1,9 @@
 {
   "scheduling": {
     "type": "indefinitely",
-    "interval": 10800,
+    "interval": 21600,
     "between": [
-      "2026-10-04T10:00:00+06:00"
+      "2026-10-04T22:00:00+06:00"
     ],
     "restrict": [
       {
@@ -24,7 +24,7 @@
     ]
   },
   "blueprint": {
-    "name": "Dr Halima – Daily plan (5 posts/day)",
+    "name": "Dr Halima – Daily plan (3 posts/day)",
     "flow": [
       {
         "id": 1,
@@ -35,11 +35,11 @@
           "variables": [
             {
               "name": "slot",
-              "value": "{{if(parseNumber(formatDate(now; \"H\")) < 13; 1; if(parseNumber(formatDate(now; \"H\")) < 16; 2; if(parseNumber(formatDate(now; \"H\")) < 19; 3; if(parseNumber(formatDate(now; \"H\")) < 22; 4; 5))))}}"
+              "value": "{{if(parseNumber(formatDate(now; \"H\")) < 16; 1; if(parseNumber(formatDate(now; \"H\")) < 22; 2; 3))}}"
             },
             {
               "name": "n",
-              "value": "{{parseNumber(formatDate(now; \"DDD\")) * 5 + if(parseNumber(formatDate(now; \"H\")) < 13; 1; if(parseNumber(formatDate(now; \"H\")) < 16; 2; if(parseNumber(formatDate(now; \"H\")) < 19; 3; if(parseNumber(formatDate(now; \"H\")) < 22; 4; 5))))}}"
+              "value": "{{parseNumber(formatDate(now; \"DDD\")) * 3 + if(parseNumber(formatDate(now; \"H\")) < 16; 1; if(parseNumber(formatDate(now; \"H\")) < 22; 2; 3))}}"
             }
           ]
         },
@@ -71,7 +71,7 @@
             },
             {
               "role": "user",
-              "content": "Today is {{formatDate(now; \"dddd D MMMM YYYY\")}} (Asia/Dhaka), post {{1.slot}} of 5 today.\nContent type: {{get(split(\"Pain → Solution,Myth vs Fact,Educational Carousel,Emotional Story,Data/Statistics,Call-to-Action,Doctor Trust\"; \",\"); (1.n + floor(1.n / 7)) - floor((1.n + floor(1.n / 7)) / 7) * 7 + 1)}}\nContent pillar: {{get(split(\"Education,Myth vs Fact,Warning/Awareness,Pregnancy,Hormonal Health,Emotional Support,Preventive Tips\"; \",\"); 1.n - floor(1.n / 7) * 7 + 1)}}\nTopic number: {{floor(1.n / 7) - floor(1.n / 70) * 10 + 1}}\n\nWrite the post in pure Bangla following the content type rules, self-check it, and return the JSON object."
+              "content": "Today is {{formatDate(now; \"dddd D MMMM YYYY\")}} (Asia/Dhaka), post {{1.slot}} of 3 today.\nContent type: {{get(split(\"Pain → Solution,Myth vs Fact,Educational Carousel,Emotional Story,Data/Statistics,Call-to-Action,Doctor Trust\"; \",\"); (1.n + floor(1.n / 7)) - floor((1.n + floor(1.n / 7)) / 7) * 7 + 1)}}\nContent pillar: {{get(split(\"Education,Myth vs Fact,Warning/Awareness,Pregnancy,Hormonal Health,Emotional Support,Preventive Tips\"; \",\"); 1.n - floor(1.n / 7) * 7 + 1)}}\nTopic number: {{floor(1.n / 7) - floor(1.n / 70) * 10 + 1}}\n\nWrite the post in pure Bangla following the content type rules, self-check it, and return the JSON object."
             }
           ]
         },
@@ -402,9 +402,9 @@
     },
     "scheduling": {
       "type": "indefinitely",
-      "interval": 10800,
+      "interval": 21600,
       "between": [
-        "2026-10-04T10:00:00+06:00"
+        "2026-10-04T22:00:00+06:00"
       ],
       "restrict": [
         {

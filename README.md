@@ -1,7 +1,7 @@
 # Dr. Halima — Social Media System
 
 Automated Bangla Facebook posts for Dr. Halima (Gynaecology & Obstetrics, Bangladesh):
-**OpenAI → Make.com → Facebook Page**, 5 posts/day at 10:00, 13:00, 16:00, 19:00 and 22:00 Asia/Dhaka.
+**OpenAI → Make.com → Facebook Page**, 3 posts/day at 10:00, 16:00 and 22:00 Asia/Dhaka.
 
 ## What is where
 

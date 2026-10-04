@@ -35,7 +35,7 @@ Facebook image (or carousel). A person approves the image, and the system then h
 
 | Part | What it does today | Changed? |
 |---|---|---|
-| **Live Make.com scenario** "Dr Halima – Daily plan (5 posts/day)" | Every 3 hours (10:00–22:00 Dhaka) it writes one Bangla post with OpenAI, makes a square picture **with no text on it**, and posts it to Facebook automatically. No human review. | **No.** It keeps running exactly as before. |
+| **Live Make.com scenario** "Dr Halima – Daily plan (3 posts/day)" | At 10:00, 16:00 and 22:00 Dhaka it writes one Bangla post with OpenAI, has GPT Image draw a Bangla infographic, checks its text (falls back to a text-free picture if the check fails) and posts it to Facebook automatically. No human review. | **No.** It keeps running exactly as before. |
 | **Node.js backend** (`backend/`) | The image pipeline below, the post writer (`npm run content`) and a small API server for them. Not deployed yet; you run it on your computer. The old Google-Sheets daily-run design was removed (it is in git history). | — |
 
 **New:** `backend/src/imaging/` (the image pipeline), `brands/` (business profiles + font), `posts/` (post files incl. 8 samples),
