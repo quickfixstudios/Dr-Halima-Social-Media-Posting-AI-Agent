@@ -21,7 +21,7 @@ Every OpenAI and Facebook step has a Retry error handler (3 attempts, 2 minutes 
 
 **Operations:** 6 per run when the first image passes, 8 when the second try passes, 9 when both fail → at most 27/day ≈ 810/month, usually 600–700 (Free plan: 1,000). Manual test runs also post to Facebook and count.
 
-**Not included yet:** real reels (slots 2 and 4 post quick-tip image posts), Instagram, engagement learning.
+**Not included yet:** reels, Instagram, engagement learning.
 
 **Status:** live since 2 Oct 2026. AI-drawn Bangla infographics with the text check start with the 10:00 run on
 4 Oct 2026. Facebook connection "Dr. Halima" expires 1 Dec 2026 — reauthorize before then.

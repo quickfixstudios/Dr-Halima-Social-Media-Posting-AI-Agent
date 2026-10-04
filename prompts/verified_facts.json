@@ -5,48 +5,36 @@
     {
       "id": "anaemia_pregnancy",
       "fact_bn": "বিশ্বজুড়ে প্রায় ৩৭% গর্ভবতী নারী রক্তস্বল্পতায় ভোগেন।",
-      "value": "৩৭%",
-      "label_bn": "গর্ভবতী নারী রক্তস্বল্পতায় ভোগেন (বিশ্বজুড়ে)",
       "source_bn": "বিশ্ব স্বাস্থ্য সংস্থা",
       "source_url": "https://www.who.int/news-room/fact-sheets/detail/anaemia"
     },
     {
       "id": "pcos_prevalence",
       "fact_bn": "প্রজনন বয়সী নারীদের আনুমানিক ৮ থেকে ১৩% পলিসিস্টিক ওভারি সিনড্রোমে আক্রান্ত, আর আক্রান্তদের ৭০% পর্যন্ত জানেনই না।",
-      "value": "৮–১৩%",
-      "label_bn": "প্রজনন বয়সী নারী পলিসিস্টিক ওভারি সিনড্রোমে আক্রান্ত",
       "source_bn": "বিশ্ব স্বাস্থ্য সংস্থা",
       "source_url": "https://www.who.int/news-room/fact-sheets/detail/polycystic-ovary-syndrome"
     },
     {
       "id": "endometriosis_prevalence",
       "fact_bn": "প্রজনন বয়সী প্রায় ১০% নারী ও কিশোরী এন্ডোমেট্রিওসিসে আক্রান্ত।",
-      "value": "১০%",
-      "label_bn": "প্রজনন বয়সী নারী ও কিশোরী এন্ডোমেট্রিওসিসে আক্রান্ত",
       "source_bn": "বিশ্ব স্বাস্থ্য সংস্থা",
       "source_url": "https://www.who.int/news-room/fact-sheets/detail/endometriosis"
     },
     {
       "id": "anc_contacts",
       "fact_bn": "বিশ্ব স্বাস্থ্য সংস্থা গর্ভাবস্থায় কমপক্ষে ৮ বার চেকআপের পরামর্শ দেয়।",
-      "value": "৮ বার",
-      "label_bn": "গর্ভাবস্থায় কমপক্ষে চেকআপ",
       "source_bn": "বিশ্ব স্বাস্থ্য সংস্থা",
       "source_url": "https://www.who.int/publications/i/item/9789241549912"
     },
     {
       "id": "exclusive_breastfeeding",
       "fact_bn": "জন্মের পর প্রথম ৬ মাস শিশুকে শুধু মায়ের দুধ খাওয়ানোর পরামর্শ দেয় বিশ্ব স্বাস্থ্য সংস্থা।",
-      "value": "৬ মাস",
-      "label_bn": "শিশুকে শুধু মায়ের দুধ",
       "source_bn": "বিশ্ব স্বাস্থ্য সংস্থা",
       "source_url": "https://www.who.int/health-topics/breastfeeding"
     },
     {
       "id": "cervical_cancer_rank",
       "fact_bn": "জরায়ুমুখের ক্যান্সার বিশ্বে নারীদের মধ্যে চতুর্থ সর্বাধিক সাধারণ ক্যান্সার, এবং টিকা ও নিয়মিত পরীক্ষায় এটি প্রতিরোধযোগ্য।",
-      "value": "৪র্থ",
-      "label_bn": "নারীদের সাধারণ ক্যান্সারের মধ্যে জরায়ুমুখের ক্যান্সারের অবস্থান",
       "source_bn": "বিশ্ব স্বাস্থ্য সংস্থা",
       "source_url": "https://www.who.int/news-room/fact-sheets/detail/cervical-cancer"
     }
