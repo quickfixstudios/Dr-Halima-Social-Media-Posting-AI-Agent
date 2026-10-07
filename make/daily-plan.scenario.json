@@ -170,7 +170,7 @@
         "mapper": {
           "model": "gpt-6-luna",
           "max_tokens": 3000,
-          "prompt": "You are a strict Bengali proofreader and medical-content reviewer. The image was generated from the PROMPT below. Check the image:\n1. The image visibly shows its text: the headline and every line listed under \"TEXT TO INCLUDE IN IMAGE\" (the words inside the quotes after Headline, each bullet \"-\", Label and Branding) appear inside the image, readable and not cut off, spelled exactly letter by letter (vowel signs, conjuncts, hasanta, Bangla digits). Ignore punctuation (full stops, commas, ·, ?, !), spacing and line breaks: judge the letters only. Read what is actually drawn; never correct it in your head. An image without its headline or bullets FAILS.\n2. There is no other text: no English words or Latin letters, no extra or invented Bengali words, no name on any person's clothing (simple symbols such as ✓ ✕ → are fine).\n3. No garbled, malformed or unreadable letters anywhere.\n4. The image is modest and safe: no anatomy, fetus, blood, exposed belly, pills, needles or medical instruments other than a stethoscope. If a realistic photo of a doctor is shown, the small label 'প্রতীকী ছবি' must be visible (small icons or illustrations of a doctor do not need it).\nAnswer on the FIRST line exactly 'VERDICT: PASS' only if all four are true, otherwise exactly 'VERDICT: FAIL'. Then list each problem briefly.\n\nPROMPT:\n{{6.image_prompt}}",
+          "prompt": "You are a strict Bengali proofreader and medical-content reviewer. The image was generated from the PROMPT below. Check the image:\n1. The image visibly shows its text: the headline and every line listed under \"TEXT TO INCLUDE IN IMAGE\" (the words inside the quotes after Headline, each bullet \"-\" and Branding; a Label line is optional) appear inside the image, readable and not cut off, spelled exactly letter by letter (vowel signs, conjuncts, hasanta, Bangla digits). Ignore punctuation (full stops, commas, ·, ?, !), spacing and line breaks: judge the letters only. Read what is actually drawn; never correct it in your head. An image without its headline or bullets FAILS.\n2. There is no other text: no English words or Latin letters, no extra or invented Bengali words, no name on any person's clothing (simple symbols such as ✓ ✕ → are fine).\n3. No garbled, malformed or unreadable letters anywhere.\n4. The image is modest and safe: no anatomy, fetus, blood, exposed belly, pills, needles or medical instruments other than a stethoscope. Doctor photos, doctor illustrations and doctor icons are allowed.\nAnswer on the FIRST line exactly 'VERDICT: PASS' only if all four are true, otherwise exactly 'VERDICT: FAIL'. Then list each problem briefly.\n\nPROMPT:\n{{6.image_prompt}}",
           "images": [
             {
               "imageUploadType": "imageFile",
@@ -342,7 +342,7 @@
                 "mapper": {
                   "model": "gpt-6-luna",
                   "max_tokens": 3000,
-                  "prompt": "You are a strict Bengali proofreader and medical-content reviewer. The image was generated from the PROMPT below. Check the image:\n1. The image visibly shows its text: the headline and every line listed under \"TEXT TO INCLUDE IN IMAGE\" (the words inside the quotes after Headline, each bullet \"-\", Label and Branding) appear inside the image, readable and not cut off, spelled exactly letter by letter (vowel signs, conjuncts, hasanta, Bangla digits). Ignore punctuation (full stops, commas, ·, ?, !), spacing and line breaks: judge the letters only. Read what is actually drawn; never correct it in your head. An image without its headline or bullets FAILS.\n2. There is no other text: no English words or Latin letters, no extra or invented Bengali words, no name on any person's clothing (simple symbols such as ✓ ✕ → are fine).\n3. No garbled, malformed or unreadable letters anywhere.\n4. The image is modest and safe: no anatomy, fetus, blood, exposed belly, pills, needles or medical instruments other than a stethoscope. If a realistic photo of a doctor is shown, the small label 'প্রতীকী ছবি' must be visible (small icons or illustrations of a doctor do not need it).\nAnswer on the FIRST line exactly 'VERDICT: PASS' only if all four are true, otherwise exactly 'VERDICT: FAIL'. Then list each problem briefly.\n\nPROMPT:\n{{6.image_prompt}}",
+                  "prompt": "You are a strict Bengali proofreader and medical-content reviewer. The image was generated from the PROMPT below. Check the image:\n1. The image visibly shows its text: the headline and every line listed under \"TEXT TO INCLUDE IN IMAGE\" (the words inside the quotes after Headline, each bullet \"-\" and Branding; a Label line is optional) appear inside the image, readable and not cut off, spelled exactly letter by letter (vowel signs, conjuncts, hasanta, Bangla digits). Ignore punctuation (full stops, commas, ·, ?, !), spacing and line breaks: judge the letters only. Read what is actually drawn; never correct it in your head. An image without its headline or bullets FAILS.\n2. There is no other text: no English words or Latin letters, no extra or invented Bengali words, no name on any person's clothing (simple symbols such as ✓ ✕ → are fine).\n3. No garbled, malformed or unreadable letters anywhere.\n4. The image is modest and safe: no anatomy, fetus, blood, exposed belly, pills, needles or medical instruments other than a stethoscope. Doctor photos, doctor illustrations and doctor icons are allowed.\nAnswer on the FIRST line exactly 'VERDICT: PASS' only if all four are true, otherwise exactly 'VERDICT: FAIL'. Then list each problem briefly.\n\nPROMPT:\n{{6.image_prompt}}",
                   "images": [
                     {
                       "imageUploadType": "imageFile",
@@ -453,13 +453,13 @@
                     "flow": [
                       {
                         "id": 9,
-                        "module": "facebook-pages:CreatePost",
+                        "module": "facebook-pages:CreatePostWithPhotos",
                         "version": 6,
                         "parameters": {
                           "__IMTCONN__": 11459922
                         },
                         "filter": {
-                          "name": "Both tries failed → caption-only post (never a textless image)",
+                          "name": "Both tries failed → post the second image anyway (every post has an image)",
                           "conditions": [
                             [
                               {
@@ -472,7 +472,14 @@
                         },
                         "mapper": {
                           "page_id": "103052652458065",
-                          "message": "{{6.caption}}\n\n— ডা. হালিমা\nএমবিবিএস (এমএমসি), সিএমইউ (আল্ট্রা)\nএফসিপিএস - ফাইনাল পার্ট (অবস অ্যান্ড গাইনি)\nমেডিকেল অফিসার, ময়মনসিংহ মেডিকেল কলেজ হাসপাতাল{{if(6.hashtags; newline; \"\")}}{{if(6.hashtags; newline; \"\")}}{{6.hashtags}}"
+                          "message": "{{6.caption}}\n\n— ডা. হালিমা\nএমবিবিএস (এমএমসি), সিএমইউ (আল্ট্রা)\nএফসিপিএস - ফাইনাল পার্ট (অবস অ্যান্ড গাইনি)\nমেডিকেল অফিসার, ময়মনসিংহ মেডিকেল কলেজ হাসপাতাল{{if(6.hashtags; newline; \"\")}}{{if(6.hashtags; newline; \"\")}}{{6.hashtags}}",
+                          "photos": [
+                            {
+                              "type": "data",
+                              "fileName": "dr-halima-{{formatDate(now; \"YYYYMMDD-HH\")}}.jpg",
+                              "data": "{{18.resImgData}}"
+                            }
+                          ]
                         },
                         "metadata": {
                           "designer": {
